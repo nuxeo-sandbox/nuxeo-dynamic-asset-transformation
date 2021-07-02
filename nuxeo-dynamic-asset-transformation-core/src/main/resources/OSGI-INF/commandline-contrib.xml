@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.labs.asset.transformation.commandline">
+
+    <require>org.nuxeo.ecm.platform.picture.commandline.imagemagick</require>
+
+    <extension target="org.nuxeo.ecm.platform.commandline.executor.service.CommandLineExecutorComponent" point="command">
+
+        <command name="dynamicImageResizerCli" enabled="true">
+            <commandLine>convert</commandLine>
+            <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet  #{sourceFilePath}[0] -flatten -gravity NorthWest -crop #{crop} -resize #{width}x#{height}! -strip -sampling-factor 4:2:0 -quality 80 -colorspace sRGB  #{format}:#{targetFilePath}</parameterString>
+            <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet #{sourceFilePath}[0] -flatten -gravity NorthWest -crop #{crop} -resize #{width}x#{height}! -strip -sampling-factor 4:2:0 -quality 80 -colorspace sRGB #{format}:#{targetFilePath}</winParameterString>
+            <installationDirective>You need to install ImageMagick.</installationDirective>
+        </command>
+
+    </extension>
+
+</component>

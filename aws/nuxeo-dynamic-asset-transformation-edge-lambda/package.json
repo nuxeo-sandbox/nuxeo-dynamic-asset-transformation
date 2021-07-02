@@ -1,0 +1,23 @@
+{
+  "name": "nuxeo-dynamic-asset-transformation-edge-lambda",
+  "version": "0.1.0",
+  "bin": {
+    "nuxeo-dynamic-asset-transformation-edge-lambda": "bin/nuxeo-dynamic-asset-transformation-edge-lambda.js"
+  },
+  "scripts": {
+    "build": "echo \"The build step is not required when using JavaScript!\" && exit 0",
+    "cdk": "cdk",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.94.1",
+    "aws-cdk": "1.94.1",
+    "jest": "^26.4.2"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-cloudfront": "^1.94.1",
+    "@aws-cdk/aws-iam": "^1.94.1",
+    "@aws-cdk/aws-lambda": "^1.94.1",
+    "@aws-cdk/core": "^1.94.1"
+  }
+}

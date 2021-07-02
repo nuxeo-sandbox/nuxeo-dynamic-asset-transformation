@@ -1,0 +1,7 @@
+<component name="org.nuxeo.labs.asset.transformation.aws.webresources">
+    <#if (nuxeo.s3storage.cloudfront.distribDomain)??>
+      <extension target="org.nuxeo.runtime.ConfigurationService" point="configuration">
+        <property name="org.nuxeo.web.ui.transformCdn">${transform.cdn.protocol}://${nuxeo.s3storage.cloudfront.distribDomain}${transform.cdn.path}</property>
+      </extension>
+    </#if>
+</component>

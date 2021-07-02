@@ -1,0 +1,14 @@
+{
+  "label.action.transform":"On demand Asset Tranformation",
+  "label.action.transform.height":"Height",
+  "label.action.transform.width":"Width",
+  "label.action.transform.format":"Format",
+  "label.action.transform.ratio":"Aspect Ratio",
+  "label.action.transform.top":"Top offset",
+  "label.action.transform.left":"Left Offset",
+  "label.dialog.button.close":"Close",
+  "label.action.transform.download": "Download",
+  "label.action.transform.download.url": "Download URL",
+  "label.action.transform.activate.cdn": "Activate CDN",
+  "label.action.transform.cdn.link":"CDN URL"
+}

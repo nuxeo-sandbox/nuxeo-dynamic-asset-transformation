@@ -1,0 +1,79 @@
+/*
+ * (C) Copyright 2021 Nuxeo (http://nuxeo.com/) and others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Contributors:
+ *     Michael Vachette
+ */
+package org.nuxeo.labs.asset.transformation.pub.endpoint;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.nuxeo.ecm.core.api.CoreInstance;
+import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.webengine.model.WebObject;
+import org.nuxeo.labs.asset.transformation.api.Transformation;
+import org.nuxeo.labs.asset.transformation.api.TransformationBuilder;
+import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
+import org.nuxeo.labs.download.link.service.PublicDownloadLinkService;
+import org.nuxeo.runtime.api.Framework;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+
+/**
+ * Endpoint to get a dynamic rendition of an asset using an authentication token
+ */
+@Path("/public/transform")
+@WebObject(type = "publicTransform")
+@Produces("text/html;charset=UTF-8")
+public class Transform {
+
+    private static final Logger log = LogManager.getLogger(Transform.class);
+
+    @GET
+    @Path("/{repository}/{id}")
+    public Object getTransform(
+            @PathParam("repository") String repository,
+            @PathParam("id") String documentId,
+            @QueryParam("width") int width,
+            @QueryParam("height") int height,
+            @QueryParam("format") String format,
+            @QueryParam("crop") String crop
+    ) {
+
+        return Framework.doPrivileged(() -> {
+            CoreSession session = CoreInstance.getCoreSessionSystem(repository);
+            DocumentModel document = session.getDocument(new IdRef(documentId));
+            PublicDownloadLinkService downloadLinkService = Framework.getService(PublicDownloadLinkService.class);
+            if (!downloadLinkService.hasPublicDownloadPermission(document,"file:content")) {
+                return buildError(Response.Status.NOT_FOUND);
+            } else {
+                DynamicTransformationService service = Framework.getService(DynamicTransformationService.class);
+                Transformation transformation = new TransformationBuilder(document).width(width).height(height).cropBox(crop).format(format).build();
+                return service.transform(document, transformation);
+            }
+        });
+    }
+
+    private Response buildError(Response.Status status) {
+        return Response.status(status).entity("Invalid request.").type("text/plain").build();
+    }
+}

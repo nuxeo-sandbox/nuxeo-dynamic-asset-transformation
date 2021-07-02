@@ -1,0 +1,10 @@
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Manifest-Version: 1.0
+Bundle-Vendor: org.nuxeo.labs.asset.transformation
+Bundle-Version: 1.0.0
+Bundle-Name: nuxeo-dynamic-asset-transformation-core
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: nuxeo-dynamic-asset-transformation-core;singleton=true
+Nuxeo-Component: OSGI-INF/service-contrib.xml, OSGI-INF/commandline-contrib.xml, OSGI-INF/converter-contrib.xml,
+    OSGI-INF/mimetype-contrib.xml

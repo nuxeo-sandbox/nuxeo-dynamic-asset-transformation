@@ -1,0 +1,455 @@
+<!--
+  `nuxeo-asset-transformation-action`
+  @group Nuxeo UI
+  @element nuxeo-asset-transformation-action
+  -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.js"
+        integrity="sha512-ZK6m9vADamSl5fxBPtXw6ho6A4TuX89HUbcfvxa2v2NYNT/7l8yFGJ3JlXyMN4hlNbz0il4k6DvqbIW5CCwqkw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<dom-module id="nuxeo-asset-transformation-action">
+    <template>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.css"
+              integrity="sha512-+VDbDxc9zesADd49pfvz7CgsOl2xREI/7gnzcdyA9XjuTxLXrdpuz21VVIqc5HPfZji2CypSbxx1lgD7BgBK5g=="
+              crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <style include="nuxeo-action-button-styles nuxeo-styles iron-flex iron-flex-alignment">
+            .content {
+                @apply(--layout-vertical);
+                margin-top:0px;
+            }
+
+            #progress {
+                margin: 0px;
+                padding: 0px;
+                width:100%;
+            }
+
+            .buttons {
+                margin-top: 0px;
+            }
+
+            .main {
+                width:100%;
+                margin-top:32px;
+                height: calc(100vh - 192px);
+            }
+
+            #imageToCrop {
+                display: block;
+                max-width: 100%;
+            }
+
+            .params {
+                overflow:auto;
+            }
+
+            #form {
+                margin-right:64px;
+            }
+
+            nuxeo-dialog {
+                --nuxeo-dialog: {
+                    min-width:100%;
+                    width:100%;
+                }
+            }
+
+            .cropArea {
+                display:block;
+                height:100%;
+                min-height:100%;
+            }
+
+            #copy, #revoke, #download {
+                margin-top: 16px;
+            }
+
+            *[role='widget'] {
+                margin-bottom: 0px;
+            }
+
+            .cdnLink {
+                margin-top:16px;
+            }
+
+            .firstTitle {
+                margin-top:0px;
+            }
+
+            .links {
+                margin-top:16px;
+            }
+
+        </style>
+
+        <nuxeo-operation id="createLinkOp" input="[[input]]" params="[[params]]" op="CreatePublicDownloadLink"></nuxeo-operation>
+
+        <nuxeo-operation id="revokeLinkOp" input="[[input]]" params="[[params]]" op="RevokePublicDownloadLink"></nuxeo-operation>
+
+        <div class="action" on-tap="_toggleDialog">
+            <paper-icon-button id="bt" icon="[[icon]]"></paper-icon-button>
+            <span class="label" hidden$="[[!showLabel]]">[[i18n('label.action.transform')]]</span>
+        </div>
+        <paper-tooltip for="bt">[[i18n('label.action.transform')]]</paper-tooltip>
+
+        <nuxeo-dialog id="dialog" with-backdrop modal on-iron-overlay-opened="_onDialogOpened">
+            <h2>[[i18n('label.action.transform')]]</h2>
+            <div class="content">
+                <div class="main layout horizontal">
+                    <div class="params">
+                        <iron-form id="form">
+                            <form>
+                                <h3 class="firstTitle">Crop Box</h3>
+                                <nuxeo-input name="ratio"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.ratio')]]"
+                                             value="{{cropData.ratio}}"
+                                             type="number"
+                                             min="0.001"
+                                             step="0.001">
+                                </nuxeo-input>
+                                <nuxeo-input name="top"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.top')]]"
+                                             value="{{cropData.y}}"
+                                             type="number"
+                                             min="1"
+                                             step="1">
+                                </nuxeo-input>
+                                <nuxeo-input name="left"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.left')]]"
+                                             value="{{cropData.x}}"
+                                             type="number"
+                                             min="1"
+                                             step="1">
+                                </nuxeo-input>
+                                <nuxeo-input name="width"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.width')]]"
+                                             value="{{cropData.width}}"
+                                             type="number"
+                                             min="1"
+                                             step="1">
+                                </nuxeo-input>
+                                <nuxeo-input name="height"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.height')]]"
+                                             value="{{cropData.height}}"
+                                             type="number"
+                                             min="1"
+                                             step="1">
+                                </nuxeo-input>
+                                <h3>Output Format</h3>
+                                <nuxeo-input name="width"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.width')]]"
+                                             value="{{width}}"
+                                             type="number"
+                                             min="1"
+                                             step="1">
+                                </nuxeo-input>
+                                <nuxeo-input name="height"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.height')]]"
+                                             value="{{height}}"
+                                             type="number"
+                                             min="1"
+                                             step="1">
+                                </nuxeo-input>
+
+                                <div role="widget">
+                                    <label>[[i18n('label.action.transform.format')]]</label>
+                                    <nuxeo-select role="widget"
+                                                  name="format"
+                                                  placeholder="[[i18n('label.action.transform.format')]]"
+                                                  options="[[formatOptions]]" selected="{{format}}">
+                                    </nuxeo-select>
+                                </div>
+                            </form>
+                        </iron-form>
+
+                        <h3>URLs</h3>
+
+                        <div role="widget" class="links">
+                            <div class="layout horizontal">
+                                <nuxeo-input id="downloadLink" label="[[i18n('label.action.transform.download.url')]]" value="[[url]]" autofocus readonly>
+                                </nuxeo-input>
+                                <a href="[[url]]">
+                                    <paper-icon-button id="download" icon="nuxeo:download"></paper-icon-button>
+                                    <paper-tooltip for="download">[[i18n('label.action.transform.download')]]</paper-tooltip>
+                                </a>
+                            </div>
+                        </div>
+
+                        <template is="dom-if" if="[[_canUseCDN(hasPublicToken)]]">
+                            <div role="widget" class="links">
+                                <paper-button on-tap="_createLink" class="secondary">[[i18n('label.action.transform.activate.cdn')]]</paper-button>
+                            </div>
+                        </template>
+
+                        <template is="dom-if" if="[[_displayCDNlink(hasPublicToken)]]">
+                            <div role="widget" class="links">
+                                <div class="layout horizontal">
+                                    <nuxeo-input id="cdnLink" label="[[i18n('label.action.transform.cdn.link')]]" value="[[cdnUrl]]" autofocus readonly>
+                                    </nuxeo-input>
+                                    <paper-icon-button id="copy" icon="icons:content-copy" on-tap="_copyPermalink"></paper-icon-button>
+                                    <paper-tooltip for="copy">[[i18n('nuxeo.public.download.button.copy')]]</paper-tooltip>
+                                    <paper-icon-button id="revoke" icon="nuxeo:delete" on-tap="_deleteLink"></paper-icon-button>
+                                    <paper-tooltip for="revoke">[[i18n('nuxeo.public.download.button.revoke')]]</paper-tooltip>
+                                </div>
+                            </div>
+                        </template>
+
+                    </div>
+                    <div class="flex">
+                        <div class="cropArea">
+                            <img id="imageToCrop" src="[[_getPreviewUrl(document)]]" on-load="_initializeCropper" visible="{{visible}}">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <paper-progress id="progress" indeterminate disabled></paper-progress>
+            <div class="buttons">
+                <paper-button noink dialog-dismiss on-tap="_close">
+                    [[i18n('label.dialog.button.close')]]
+                </paper-button>
+            </div>
+        </nuxeo-dialog>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'nuxeo-asset-transformation-action',
+            behaviors: [Nuxeo.I18nBehavior,Nuxeo.FiltersBehavior,Nuxeo.RoutingBehavior,Polymer.IronResizableBehavior],
+            properties: {
+                document: {
+                    type: Object,
+                    observer: '_documentChanged'
+                },
+
+                showLabel: {
+                    type: Boolean,
+                    value: false,
+                },
+
+                icon: {
+                    type: String,
+                    value: 'icons:check-box'
+                },
+
+                formatOptions: {
+                    type: Array,
+                    value: function() {
+                        return [
+                            {
+                                id: "jpg",
+                                label: "JPEG",
+                            },{
+                                id: "png",
+                                label: "PNG",
+                            },{
+                                id: "webp",
+                                label: "WEBP",
+                            }
+                        ];
+                    }
+                },
+
+                format: {
+                    type: String,
+                    value: "jpg"
+                },
+
+                url: {
+                    type: String,
+                    computed: 'computeUrl(document, height, width, format, cropData.*)'
+                },
+
+                cdnUrl: {
+                    type: String,
+                    computed: 'computeCdnUrl(document, height, width, format, cropData.*, hasPublicToken)'
+                },
+
+                cropRatio: {
+                    type: Number
+                },
+
+                hasPublicToken: {
+                    type: Boolean
+                }
+
+            },
+
+            observers:['_cropRatioChanged(cropData.ratio)', '_cropDimensionChanged(cropData.width, cropData.height)'],
+
+            _toggleDialog: function () {
+                this.$.dialog.toggle();
+            },
+
+            _onDialogOpened: function(e) {
+                if (this._cropper && e.srcElement.id === "dialog") {
+                    this._initializeCropper();
+                }
+            },
+
+            _documentChanged: function(document) {
+                this.hasPublicToken = document && document.contextParameters && document.contextParameters.publicDownload && document.contextParameters.publicDownload['file:content'] !== undefined;
+            },
+
+            _getPreviewUrl: function(document) {
+                if (!document || !document.properties || !document.properties['picture:views']){
+                    return "";
+                } else {
+                    return document.properties['picture:views'][4].content.data;
+                }
+            },
+
+            _initializeCropper: function() {
+                if (this._cropper) {
+                    this._cropper.destroy();
+                }
+                const options = {
+                    autoCrop: true,
+                    autoCropArea: 1,
+                    background: false,
+                    checkCrossOrigin: false,
+                    checkOrientation: false,
+                    dragMode: 'crop',
+                    responsive: true,
+                    restore: false,
+                    toggleDragModeOnDblclick: false,
+                    viewMode: 2,
+                    zoomOnWheel: this.zoomOnWheel,
+                    crop: this._cropCallback.bind(this)
+                };
+                this._cropper = new Cropper(this.$.imageToCrop, options);
+                this._cropper.enable();
+            },
+
+            // This is a callback from Cropper anytime the cropbox changes.
+            // We calculate the cropbox in coordinates relative to the original size
+            // The callback has been bound to this element, so the this object is our element, not the crop.
+            _cropCallback: function(allCropData) {
+                let cropData = {
+                    x: Math.round(allCropData.detail.x),
+                    y: Math.round(allCropData.detail.y),
+                    width: Math.round(allCropData.detail.width),
+                    height: Math.round(allCropData.detail.height),
+                    ratio: (allCropData.detail.width / allCropData.detail.height).toFixed(4)
+                };
+                this.cropData = cropData;
+            },
+
+            _getOriginalZoomRatio: function() {
+                if (this._cropper) {
+                    const canvasData = this._cropper.initialCanvasData;
+                    return canvasData.width / canvasData.naturalWidth;
+                }
+            },
+
+            _cropRatioChanged: function(cropRatio) {
+                let cropBox = this._cropper.getCropBoxData();
+                if (!cropBox) {
+                    return;
+                }
+                let cropBoxRatio = cropBox.width / cropBox.height;
+                if (this._cropper && Math.abs(cropRatio  - cropBoxRatio) > 0.0001) {
+                    this._cropper.setAspectRatio(cropRatio);
+                }
+            },
+
+            _cropDimensionChanged: function(width, height) {
+                this.width = width;
+                this.height = height;
+            },
+
+            computeUrl: function(document, height, width, format, cropData) {
+                if (!document) return;
+                var params = [];
+                if (width) params.push(`width=${width}`);
+                if (height) params.push(`height=${height}`);
+                if (format) params.push(`format=${format}`);
+                if (this.cropData) params.push(`crop=${this.cropData.width},${this.cropData.height},${this.cropData.x},${this.cropData.y}`);
+                return `${window.location.origin}/nuxeo/api/v1/transform/${document.uid}?${params.join('&')}`;
+            },
+
+
+            _canUseCDN: function(hasPublicToken){
+                return !hasPublicToken && window.Nuxeo.UI.config.transformCdn !== undefined;
+            },
+
+            _displayCDNlink: function(hasPublicToken) {
+                return hasPublicToken && window.Nuxeo.UI.config.transformCdn !== undefined;
+            },
+
+            computeCdnUrl: function(document, height, width, format, cropData, token) {
+                if (!document) return;
+                var params = [];
+                if (width) params.push(`width=${width}`);
+                if (height) params.push(`height=${height}`);
+                if (format) params.push(`format=${format}`);
+                if (this.cropData) params.push(`crop=${this.cropData.width},${this.cropData.height},${this.cropData.x},${this.cropData.y}`);
+                return `${window.Nuxeo.UI.config.transformCdn}/${document.repository}/${document.uid}?${params.join('&')}`;
+            },
+
+            _createLink: function() {
+                if (!this.document) {
+                    return;
+                }
+                this.input = 'doc:' + this.document.uid;
+                this.params = {
+                    xpath: 'file:content'
+                }
+                this.$.createLinkOp.execute().then(response => {
+                    this.hasPublicToken = true;
+                }).catch(error => {
+                    this.fire('notify', {
+                        message: this.i18n('nuxeo.public.download.create.failure')
+                    });
+                }).finally(function() {
+                    //todo
+                }.bind(this));
+            },
+
+            _deleteLink: function() {
+                if (!this.document) {
+                    return;
+                }
+                this.input = 'doc:' + this.document.uid;
+                this.params = {
+                    xpath: this.xpath
+                }
+                this.$.revokeLinkOp.execute().then(response => {
+                    this.hasPublicToken = false;
+                }).catch(error => {
+                    this.fire('notify', {
+                        message: this.i18n('nuxeo.public.download.revoke.failure')
+                    });
+                }).finally(function() {
+                    //todo
+                }.bind(this));
+            },
+
+            _copyPermalink: function() {
+                this._selectPermalink();
+                window.document.execCommand('copy');
+            },
+
+            _selectPermalink: function() {
+                let inputElement = this.shadowRoot.querySelector('#cdnLink');
+                if (!inputElement) {
+                    return;
+                }
+                inputElement.$.paperInput.inputElement.inputElement.select();
+            }
+
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.labs.asset.transformation.pub.endpoint.auth">
+
+    <extension target="org.nuxeo.ecm.platform.ui.web.auth.service.PluggableAuthenticationService" point="openUrl">
+        <openUrl name="publicTransform">
+            <method>GET</method>
+            <grantPattern>/nuxeo/site/public/transform/.*</grantPattern>
+        </openUrl>
+    </extension>
+
+</component>

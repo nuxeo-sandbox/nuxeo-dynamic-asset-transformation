@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.labs.asset.transformation.mimetypes">
+    <extension point="mimetype" target="org.nuxeo.ecm.platform.mimetype.service.MimetypeRegistryService">
+        <!-- WEBP -->
+        <mimetype binary="false" iconPath="image.gif" normalized="image/webp">
+            <mimetypes>
+                <mimetype>image/webp</mimetype>
+            </mimetypes>
+            <extensions>
+                <extension>webp</extension>
+            </extensions>
+        </mimetype>
+    </extension>
+</component>

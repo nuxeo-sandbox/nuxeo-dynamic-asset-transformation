@@ -1,0 +1,9 @@
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Manifest-Version: 1.0
+Bundle-Vendor: org.nuxeo.labs.asset.transformation
+Bundle-Version: 1.0.0
+Bundle-Name: nuxeo-dynamic-asset-transformation-webui
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: nuxeo-dynamic-asset-transformation-webui;singleton=true
+Nuxeo-Component: OSGI-INF/webresources-contrib.xml

@@ -1,0 +1,103 @@
+/*
+ * (C) Copyright 2021 Nuxeo (http://nuxeo.com/) and others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Contributors:
+ *     Michael Vachette
+ */
+
+package org.nuxeo.labs.asset.transformation.api;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
+import org.nuxeo.ecm.core.test.annotations.Granularity;
+import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
+import org.nuxeo.ecm.platform.picture.api.ImageInfo;
+import org.nuxeo.labs.asset.transformation.TestFeature;
+import org.nuxeo.runtime.test.runner.Features;
+import org.nuxeo.runtime.test.runner.FeaturesRunner;
+
+import javax.inject.Inject;
+
+import static org.nuxeo.labs.asset.transformation.TestFeature.HEIGHT;
+import static org.nuxeo.labs.asset.transformation.TestFeature.WIDTH;
+
+@RunWith(FeaturesRunner.class)
+@Features({TestFeature.class})
+@RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
+public class TestTransformation {
+
+    @Inject
+    protected CoreSession session;
+
+    @Test
+    public void testDocConstructor() {
+        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
+        Transformation transformation = new TransformationBuilder(doc).build();
+        Assert.assertEquals(WIDTH,transformation.getWidth());
+        Assert.assertEquals(TestFeature.HEIGHT,transformation.getHeight());
+        Assert.assertEquals("jpg",transformation.getFormat());
+    }
+
+    @Test
+    public void testWithNoParameters() {
+        ImageInfo imageInfo = TestFeature.getImageInfo();
+        Transformation transformation = new TransformationBuilder(imageInfo).build();
+        Assert.assertEquals(WIDTH,transformation.getWidth());
+        Assert.assertEquals(TestFeature.HEIGHT,transformation.getHeight());
+        Assert.assertEquals("jpg",transformation.getFormat());
+    }
+
+    @Test
+    public void testWithAllParameters() {
+        ImageInfo imageInfo = TestFeature.getImageInfo();
+        CropBox box = new CropBox(0,100,100,100);
+        Transformation transformation = new TransformationBuilder(imageInfo).width(50).height(50).cropBox(box).format("png").build();
+        Assert.assertEquals(50,transformation.getWidth());
+        Assert.assertEquals(50,transformation.getHeight());
+        Assert.assertEquals("png",transformation.getFormat());
+        Assert.assertEquals(box,transformation.getCropBox());
+    }
+
+    @Test
+    public void testKeepOriginalRatioFromWidth() {
+        ImageInfo imageInfo = TestFeature.getImageInfo();
+        Transformation transformation = new TransformationBuilder(imageInfo).width(600).build();
+        Assert.assertEquals(600,transformation.getWidth());
+        Assert.assertEquals(400,transformation.getHeight());
+        Assert.assertEquals("jpg",transformation.getFormat());
+    }
+
+    @Test
+    public void testKeepOriginalRatioFromHeight() {
+        ImageInfo imageInfo = TestFeature.getImageInfo();
+        Transformation transformation = new TransformationBuilder(imageInfo).height(400).format("png").build();
+        Assert.assertEquals(600,transformation.getWidth());
+        Assert.assertEquals(400,transformation.getHeight());
+        Assert.assertEquals("png",transformation.getFormat());
+    }
+
+    @Test
+    public void testWithNoCrop() {
+        ImageInfo imageInfo = TestFeature.getImageInfo();
+        Transformation transformation = new TransformationBuilder(imageInfo).build();
+        Assert.assertNotNull(transformation.getCropBox());
+        Assert.assertEquals(WIDTH,transformation.getCropBox().getWidth());
+        Assert.assertEquals(HEIGHT,transformation.getCropBox().getHeight());
+    }
+}

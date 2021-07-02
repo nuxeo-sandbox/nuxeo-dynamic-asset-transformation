@@ -1,0 +1,11 @@
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Manifest-Version: 1.0
+Bundle-Vendor: org.nuxeo.labs.asset.transformation
+Bundle-Version: 1.0.0
+Bundle-Name: nuxeo-dynamic-asset-transformation-pub-endpoint
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: nuxeo-dynamic-asset-transformation-pub-endpoint;singleton=true
+Nuxeo-WebModule: org.nuxeo.ecm.webengine.app.WebEngineModule;name=publicTransform;package=org/nuxeo/labs/asset/transformation/pub/endpoint
+Nuxeo-Component: OSGI-INF/auth-contrib.xml
+
