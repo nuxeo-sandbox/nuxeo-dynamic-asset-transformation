@@ -19,6 +19,11 @@
 
 package org.nuxeo.labs.asset.transformation.api;
 
+import org.nuxeo.ecm.platform.picture.api.ImageInfo;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,10 +31,10 @@ public class CropBox {
 
     static Pattern p = Pattern.compile("([0-9]*),([0-9]*),([0-9]*),([0-9]*)");
 
-    int top;
-    int left;
-    int width;
-    int height;
+    long top;
+    long left;
+    long width;
+    long height;
 
     public CropBox(String crop) {
 
@@ -37,38 +42,84 @@ public class CropBox {
         if (!m.matches()) {
             throw new IllegalArgumentException("Invalid crop format");
         } else {
-            this.top = Integer.parseInt(m.group(4));
-            this.left = Integer.parseInt(m.group(3));
-            this.width = Integer.parseInt(m.group(1));
-            this.height = Integer.parseInt(m.group(2));
+            this.top = Long.parseLong(m.group(4));
+            this.left = Long.parseLong(m.group(3));
+            this.width = Long.parseLong(m.group(1));
+            this.height = Long.parseLong(m.group(2));
         }
     }
 
-    public CropBox(int top, int left, int width, int height) {
+    public CropBox(long top, long left, long width, long height) {
         this.top = top;
         this.left = left;
         this.width = width;
         this.height = height;
     }
 
-    public int getTop() {
+    public CropBox(Map<String, Serializable> map) {
+        this.top = (long) map.get("top");
+        this.left = (long) map.get("left");
+        this.width = (long) map.get("width");
+        this.height = (long) map.get("height");
+    }
+
+    public CropBox(ImageInfo imageInfo, double cropRatio) {
+        this(0, 0, imageInfo.getWidth(), imageInfo.getHeight());
+        double originalRatio = getRatio();
+
+        if (originalRatio == cropRatio) {
+            return;
+        }
+
+        if (width < height) {
+            // invert ratio
+            cropRatio = 1.0 / cropRatio;
+        }
+
+        if (originalRatio < cropRatio) {
+            // if target ratio is greater than the original image ratio, crop height
+            int targetHeight = (int) Math.round(width / cropRatio);
+            this.top = (height - targetHeight) / 2;
+            this.height = targetHeight;
+        } else {
+            // else if the target ratio is lower than the original image ratio, crop width
+            int targetWidth = (int) Math.round(height * cropRatio);
+            this.left = (width - targetWidth) / 2;
+            this.width = targetWidth;
+        }
+    }
+
+    public long getTop() {
         return top;
     }
 
-    public int getLeft() {
+    public long getLeft() {
         return left;
     }
 
-    public int getWidth() {
+    public long getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public long getHeight() {
         return height;
+    }
+
+    public double getRatio() {
+        return (width * (1.0)) / height;
     }
 
     @Override
     public String toString() {
-        return String.format("%dx%d+%d+%d",width,height,left,top);
+        return String.format("%dx%d+%d+%d", width, height, left, top);
+    }
+
+    public Map<String, Serializable> toMap() {
+        Map<String, Serializable> map = new HashMap<>();
+        map.put("top", top);
+        map.put("left", left);
+        map.put("width", width);
+        map.put("height", height);
+        return map;
     }
 }

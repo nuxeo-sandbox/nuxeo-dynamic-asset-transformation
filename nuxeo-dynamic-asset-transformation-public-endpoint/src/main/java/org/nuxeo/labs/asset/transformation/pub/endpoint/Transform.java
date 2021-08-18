@@ -53,10 +53,11 @@ public class Transform {
     public Object getTransform(
             @PathParam("repository") String repository,
             @PathParam("id") String documentId,
-            @QueryParam("width") int width,
-            @QueryParam("height") int height,
+            @QueryParam("width") long width,
+            @QueryParam("height") long height,
             @QueryParam("format") String format,
-            @QueryParam("crop") String crop
+            @QueryParam("crop") String crop,
+            @QueryParam("autoCropRatio") double autoCropRatio
     ) {
 
         return Framework.doPrivileged(() -> {
@@ -67,7 +68,7 @@ public class Transform {
                 return buildError(Response.Status.NOT_FOUND);
             } else {
                 DynamicTransformationService service = Framework.getService(DynamicTransformationService.class);
-                Transformation transformation = new TransformationBuilder(document).width(width).height(height).cropBox(crop).format(format).build();
+                Transformation transformation = new TransformationBuilder(document).width(width).height(height).cropBox(crop).cropRatio(autoCropRatio).format(format).build();
                 return service.transform(document, transformation);
             }
         });

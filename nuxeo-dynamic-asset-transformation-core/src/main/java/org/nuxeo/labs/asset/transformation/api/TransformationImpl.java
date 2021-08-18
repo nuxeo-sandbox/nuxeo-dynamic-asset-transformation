@@ -25,28 +25,29 @@ import java.util.Map;
 
 public class TransformationImpl implements Transformation {
 
-    protected int width;
-    protected int height;
+    protected long width;
+    protected long height;
     protected String format;
     protected CropBox cropBox;
+    protected double ratio;
 
     @Override
-    public int getWidth() {
+    public long getWidth() {
         return width;
     }
 
     @Override
-    public void setWidth(int width) {
+    public void setWidth(long width) {
         this.width = width;
     }
 
     @Override
-    public int getHeight() {
+    public long getHeight() {
         return height;
     }
 
     @Override
-    public void setHeight(int height) {
+    public void setHeight(long height) {
         this.height = height;
     }
 
@@ -68,6 +69,17 @@ public class TransformationImpl implements Transformation {
     @Override
     public void setCropBox(CropBox box) {
         this.cropBox = box;
+        this.ratio = this.cropBox.getRatio();
+    }
+
+    @Override
+    public void setCropRatio(double ratio) {
+        this.ratio = ratio;
+    }
+
+    @Override
+    public double getCropRatio() {
+        return ratio;
     }
 
     @Override

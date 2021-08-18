@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<component name="test-document-type" version="1.0">
+
+    <require>org.nuxeo.labs.asset.transformation.schemas</require>
+
+    <extension point="doctype" target="org.nuxeo.ecm.core.schema.TypeService">
+        <doctype extends="Document" name="CropDocument">
+            <schema name="dublincore"/>
+            <schema name="crops"/>
+        </doctype>
+    </extension>
+
+</component>

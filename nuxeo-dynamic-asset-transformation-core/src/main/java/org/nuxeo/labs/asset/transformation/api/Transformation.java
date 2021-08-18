@@ -26,21 +26,69 @@ public interface Transformation {
 
     String DEFAULT_FORMAT = "jpg";
 
-    int getWidth();
+    /**
+     *
+     * @return the target width of the transformation
+     */
+    long getWidth();
 
-    void setWidth(int width);
+    /**
+     *
+     * @param width the target width of the transformation
+     */
+    void setWidth(long width);
 
-    int getHeight();
+    /**
+     *
+     * @return the target height of the transformation
+     */
+    long getHeight();
 
-    void setHeight(int height);
+    /**
+     *
+     * @param height the target height of the transformation
+     */
+    void setHeight(long height);
 
+    /**
+     *
+     * @return the target file format of the transformation
+     */
     String getFormat();
 
+    /**
+     *
+     * @param format the target format of the transformation
+     */
     void setFormat(String format);
 
+    /**
+     *
+     * @return the crop box coordinates of the transformation.
+     */
     CropBox getCropBox();
 
+    /**
+     *
+     * @param box the crop box of the transformation
+     */
     void setCropBox(CropBox box);
 
+    /**
+     *
+     * @param ratio the target image size ratio
+     */
+    void setCropRatio(double ratio);
+
+    /**
+     *
+     * @return the target image size ratio
+     */
+    double getCropRatio();
+
+    /**
+     *
+     * @return a map of the transformation parameters
+     */
     Map<String, Serializable> toMap();
 }

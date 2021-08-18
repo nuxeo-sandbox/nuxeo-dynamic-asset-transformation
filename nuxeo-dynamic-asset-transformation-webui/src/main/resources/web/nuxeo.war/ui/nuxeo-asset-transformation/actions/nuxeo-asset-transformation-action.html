@@ -103,15 +103,25 @@
                         <iron-form id="form">
                             <form>
                                 <h3 class="firstTitle">Crop Box</h3>
-                                <nuxeo-input name="ratio"
-                                             role="widget"
-                                             label="[[i18n('label.action.transform.ratio')]]"
-                                             value="{{cropData.ratio}}"
-                                             type="number"
-                                             min="0.001"
-                                             step="0.001">
-                                </nuxeo-input>
-                                <nuxeo-input name="top"
+                                <div role="widget">
+                                    <label>"[[i18n('label.action.transform.ratio')]]"</label>
+                                    <nuxeo-select role="widget"
+                                                  name="format"
+                                                  placeholder="[[i18n('label.action.transform.ratio')]]"
+                                                  options="[[cropFormatOptions]]" selected="{{cropFormat}}">
+                                    </nuxeo-select>
+                                </div>
+                                <template is="dom-if" if="[[_isFreeCropRatio(cropFormat)]]">
+                                    <nuxeo-input name="ratio"
+                                                 role="widget"
+                                                 label="[[i18n('label.action.transform.ratio')]]"
+                                                 value="{{cropData.ratio}}"
+                                                 type="number"
+                                                 min="0.001"
+                                                 step="0.001">
+                                    </nuxeo-input>
+                                </template>
+                                <!--nuxeo-input name="top"
                                              role="widget"
                                              label="[[i18n('label.action.transform.top')]]"
                                              value="{{cropData.y}}"
@@ -142,7 +152,7 @@
                                              type="number"
                                              min="1"
                                              step="1">
-                                </nuxeo-input>
+                                </nuxeo-input-->
                                 <h3>Output Format</h3>
                                 <nuxeo-input name="width"
                                              role="widget"
@@ -267,6 +277,41 @@
                     value: "jpg"
                 },
 
+
+                cropFormatOptions: {
+                    type: Array,
+                    value: function() {
+                        return [
+                            {
+                                id: "0",
+                                label: "Free",
+                            },{
+                                id: "1.00",
+                                label: "Square",
+                            },{
+                                id: "1.50",
+                                label: "3/2",
+                            },{
+                                id: "1.76",
+                                label: "16/9",
+                            },{
+                                id: "7.80",
+                                label: "Full Banner (7.8)"
+                            },{
+                                id: "3.90",
+                                label: "half Banner (3.9)"
+                            }
+                        ];
+                    }
+                },
+
+                cropFormat: {
+                    type: String,
+                    value: "0",
+                    observer: "_cropFormatChanged"
+                },
+
+
                 url: {
                     type: String,
                     computed: 'computeUrl(document, height, width, format, cropData.*)'
@@ -295,7 +340,8 @@
 
             _onDialogOpened: function(e) {
                 if (this._cropper && e.srcElement.id === "dialog") {
-                    this._initializeCropper();
+                    this.cropFormat = "0",
+                        this._initializeCropper();
                 }
             },
 
@@ -368,6 +414,31 @@
             _cropDimensionChanged: function(width, height) {
                 this.width = width;
                 this.height = height;
+            },
+
+
+            _cropFormatChanged: function(cropFormat) {
+                console.log(cropFormat);
+                if (cropFormat > "0") {
+                    if (this.document && this.document.properties && this.document.properties['crops:crops']) {
+                        let crop = this.document.properties['crops:crops'].find(element => element.name === cropFormat);
+                        var ratio = Number.parseFloat(cropFormat);
+                        this._cropper.setAspectRatio(ratio);
+                        this._cropper.setData({
+                            x: crop.left,
+                            y: crop.top,
+                            width: crop.width,
+                            height: crop.height
+                        });
+                    } else {
+                        var ratio = Number.parseFloat(cropFormat);
+                        this._cropRatioChanged(ratio);
+                    }
+                }
+            },
+
+            _isFreeCropRatio: function(cropFormat) {
+                return cropFormat === '0';
             },
 
             computeUrl: function(document, height, width, format, cropData) {
@@ -453,3 +524,4 @@
         });
     </script>
 </dom-module>
+

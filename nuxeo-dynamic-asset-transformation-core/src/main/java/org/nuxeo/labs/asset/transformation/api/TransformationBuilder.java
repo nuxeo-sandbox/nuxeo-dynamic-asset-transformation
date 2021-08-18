@@ -24,6 +24,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.nuxeo.ecm.platform.picture.api.ImagingDocumentConstants.PICTURE_FACET;
@@ -31,29 +32,43 @@ import static org.nuxeo.labs.asset.transformation.api.Transformation.DEFAULT_FOR
 
 public class TransformationBuilder {
 
+    protected DocumentModel doc;
     protected ImageInfo imageInfo;
-    protected int width = 0;
-    protected int height = 0;
+    protected long width = 0;
+    protected long height = 0;
     protected String format ;
     protected CropBox cropBox = null;
+    protected double cropRatio = 0;
+    protected Map<String,CropBox> cropPresets = new HashMap<>();
     
     public TransformationBuilder(DocumentModel doc) {
         if (!doc.hasFacet(PICTURE_FACET)) {
             throw new IllegalArgumentException("doc is Not a Picture document");
         }
+        this.doc = doc;
         this.imageInfo = ImageInfo.fromMap((Map<String, Serializable>) doc.getPropertyValue("picture:info"));
+
+        CropDocumentAdapter adapter = doc.getAdapter(CropDocumentAdapter.class);
+        if (adapter != null) {
+            this.cropPresets = adapter.getCrops();
+        }
     }
 
-    public TransformationBuilder(ImageInfo info) {
+    protected TransformationBuilder(ImageInfo info) {
         this.imageInfo = info;
     }
+
+    protected TransformationBuilder(ImageInfo info, Map<String,CropBox> cropPresets) {
+        this.imageInfo = info;
+        this.cropPresets = cropPresets;
+    }
     
-    public TransformationBuilder width(int width) {
+    public TransformationBuilder width(long width) {
         this.width = width;
         return this;
     }
 
-    public TransformationBuilder height(int height) {
+    public TransformationBuilder height(long height) {
         this.height = height;
         return this;
     }
@@ -68,6 +83,11 @@ public class TransformationBuilder {
         return this;
     }
 
+    public TransformationBuilder cropRatio(double ratio) {
+        this.cropRatio = ratio;
+        return this;
+    }
+
     public TransformationBuilder cropBox(String crop) {
         this.cropBox = crop != null ? new CropBox(crop) : null;
         return this;
@@ -79,12 +99,18 @@ public class TransformationBuilder {
 
         //first, crop
         if (this.cropBox == null) {
-            this.cropBox = new CropBox(0,0,this.imageInfo.getWidth(), this.imageInfo.getHeight());
+            if (this.cropRatio > 0) {
+                //get preset if it exists
+                CropBox box = cropPresets.get(String.format("%.2f",cropRatio));
+                this.cropBox = box != null ? box : new CropBox(this.imageInfo,this.cropRatio);
+            } else {
+                this.cropBox = new CropBox(0,0,this.imageInfo.getWidth(), this.imageInfo.getHeight());
+            }
         }
 
         transformation.setCropBox(this.cropBox);
 
-        float imageRatio = (cropBox.getWidth() * 1.0f) / cropBox.getHeight();
+        double imageRatio = cropBox.getRatio();
 
         if (this.width <= 0 && this.height <= 0) {
           this.width = cropBox.getWidth();
@@ -102,5 +128,4 @@ public class TransformationBuilder {
 
         return transformation;
     }
-    
 }

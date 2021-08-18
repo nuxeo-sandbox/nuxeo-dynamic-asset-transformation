@@ -34,6 +34,9 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
 import javax.inject.Inject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.nuxeo.labs.asset.transformation.TestFeature.HEIGHT;
 import static org.nuxeo.labs.asset.transformation.TestFeature.WIDTH;
 
@@ -93,11 +96,30 @@ public class TestTransformation {
     }
 
     @Test
+    public void testWithCropRatio() {
+        ImageInfo imageInfo = TestFeature.getImageInfo();
+        Transformation transformation = new TransformationBuilder(imageInfo).cropRatio(1.0).build();
+        Assert.assertEquals(TestFeature.HEIGHT,transformation.getWidth());
+        Assert.assertEquals(TestFeature.HEIGHT,transformation.getHeight());
+    }
+
+    @Test
     public void testWithNoCrop() {
         ImageInfo imageInfo = TestFeature.getImageInfo();
         Transformation transformation = new TransformationBuilder(imageInfo).build();
         Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(WIDTH,transformation.getCropBox().getWidth());
         Assert.assertEquals(HEIGHT,transformation.getCropBox().getHeight());
+    }
+
+    @Test
+    public void testWithPreset() {
+        ImageInfo imageInfo = TestFeature.getImageInfo();
+        Map<String,CropBox> cropPresets = new HashMap<>();
+        cropPresets.put("2.00",new CropBox(0,0,200,100));
+        Transformation transformation = new TransformationBuilder(imageInfo, cropPresets).cropRatio(2.0).build();
+        Assert.assertNotNull(transformation.getCropBox());
+        Assert.assertEquals(200,transformation.getCropBox().getWidth());
+        Assert.assertEquals(100,transformation.getCropBox().getHeight());
     }
 }

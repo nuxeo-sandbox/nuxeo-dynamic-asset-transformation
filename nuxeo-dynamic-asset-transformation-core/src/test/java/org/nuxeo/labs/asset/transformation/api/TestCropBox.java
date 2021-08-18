@@ -21,6 +21,7 @@ package org.nuxeo.labs.asset.transformation.api;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 
 public class TestCropBox {
 
@@ -31,6 +32,66 @@ public class TestCropBox {
         Assert.assertEquals(200,box.getWidth());
         Assert.assertEquals(200,box.getHeight());
         Assert.assertEquals(10,box.getLeft());
+        Assert.assertEquals(0,box.getTop());
+    }
+
+    @Test
+    public void testWithOriginalRatio() {
+        ImageInfo info = new ImageInfo("300", "200", null, null);
+        CropBox box = new CropBox(info,1.5);
+        Assert.assertEquals(300,box.getWidth());
+        Assert.assertEquals(200,box.getHeight());
+        Assert.assertEquals(0,box.getLeft());
+        Assert.assertEquals(0,box.getTop());
+    }
+
+    @Test
+    public void testLandscapeWithSquareRatio() {
+        ImageInfo info = new ImageInfo("300", "200", null, null);
+        CropBox box = new CropBox(info,1.0);
+        Assert.assertEquals(200,box.getWidth());
+        Assert.assertEquals(200,box.getHeight());
+        Assert.assertEquals(50,box.getLeft());
+        Assert.assertEquals(0,box.getTop());
+    }
+
+    @Test
+    public void testPortraitWithSquareRatio() {
+        ImageInfo info = new ImageInfo("200", "300", null, null);
+        CropBox box = new CropBox(info,1.0);
+        Assert.assertEquals(200,box.getWidth());
+        Assert.assertEquals(200,box.getHeight());
+        Assert.assertEquals(0,box.getLeft());
+        Assert.assertEquals(50,box.getTop());
+    }
+
+    @Test
+    public void testLandscapeWithGreaterRatio() {
+        ImageInfo info = new ImageInfo("300", "200", null, null);
+        CropBox box = new CropBox(info,1.77777);
+        Assert.assertEquals(300,box.getWidth());
+        Assert.assertEquals(169,box.getHeight());
+        Assert.assertEquals(0,box.getLeft());
+        Assert.assertEquals(15,box.getTop());
+    }
+
+    @Test
+    public void testPortraitWithGreaterRatio() {
+        ImageInfo info = new ImageInfo("200", "300", null, null);
+        CropBox box = new CropBox(info,1.77777);
+        Assert.assertEquals(169,box.getWidth());
+        Assert.assertEquals(300,box.getHeight());
+        Assert.assertEquals(15,box.getLeft());
+        Assert.assertEquals(0,box.getTop());
+    }
+
+    @Test
+    public void testLandscapeToPortraitCrop() {
+        ImageInfo info = new ImageInfo("300", "200", null, null);
+        CropBox box = new CropBox(info,0.75);
+        Assert.assertEquals(150,box.getWidth());
+        Assert.assertEquals(200,box.getHeight());
+        Assert.assertEquals(75,box.getLeft());
         Assert.assertEquals(0,box.getTop());
     }
 

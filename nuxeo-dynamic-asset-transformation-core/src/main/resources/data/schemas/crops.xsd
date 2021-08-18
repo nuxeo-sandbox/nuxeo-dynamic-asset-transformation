@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/crops" targetNamespace="http://www.nuxeo.org/ecm/project/schemas/crops">
+  <xs:complexType name="crop">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="width" type="xs:integer"/>
+      <xs:element name="height" type="xs:integer"/>
+      <xs:element name="top" type="xs:integer"/>
+      <xs:element name="left" type="xs:integer"/>
+      <xs:element name="source" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cropList">
+    <xs:sequence>
+      <xs:element name="item" type="nxs:crop" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="crops" type="nxs:cropList"/>
+</xs:schema>
