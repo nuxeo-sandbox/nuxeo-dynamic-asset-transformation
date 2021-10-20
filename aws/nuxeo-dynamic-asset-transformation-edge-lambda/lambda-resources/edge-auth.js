@@ -35,8 +35,6 @@ exports.handler = (event, context, callback) => {
                 const location = url.parse(res.headers.location);
                 console.log('Nuxeo Location: '+ JSON.stringify(location));
                 request.uri = location.pathname;
-                let queryParams = new URLSearchParams(location.search);
-                request.querystring=`response-content-type=${queryParams.get('response-content-type')}&response-content-disposition=${queryParams.get('response-content-disposition')}`;
                 console.log('Modified request: '+JSON.stringify(request));
                 callback(null, request);
             }
