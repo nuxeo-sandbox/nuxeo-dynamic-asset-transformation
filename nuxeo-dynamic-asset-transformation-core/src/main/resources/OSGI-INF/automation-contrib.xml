@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.labs.asset.transformation.automation" version="1.0">
+
+    <extension point="operations" target="org.nuxeo.ecm.core.operation.OperationServiceComponent">
+        <operation class="org.nuxeo.labs.asset.transformation.automation.ImageTransformOp"/>
+        <operation class="org.nuxeo.labs.asset.transformation.automation.AddPictureViewOp"/>
+    </extension>
+
+</component>
