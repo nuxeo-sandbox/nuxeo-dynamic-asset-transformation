@@ -25,8 +25,6 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
 import org.nuxeo.ecm.core.api.blobholder.SimpleBlobHolder;
 import org.nuxeo.ecm.core.convert.api.ConversionService;
-import org.nuxeo.ecm.core.transientstore.api.TransientStore;
-import org.nuxeo.ecm.core.transientstore.api.TransientStoreService;
 import org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
 import org.nuxeo.runtime.api.Framework;
@@ -50,14 +48,6 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
 
         resultBlob.setMimeType(mimetype);
 
-        TransientStoreService transientStoreService = Framework.getService(TransientStoreService.class);
-
-        TransientStore store = transientStoreService.getStore("image-transformation");
-
-        String key = doc.getId() + transformation;
-        store.putBlobs(key, result.getBlobs());
-        store.setCompleted(key,true);
-
-        return store.getBlobs(key).get(0);
+        return resultBlob;
     }
 }

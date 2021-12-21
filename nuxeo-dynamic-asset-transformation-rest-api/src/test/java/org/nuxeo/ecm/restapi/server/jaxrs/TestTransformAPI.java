@@ -21,6 +21,7 @@ package org.nuxeo.ecm.restapi.server.jaxrs;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.automation.test.AutomationFeature;
@@ -32,6 +33,7 @@ import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.restapi.test.BaseTest;
 import org.nuxeo.ecm.restapi.test.RestServerFeature;
+import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
@@ -61,6 +63,12 @@ public class TestTransformAPI extends BaseTest {
 
     @Inject
     protected TransactionalFeature transactionalFeature;
+
+    @Before
+    public void setup() {
+        int port = this.servletContainerFeature.getPort();
+        Framework.getProperties().put("nuxeo.url", "http://localhost:" + port);
+    }
 
     @Test
     public void testCallAPI() {
