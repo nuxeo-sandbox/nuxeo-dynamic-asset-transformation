@@ -309,7 +309,7 @@
 
             },
 
-            observers:['_cropRatioChanged(cropData.ratio)', '_cropDimensionChanged(cropData.width, cropData.height)'],
+            observers:['_cropRatioChanged(cropData.ratio)', '_cropDimensionChanged(cropData.width, cropData.height)', '_resizeWidthChanged(width)','_resizeHeightChanged(height)'],
 
             _toggleDialog: function () {
                 this.$.dialog.toggle();
@@ -368,7 +368,15 @@
                     height: Math.round(allCropData.detail.height),
                     ratio: (allCropData.detail.width / allCropData.detail.height).toFixed(4)
                 };
-                this.cropData = cropData;
+
+                //update only if there is a change
+                if ( !this.cropData ||
+                    this.cropData.x !== cropData.x ||
+                    this.cropData.y !== cropData.y ||
+                    this.cropData.width !== cropData.width ||
+                    this.cropData.height !== cropData.height ) {
+                    this.cropData = cropData;
+                }
             },
 
             _getOriginalZoomRatio: function() {
@@ -417,6 +425,18 @@
 
             _isFreeCropRatio: function(cropFormat) {
                 return cropFormat === '0';
+            },
+
+            _resizeWidthChanged: function(width) {
+                if (this.cropData && Math.round(width / this.cropData.ratio) !== this.height) {
+                    this.height = Math.round(width / this.cropData.ratio);
+                }
+            },
+
+            _resizeHeightChanged: function(height) {
+                if (this.cropData && Math.round(height * this.cropData.ratio) !== this.width) {
+                    this.width = Math.round(height * this.cropData.ratio);
+                }
             },
 
             _computeUrl: function(document, height, width, format, cropData) {
