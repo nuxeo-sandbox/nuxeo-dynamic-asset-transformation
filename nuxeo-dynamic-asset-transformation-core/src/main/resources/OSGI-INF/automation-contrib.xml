@@ -6,4 +6,66 @@
         <operation class="org.nuxeo.labs.asset.transformation.automation.AddPictureViewOp"/>
     </extension>
 
+    <extension target="org.nuxeo.automation.scripting.internals.AutomationScriptingComponent" point="operation">
+        <scriptedOperation id="javascript.api_save_rendition">
+            <inputType>document</inputType>
+            <outputType>document</outputType>
+            <param type="string" name="format"/>
+            <param type="string" name="width"/>
+            <param type="string" name="height"/>
+            <param type="string" name="crop"/>
+            <param type="string" name="autoCropRatio"/>
+            <param type="string" name="renditionName"/>
+            <param type="string" name="derivativeName"/>
+            <param type="string" name="saveAsDerivative"/>
+            <category>javascript</category>
+            <description></description>
+            <script>
+                <![CDATA[
+                function run(input, params) {
+
+                  var blob = Blob.ImageTransform(input, {
+                    'format': params.format
+                  });
+
+                  if (params.saveAsDerivative) {
+
+                    var folder = Document.GetParent(input, {});
+
+                    var copy = Document.Copy(input, {
+                      target: folder.id,
+                      name: params.derivativeName,
+                      resetLifeCycle: true
+                    });
+
+                    copy = Document.Update(copy, {
+                      save: false,
+                      properties: {
+                        'dc:title': params.derivativeName,
+                        'uid:major_version': 0,
+                        'uid:minor_version': 0
+                      }
+                    });
+
+                    copy = Document.SetBlob(copy, {
+                      'file': blob,
+                      'save': true
+                    });
+
+                  } else {
+                    input = Picture.AddView(input, {
+                      'blob': blob,
+                      'viewTitle': 'My View',
+                      'viewDescription': params.renditionName,
+                      'save': true
+                    });
+                  }
+
+                  return input;
+                }
+                ]]>
+            </script>
+        </scriptedOperation>
+    </extension>
+
 </component>

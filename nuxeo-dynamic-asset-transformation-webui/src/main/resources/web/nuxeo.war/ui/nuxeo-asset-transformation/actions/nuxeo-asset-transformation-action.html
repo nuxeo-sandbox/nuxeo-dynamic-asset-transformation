@@ -84,7 +84,13 @@
                 margin-top:16px;
             }
 
+            .save {
+                margin-bottom:16px;
+            }
+
         </style>
+
+        <nuxeo-operation id="saveOp" op="javascript.api_save_rendition" input="[[document.uid]]"></nuxeo-operation>
 
         <nuxeo-operation id="createLinkOp" input="[[input]]" params="[[params]]" op="CreatePublicDownloadLink"></nuxeo-operation>
 
@@ -185,6 +191,36 @@
                                 </div>
                             </div>
                         </template>
+
+                        <h3>Save</h3>
+
+                        <div>
+                            <div>
+                                <nuxeo-input id="renditionName"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.rendition')]]"
+                                             value="{{renditionName}}"
+                                             type="text"
+                                             required>
+                                </nuxeo-input>
+                                <paper-button id="saveRendition" noink class="secondary save" on-tap="_saveRendition">
+                                    [[i18n('label.dialog.button.save.rendition')]]
+                                </paper-button>
+                            </div>
+
+                            <nuxeo-input id="derivativeName"
+                                         role="widget"
+                                         label="[[i18n('label.action.transform.derivative')]]"
+                                         value="{{derivativeName}}"
+                                         type="text"
+                                         required>
+                            </nuxeo-input>
+                            <div>
+                                <paper-button id="saveDerivative" noink class="secondary save" on-tap="_saveDerivative">
+                                    [[i18n('label.dialog.button.save.derivative')]]
+                                </paper-button>
+                            </div>
+                        </div>
 
                     </div>
                     <div class="flex">
@@ -299,6 +335,15 @@
                     computed: '_computeCdnUrl(document, height, width, format, cropData.*, hasPublicToken)'
                 },
 
+                renditionName: {
+                    type: String,
+                    value: 'Custom Rendition'
+                },
+
+                derivativeName: {
+                    type: String
+                },
+
                 cropRatio: {
                     type: Number
                 },
@@ -324,6 +369,9 @@
 
             _documentChanged: function(document) {
                 this.hasPublicToken = document && document.contextParameters && document.contextParameters.publicDownload && document.contextParameters.publicDownload['file:content'] !== undefined;
+                if (document) {
+                    this.derivativeName = 'derivative-'+document.title;
+                }
             },
 
             _getPreviewUrl: function(document) {
@@ -522,9 +570,61 @@
                     return;
                 }
                 inputElement.$.paperInput.inputElement.inputElement.select();
+            },
+
+            _saveRendition: function() {
+                if (!this.$.renditionName.validate()) return;
+
+                this.$.saveOp.params = {
+                    format : this.format,
+                    width: this.width,
+                    height: this.height,
+                    crop: `${this.cropData.width},${this.cropData.height},${this.cropData.x},${this.cropData.y}`,
+                    renditionName: this.renditionName
+                };
+
+                this.$.progress.disabled = false;
+                this.$.saveRendition.disabled = true;
+
+                this.$.saveOp.execute().then(response => {
+                    this.fire('notify', { message: this.i18n('label.action.save.rendition.success') });
+                }).catch(error => {
+                    this.fire('notify', { message: this.i18n('label.action.save.failure') });
+                }).finally(function(){
+                    this.$.progress.disabled = true;
+                    this.$.saveRendition.disabled = false;
+                }.bind(this));
+            },
+
+            _saveDerivative: function() {
+                if (!this.$.derivativeName.validate()) return;
+
+                this.$.saveOp.params = {
+                    format : this.format,
+                    width: this.width,
+                    height: this.height,
+                    crop: `${this.cropData.width},${this.cropData.height},${this.cropData.x},${this.cropData.y}`,
+                    derivativeName: this.derivativeName,
+                    saveAsDerivative: true
+                };
+
+                this.$.progress.disabled = false;
+                this.$.saveRendition.disabled = true;
+
+                this.$.saveOp.execute().then(response => {
+                    this.fire('notify', { message: this.i18n('label.action.save.rendition.success') });
+                }).catch(error => {
+                    this.fire('notify', { message: this.i18n('label.action.save.failure') });
+                }).finally(function(){
+                    this.$.progress.disabled = true;
+                    this.$.saveRendition.disabled = false;
+                }.bind(this));
+            },
+
+            _close: function() {
+                this.fire('document-updated',{});
             }
 
         });
     </script>
 </dom-module>
-
