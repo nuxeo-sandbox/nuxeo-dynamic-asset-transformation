@@ -42,6 +42,9 @@ public class AddPictureViewOp {
     @Param(name = "viewTitle", required = true)
     String title;
 
+    @Param(name = "viewDescription", required = true)
+    String description;
+
     @Param(name = "blob", required = true)
     Blob blob;
 
@@ -60,6 +63,7 @@ public class AddPictureViewOp {
         ImageInfo imageInfo = imagingService.getImageInfo(blob);
         PictureView pictureView = new PictureViewImpl();
         pictureView.setTitle(title);
+        pictureView.setDescription(description);
         pictureView.setBlob(blob);
         pictureView.setImageInfo(imageInfo);
         adapter.addView(pictureView);

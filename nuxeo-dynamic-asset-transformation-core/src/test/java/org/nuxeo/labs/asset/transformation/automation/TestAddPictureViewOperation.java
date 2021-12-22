@@ -71,6 +71,7 @@ public class TestAddPictureViewOperation {
         Map<String, Object> params = new HashMap<>();
         params.put("blob",blob);
         params.put("viewTitle","TheView");
+        params.put("viewDescription","TheView");
         ctx.setInput(doc);
         doc = (DocumentModel) automationService.run(ctx, AddPictureViewOp.ID, params);
         Assert.assertNotNull(doc);
