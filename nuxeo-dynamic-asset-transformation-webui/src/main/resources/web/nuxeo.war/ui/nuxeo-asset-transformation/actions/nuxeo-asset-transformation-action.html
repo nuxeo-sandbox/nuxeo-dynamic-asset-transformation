@@ -64,7 +64,7 @@
                 min-height:100%;
             }
 
-            #copy, #revoke, #download {
+            #copyCdnUrl, #copyUrl, #revoke, #download {
                 margin-top: 16px;
             }
 
@@ -189,6 +189,8 @@
                             <div class="layout horizontal">
                                 <nuxeo-input id="downloadLink" label="[[i18n('label.action.transform.download.url')]]" value="[[url]]" autofocus readonly>
                                 </nuxeo-input>
+                                <paper-icon-button id="copyUrl" icon="icons:content-copy" on-tap="_copyUrlPermalink"></paper-icon-button>
+                                <paper-tooltip for="copyUrl">[[i18n('label.action.transform.copy.url')]]</paper-tooltip>
                                 <a href="[[url]]">
                                     <paper-icon-button id="download" icon="nuxeo:download"></paper-icon-button>
                                     <paper-tooltip for="download">[[i18n('label.action.transform.download')]]</paper-tooltip>
@@ -207,8 +209,8 @@
                                 <div class="layout horizontal">
                                     <nuxeo-input id="cdnLink" label="[[i18n('label.action.transform.cdn.link')]]" value="[[cdnUrl]]" autofocus readonly>
                                     </nuxeo-input>
-                                    <paper-icon-button id="copy" icon="icons:content-copy" on-tap="_copyPermalink"></paper-icon-button>
-                                    <paper-tooltip for="copy">[[i18n('nuxeo.public.download.button.copy')]]</paper-tooltip>
+                                    <paper-icon-button id="copyCdnUrl" icon="icons:content-copy" on-tap="_copyCdnPermalink"></paper-icon-button>
+                                    <paper-tooltip for="copyCdnUrl">[[i18n('label.action.transform.copy.cdn.url')]]</paper-tooltip>
                                     <paper-icon-button id="revoke" icon="nuxeo:delete" on-tap="_deleteLink"></paper-icon-button>
                                     <paper-tooltip for="revoke">[[i18n('nuxeo.public.download.button.revoke')]]</paper-tooltip>
                                 </div>
@@ -315,12 +317,12 @@
 
                 url: {
                     type: String,
-                    computed: 'computeUrl(document, height, width, format, cropData.*)'
+                    computed: '_computeUrl(document, height, width, format, cropData.*)'
                 },
 
                 cdnUrl: {
                     type: String,
-                    computed: 'computeCdnUrl(document, height, width, format, cropData.*, hasPublicToken)'
+                    computed: '_computeCdnUrl(document, height, width, format, cropData.*, hasPublicToken)'
                 },
 
                 cropRatio: {
@@ -442,7 +444,7 @@
                 return cropFormat === '0';
             },
 
-            computeUrl: function(document, height, width, format, cropData) {
+            _computeUrl: function(document, height, width, format, cropData) {
                 if (!document) return;
                 var params = [];
                 if (width) params.push(`width=${width}`);
@@ -461,7 +463,7 @@
                 return hasPublicToken && window.Nuxeo.UI.config.transformCdn !== undefined;
             },
 
-            computeCdnUrl: function(document, height, width, format, cropData, token) {
+            _computeCdnUrl: function(document, height, width, format, cropData, token) {
                 if (!document) return;
                 var params = [];
                 if (width) params.push(`width=${width}`);
@@ -509,13 +511,18 @@
                 }.bind(this));
             },
 
-            _copyPermalink: function() {
-                this._selectPermalink();
+            _copyCdnPermalink: function() {
+                this._selectPermalink('#cdnLink');
                 window.document.execCommand('copy');
             },
 
-            _selectPermalink: function() {
-                let inputElement = this.shadowRoot.querySelector('#cdnLink');
+            _copyUrlPermalink: function() {
+                this._selectPermalink('#downloadLink');
+                window.document.execCommand('copy');
+            },
+
+            _selectPermalink: function(querySelector) {
+                let inputElement = this.shadowRoot.querySelector(querySelector);
                 if (!inputElement) {
                     return;
                 }

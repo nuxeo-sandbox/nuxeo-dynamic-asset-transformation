@@ -10,5 +10,7 @@
   "label.action.transform.download": "Download",
   "label.action.transform.download.url": "Download URL",
   "label.action.transform.activate.cdn": "Activate CDN",
-  "label.action.transform.cdn.link":"CDN URL"
+  "label.action.transform.cdn.link":"CDN URL",
+  "label.action.transform.copy.url": "Copy URL",
+  "label.action.transform.copy.cdn.url": "Copy CDN URL"
 }
