@@ -122,39 +122,7 @@
                                                  step="0.0001">
                                     </nuxeo-input>
                                 </template>
-                                <!--nuxeo-input name="top"
-                                             role="widget"
-                                             label="[[i18n('label.action.transform.top')]]"
-                                             value="{{cropData.y}}"
-                                             type="number"
-                                             min="1"
-                                             step="1">
-                                </nuxeo-input>
-                                <nuxeo-input name="left"
-                                             role="widget"
-                                             label="[[i18n('label.action.transform.left')]]"
-                                             value="{{cropData.x}}"
-                                             type="number"
-                                             min="1"
-                                             step="1">
-                                </nuxeo-input>
-                                <nuxeo-input name="width"
-                                             role="widget"
-                                             label="[[i18n('label.action.transform.width')]]"
-                                             value="{{cropData.width}}"
-                                             type="number"
-                                             min="1"
-                                             step="1">
-                                </nuxeo-input>
-                                <nuxeo-input name="height"
-                                             role="widget"
-                                             label="[[i18n('label.action.transform.height')]]"
-                                             value="{{cropData.height}}"
-                                             type="number"
-                                             min="1"
-                                             step="1">
-                                </nuxeo-input-->
-                                <h3>Output Format</h3>
+                                <h3>Resize</h3>
                                 <nuxeo-input name="width"
                                              role="widget"
                                              label="[[i18n('label.action.transform.width')]]"
@@ -172,6 +140,7 @@
                                              step="1">
                                 </nuxeo-input>
 
+                                <h3>Output Format</h3>
                                 <div role="widget">
                                     <label>[[i18n('label.action.transform.format')]]</label>
                                     <nuxeo-select role="widget"
@@ -183,7 +152,7 @@
                             </form>
                         </iron-form>
 
-                        <h3>URLs</h3>
+                        <h3>Download URLs</h3>
 
                         <div role="widget" class="links">
                             <div class="layout horizontal">
