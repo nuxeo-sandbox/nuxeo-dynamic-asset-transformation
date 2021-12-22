@@ -216,6 +216,11 @@
                     observer: '_documentChanged'
                 },
 
+                previewView: {
+                    type: String,
+                    value: 'OriginalJpeg'
+                },
+
                 showLabel: {
                     type: Boolean,
                     value: false,
@@ -325,7 +330,8 @@
                 if (!document || !document.properties || !document.properties['picture:views']){
                     return "";
                 } else {
-                    return document.properties['picture:views'][4].content.data;
+                    let view = document.properties['picture:views'].find(element => element.title === this.previewView);
+                    return view ? view.content.data : undefined;
                 }
             },
 
