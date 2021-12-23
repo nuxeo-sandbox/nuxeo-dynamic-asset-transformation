@@ -12,5 +12,9 @@
   "label.action.transform.activate.cdn": "Activate CDN",
   "label.action.transform.cdn.link":"CDN URL",
   "label.action.transform.copy.url": "Copy URL",
-  "label.action.transform.copy.cdn.url": "Copy CDN URL"
+  "label.action.transform.copy.cdn.url": "Copy CDN URL",
+  "label.action.transform.rendition": "Rendition Name",
+  "label.action.transform.derivative": "Derivative Name",
+  "label.dialog.button.save.rendition": "Save As Rendition",
+  "label.dialog.button.save.derivative": "Save As Derivative"
 }
