@@ -55,7 +55,7 @@
                   } else {
                     input = Picture.AddView(input, {
                       'blob': blob,
-                      'viewTitle': 'My View',
+                      'viewTitle': params.renditionName,
                       'viewDescription': params.renditionName,
                       'save': true
                     });
