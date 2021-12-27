@@ -586,8 +586,10 @@
                     renditionName: this.renditionName
                 };
 
+                let saveRendition = this.shadowRoot.querySelector('#saveRendition');
+
                 this.$.progress.disabled = false;
-                this.$.saveRendition.disabled = true;
+                saveRendition.disabled = true;
 
                 this.$.saveOp.execute().then(response => {
                     this.fire('notify', { message: this.i18n('label.action.save.rendition.success') });
@@ -595,7 +597,7 @@
                     this.fire('notify', { message: this.i18n('label.action.save.failure') });
                 }).finally(function(){
                     this.$.progress.disabled = true;
-                    this.$.saveRendition.disabled = false;
+                    saveRendition.disabled = false;
                 }.bind(this));
             },
 
@@ -612,8 +614,10 @@
                     saveAsDerivative: true
                 };
 
+                let saveDerivative = this.shadowRoot.querySelector('#saveDerivative');
+
                 this.$.progress.disabled = false;
-                this.$.saveRendition.disabled = true;
+                saveDerivative.disabled = true;
 
                 this.$.saveOp.execute().then(response => {
                     this.fire('notify', { message: this.i18n('label.action.save.derivative.success') });
@@ -621,7 +625,7 @@
                     this.fire('notify', { message: this.i18n('label.action.save.failure') });
                 }).finally(function(){
                     this.$.progress.disabled = true;
-                    this.$.saveRendition.disabled = false;
+                    saveDerivative.disabled = false;
                 }.bind(this));
             },
 
