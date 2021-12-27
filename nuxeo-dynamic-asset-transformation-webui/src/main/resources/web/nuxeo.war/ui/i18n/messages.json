@@ -16,5 +16,8 @@
   "label.action.transform.rendition": "Rendition Name",
   "label.action.transform.derivative": "Derivative Name",
   "label.dialog.button.save.rendition": "Save As Rendition",
-  "label.dialog.button.save.derivative": "Save As Derivative"
+  "label.dialog.button.save.derivative": "Save As Derivative",
+  "label.action.save.rendition.success": "Rendition successfully saved",
+  "label.action.save.derivative.success": "Derivative successfully created",
+  "label.action.save.failure": "Failed to save"
 }

@@ -575,7 +575,8 @@
             },
 
             _saveRendition: function() {
-                if (!this.$.renditionName.validate()) return;
+                let nameElement = this.shadowRoot.querySelector('#renditionName');
+                if (!nameElement.validate()) return;
 
                 this.$.saveOp.params = {
                     format : this.format,
@@ -599,7 +600,8 @@
             },
 
             _saveDerivative: function() {
-                if (!this.$.derivativeName.validate()) return;
+                let nameElement = this.shadowRoot.querySelector('#derivativeName');
+                if (!nameElement.validate()) return;
 
                 this.$.saveOp.params = {
                     format : this.format,
@@ -614,7 +616,7 @@
                 this.$.saveRendition.disabled = true;
 
                 this.$.saveOp.execute().then(response => {
-                    this.fire('notify', { message: this.i18n('label.action.save.rendition.success') });
+                    this.fire('notify', { message: this.i18n('label.action.save.derivative.success') });
                 }).catch(error => {
                     this.fire('notify', { message: this.i18n('label.action.save.failure') });
                 }).finally(function(){
