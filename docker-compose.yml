@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   nuxeo:
-    image: nuxeo-dynamic-asset-transformation:2021.3.0-SNAPSHOT
+    image: nuxeo-dynamic-asset-transformation:2021.4.0-SNAPSHOT
     ports:
       - "8080:8080"
       - "8787:8787"
