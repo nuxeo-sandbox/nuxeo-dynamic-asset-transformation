@@ -20,10 +20,13 @@ package org.nuxeo.labs.asset.transformation.pub.endpoint;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.core.transientstore.api.TransientStore;
+import org.nuxeo.ecm.core.transientstore.api.TransientStoreService;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
 import org.nuxeo.labs.asset.transformation.api.TransformationBuilder;
@@ -37,6 +40,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Endpoint to get a dynamic rendition of an asset using an authentication token
@@ -69,7 +73,13 @@ public class Transform {
             } else {
                 DynamicTransformationService service = Framework.getService(DynamicTransformationService.class);
                 Transformation transformation = new TransformationBuilder(document).width(width).height(height).cropBox(crop).cropRatio(autoCropRatio).format(format).build();
-                return service.transform(document, transformation);
+                Blob renditionBlob = service.transform(document, transformation);
+                TransientStoreService transientStoreService = Framework.getService(TransientStoreService.class);
+                TransientStore store = transientStoreService.getStore("image-transformation");
+                String key = document.getId() + transformation;
+                store.putBlobs(key,List.of(renditionBlob));
+                store.setCompleted(key,true);
+                return store.getBlobs(key).get(0);
             }
         });
     }
