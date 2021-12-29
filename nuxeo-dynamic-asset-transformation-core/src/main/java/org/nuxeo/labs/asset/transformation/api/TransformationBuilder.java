@@ -20,6 +20,7 @@
 package org.nuxeo.labs.asset.transformation.api;
 
 import org.apache.commons.lang3.StringUtils;
+import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 
@@ -40,6 +41,8 @@ public class TransformationBuilder {
     protected CropBox cropBox = null;
     protected double cropRatio = 0;
     protected Map<String,CropBox> cropPresets = new HashMap<>();
+    protected String textWatermark = null;
+    protected Blob imageWatermark = null;
     
     public TransformationBuilder(DocumentModel doc) {
         if (!doc.hasFacet(PICTURE_FACET)) {
@@ -92,6 +95,16 @@ public class TransformationBuilder {
         this.cropBox = crop != null ? new CropBox(crop) : null;
         return this;
     }
+
+    public TransformationBuilder textWatermark(String text) {
+        this.textWatermark = text;
+        return this;
+    }
+
+    public TransformationBuilder imageWatermark(Blob image) {
+        this.imageWatermark = image;
+        return this;
+    }
     
     public Transformation build() {
 
@@ -125,6 +138,9 @@ public class TransformationBuilder {
         transformation.setHeight(this.height);
 
         transformation.setFormat(StringUtils.isNotEmpty(this.format) ? this.format : DEFAULT_FORMAT);
+
+        transformation.setTextWatermark(this.textWatermark);
+        transformation.setImageWatermark(this.imageWatermark);
 
         return transformation;
     }

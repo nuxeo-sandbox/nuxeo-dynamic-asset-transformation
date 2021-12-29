@@ -19,9 +19,12 @@
 
 package org.nuxeo.labs.asset.transformation.api;
 
+import org.nuxeo.ecm.core.api.Blob;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class TransformationImpl implements Transformation {
 
@@ -30,6 +33,8 @@ public class TransformationImpl implements Transformation {
     protected String format;
     protected CropBox cropBox;
     protected double ratio;
+    protected String textWatermark;
+    protected Blob imageWatermark;
 
     @Override
     public long getWidth() {
@@ -73,22 +78,58 @@ public class TransformationImpl implements Transformation {
     }
 
     @Override
-    public void setCropRatio(double ratio) {
-        this.ratio = ratio;
-    }
-
-    @Override
     public double getCropRatio() {
         return ratio;
     }
 
     @Override
+    public void setCropRatio(double ratio) {
+        this.ratio = ratio;
+    }
+
+    @Override
+    public String getTextWatermark() {
+        return textWatermark;
+    }
+
+    @Override
+    public void setTextWatermark(String textWatermark) {
+        this.textWatermark = textWatermark;
+    }
+
+    @Override
+    public Blob getImageWatermark() {
+        return imageWatermark;
+    }
+
+    @Override
+    public void setImageWatermark(Blob imageWatermark) {
+        this.imageWatermark = imageWatermark;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TransformationImpl that = (TransformationImpl) o;
+        return width == that.width && height == that.height && Double.compare(that.ratio, ratio) == 0 &&
+                Objects.equals(format, that.format) && Objects.equals(cropBox, that.cropBox) &&
+                Objects.equals(textWatermark, that.textWatermark) && Objects.equals(imageWatermark, that.imageWatermark);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height, format, cropBox, ratio, textWatermark, imageWatermark);
+    }
+
+    @Override
     public Map<String, Serializable> toMap() {
         Map<String, Serializable> map = new HashMap<>();
-        map.put("width",""+width);
-        map.put("height",""+height);
-        map.put("format",format);
-        map.put("crop",cropBox.toString());
+        map.put("width", "" + width);
+        map.put("height", "" + height);
+        map.put("format", format);
+        map.put("crop", cropBox.toString());
+        map.put("textWatermark",textWatermark);
         return map;
     }
 

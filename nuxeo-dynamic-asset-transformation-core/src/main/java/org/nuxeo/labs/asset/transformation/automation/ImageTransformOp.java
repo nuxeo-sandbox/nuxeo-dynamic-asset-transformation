@@ -50,12 +50,23 @@ public class ImageTransformOp {
     @Param(name = "autoCropRatio", required = false)
     double autoCropRatio;
 
+    @Param(name = "textWatermark", required = false)
+    String textWatermark;
+
+
     @Context
     DynamicTransformationService transformationService;
 
     @OperationMethod
     public Blob run(DocumentModel document) {
-        Transformation transformation = new TransformationBuilder(document).width(width).height(height).cropBox(crop).cropRatio(autoCropRatio).format(format).build();
+        Transformation transformation = new TransformationBuilder(document)
+                .width(width)
+                .height(height)
+                .cropBox(crop)
+                .cropRatio(autoCropRatio)
+                .format(format)
+                .textWatermark(textWatermark)
+                .build();
         return transformationService.transform(document, transformation);
     }
 

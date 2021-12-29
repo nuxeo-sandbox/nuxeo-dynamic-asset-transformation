@@ -12,6 +12,20 @@
             <installationDirective>You need to install ImageMagick.</installationDirective>
         </command>
 
+        <command name="text2WatermarkImage" enabled="true">
+            <commandLine>convert</commandLine>
+            <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -size #{width}x#{height} xc:none -font DejaVu-Sans-Bold -pointsize #{pointSize} -gravity center -draw "fill rgba(0, 0, 0, 0.2)  text  1,1  '#{textWatermark}'  fill #{color} text  0,0  '#{textWatermark}'  fill rgba(255, 255, 255, 0.3)  text -1,-1 '#{textWatermark}'" -background none -rotate -10 -gravity center -extent  #{width}x#{height} png:#{targetFilePath}</parameterString>
+            <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -size #{width}x#{height} xc:none -font DejaVu-Sans-Bold -pointsize #{pointSize} -gravity center -draw " fill rgba(0, 0, 0, 0.2)  text  1,1  '#{textWatermark}'  fill #{color} text  0,0  '#{textWatermark}'  fill rgba(255, 255, 255, 0.3)  text -1,-1 '#{textWatermark}'" -background none -rotate -10 -gravity center -extent  #{width}x#{height} png:#{targetFilePath}</winParameterString>
+            <installationDirective>You need to install ImageMagick.</installationDirective>
+        </command>
+
+        <command name="composeWatermarkedImage" enabled="true">
+            <commandLine>composite</commandLine>
+            <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -tile #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</parameterString>
+            <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -tile #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</winParameterString>
+            <installationDirective>You need to install ImageMagick.</installationDirective>
+        </command>
+
     </extension>
 
 </component>

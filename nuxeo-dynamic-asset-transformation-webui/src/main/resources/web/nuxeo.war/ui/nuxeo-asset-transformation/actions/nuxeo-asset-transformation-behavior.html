@@ -1,0 +1,117 @@
+<script>
+    var Nuxeo = Nuxeo || {};
+    (function() {
+
+        /**
+         * @polymerBehavior Nuxeo.AssetTransformationBehaviorImpl
+         */
+        Nuxeo.AssetTransformationBehaviorImpl = {
+
+            properties: {
+
+                document: {
+                    type: Object
+                },
+
+                srcPictureViewName: {
+                    type: String,
+                    value: 'OriginalJpeg'
+                },
+
+                min: {
+                    type: Number,
+                    value: 64
+                },
+
+                width: {
+                    type: Number,
+                    observer: '_resizeWidthChanged'
+                },
+
+                height: {
+                    type: Number,
+                    observer: '_resizeHeightChanged'
+                },
+
+                targetRatio: {
+                    type: Number
+                },
+
+                //effective ratio after rounding of the dimensions
+                effectiveRatio: {
+                    type: Number
+                },
+
+                formatOptions: {
+                    type: Array,
+                    value: function() {
+                        return [
+                            {
+                                id: "jpg",
+                                label: "JPEG",
+                            },{
+                                id: "png",
+                                label: "PNG",
+                            },{
+                                id: "webp",
+                                label: "WEBP",
+                            }
+                        ];
+                    }
+                },
+
+                format: {
+                    type: String,
+                    value: "jpg"
+                }
+
+            },
+
+            observers: ['_srcChanged(document, srcPictureViewName)'],
+
+            _srcChanged: function(document, srcPictureViewName) {
+                if (!document || !this.hasFacet(document,'Picture') || !srcPictureViewName) {
+                    return;
+                }
+
+                let view = document.properties['picture:views'].find(view => view.title === srcPictureViewName);
+
+                if (!view) {
+                    return;
+                }
+
+                this.targetRatio = (view.width / view.height).toFixed(4);
+                this.width = view.width;
+
+            },
+
+            _resizeWidthChanged: function(width) {
+                if (width >= this.min && this.targetRatio && Math.round(width / this.effectiveRatio) != this.height) {
+                    let newHeight = Math.round(width / this.targetRatio);
+                    //effective ratio must be set before height
+                    this.effectiveRatio = width / newHeight;
+                    this.height = newHeight;
+
+                }
+            },
+
+            _resizeHeightChanged: function(height) {
+                if (height >= this.min && this.targetRatio && Math.round(height * this.effectiveRatio) != this.width) {
+                    let newWidth = Math.round(height * this.targetRatio);
+                    //effective ratio must be set before width
+                    this.effectiveRatio = newWidth / height;
+                    this.width = newWidth;
+
+                }
+            }
+
+        };
+
+        /** @polymerBehavior */
+        Nuxeo.AssetTransformationBehavior = [
+            Nuxeo.AssetTransformationBehaviorImpl, Nuxeo.FilterBehavior
+        ];
+
+    })();
+</script>
+

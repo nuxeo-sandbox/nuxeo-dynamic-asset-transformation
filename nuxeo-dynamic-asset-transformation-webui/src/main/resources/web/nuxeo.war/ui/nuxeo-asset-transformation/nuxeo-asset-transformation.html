@@ -15,15 +15,32 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<link rel="import" href="actions/nuxeo-asset-transformation-action.html">
+<link rel="import" href="actions/nuxeo-asset-transformation-crop-action.html">
+<link rel="import" href="actions/nuxeo-asset-transformation-download-as.html">
+
 <!-- Contribution of element 'nuxeo-asset-transformation-action' for slot 'DOCUMENT_ACTIONS' -->
 
 <nuxeo-slot-content name="assetTranform" slot="DOCUMENT_ACTIONS" order="1">
     <template>
         <nuxeo-filter document="[[document]]" facet="Picture">
             <template>
-                <nuxeo-asset-transformation-action document="[[document]]" icon="image:crop">
-                </nuxeo-asset-transformation-action>
+                <nuxeo-asset-transformation-crop-action document="[[document]]" icon="image:crop">
+                </nuxeo-asset-transformation-crop-action>
+            </template>
+        </nuxeo-filter>
+    </template>
+</nuxeo-slot-content>
+
+
+<!-- Contribution of element 'nuxeo-asset-transformation-download-as' for slot 'BLOB_ACTIONS' -->
+<nuxeo-slot-content name="DownloadPictureAs" slot="BLOB_ACTIONS">
+    <template>
+        <nuxeo-filter document="[[document]]" facet="Picture">
+            <template>
+                <template is="dom-if" if="[[xpath === 'file:content']]">
+                    <nuxeo-asset-transformation-download-as document="[[document]]" icon="icons:save">
+                    </nuxeo-asset-transformation-download-as>
+                </template>
             </template>
         </nuxeo-filter>
     </template>

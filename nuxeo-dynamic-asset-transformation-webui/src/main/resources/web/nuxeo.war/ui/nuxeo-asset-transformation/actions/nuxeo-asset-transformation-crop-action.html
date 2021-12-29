@@ -1,14 +1,16 @@
+<link rel="import" href="nuxeo-asset-transformation-behavior.html">
+
 <!--
-  `nuxeo-asset-transformation-action`
+  `nuxeo-asset-transformation-crop-action`
   @group Nuxeo UI
-  @element nuxeo-asset-transformation-action
+  @element nuxeo-asset-transformation-crop-action
   -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.js"
         integrity="sha512-ZK6m9vADamSl5fxBPtXw6ho6A4TuX89HUbcfvxa2v2NYNT/7l8yFGJ3JlXyMN4hlNbz0il4k6DvqbIW5CCwqkw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<dom-module id="nuxeo-asset-transformation-action">
+<dom-module id="nuxeo-asset-transformation-crop-action">
     <template>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.css"
@@ -98,7 +100,7 @@
 
         <div class="action" on-tap="_toggleDialog">
             <paper-icon-button id="bt" icon="[[icon]]"></paper-icon-button>
-            <span class="label" hidden$="[[!showLabel]]">[[i18n('label.action.transform')]]</span>
+            <span class="label" hidden$="[[!showLabel]]">[[i18n(label)]]</span>
         </div>
         <paper-tooltip for="bt">[[i18n('label.action.transform')]]</paper-tooltip>
 
@@ -246,52 +248,26 @@
 
     <script>
         Polymer({
-            is: 'nuxeo-asset-transformation-action',
-            behaviors: [Nuxeo.I18nBehavior,Nuxeo.FiltersBehavior,Nuxeo.RoutingBehavior,Polymer.IronResizableBehavior],
+            is: 'nuxeo-asset-transformation-crop-action',
+            behaviors: [Nuxeo.AssetTransformationBehavior, Nuxeo.I18nBehavior,Nuxeo.FiltersBehavior,Nuxeo.RoutingBehavior,Polymer.IronResizableBehavior],
             properties: {
-                document: {
-                    type: Object,
-                    observer: '_documentChanged'
-                },
-
-                previewView: {
-                    type: String,
-                    value: 'OriginalJpeg'
-                },
-
                 showLabel: {
                     type: Boolean,
                     value: false,
+                },
+
+                /**
+                 * Label to display in the action button.
+                 */
+                label: {
+                    type: String,
+                    value: 'label.action.transform'
                 },
 
                 icon: {
                     type: String,
                     value: 'icons:check-box'
                 },
-
-                formatOptions: {
-                    type: Array,
-                    value: function() {
-                        return [
-                            {
-                                id: "jpg",
-                                label: "JPEG",
-                            },{
-                                id: "png",
-                                label: "PNG",
-                            },{
-                                id: "webp",
-                                label: "WEBP",
-                            }
-                        ];
-                    }
-                },
-
-                format: {
-                    type: String,
-                    value: "jpg"
-                },
-
 
                 cropFormatOptions: {
                     type: Array,
@@ -356,7 +332,7 @@
 
             },
 
-            observers:['_cropRatioChanged(cropData.ratio)', '_cropDimensionChanged(cropData.width, cropData.height)', '_resizeWidthChanged(width)','_resizeHeightChanged(height)'],
+            observers:['_documentChanged(document)', '_cropRatioChanged(cropData.ratio)', '_cropDimensionChanged(cropData.width, cropData.height)'],
 
             _toggleDialog: function () {
                 this.$.dialog.toggle();
@@ -380,7 +356,7 @@
                 if (!document || !document.properties || !document.properties['picture:views']){
                     return "";
                 } else {
-                    let view = document.properties['picture:views'].find(element => element.title === this.previewView);
+                    let view = document.properties['picture:views'].find(element => element.title === this.srcPictureViewName);
                     return view ? view.content.data : undefined;
                 }
             },
@@ -445,6 +421,7 @@
                 if (this._cropper && Math.abs(cropRatio  - cropBoxRatio) > 0.0001) {
                     this._cropper.setAspectRatio(cropRatio);
                 }
+                this.targetRatio = cropRatio;
             },
 
             _cropDimensionChanged: function(width, height) {
@@ -475,18 +452,6 @@
 
             _isFreeCropRatio: function(cropFormat) {
                 return cropFormat === '0';
-            },
-
-            _resizeWidthChanged: function(width) {
-                if (this.cropData && Math.round(width / this.cropData.ratio) !== this.height) {
-                    this.height = Math.round(width / this.cropData.ratio);
-                }
-            },
-
-            _resizeHeightChanged: function(height) {
-                if (this.cropData && Math.round(height * this.cropData.ratio) !== this.width) {
-                    this.width = Math.round(height * this.cropData.ratio);
-                }
             },
 
             _computeUrl: function(document, height, width, format, cropData) {

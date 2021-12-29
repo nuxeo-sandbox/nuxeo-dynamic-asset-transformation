@@ -43,7 +43,8 @@ public class TransformObject extends DefaultObject {
             @QueryParam("height") long height,
             @QueryParam("format") String format,
             @QueryParam("crop") String crop,
-            @QueryParam("autoCropRatio") double autoCropRatio
+            @QueryParam("autoCropRatio") double autoCropRatio,
+            @QueryParam("textWatermark") String textWatermark
     ) {
 
         boolean acceptJson = false;
@@ -56,7 +57,14 @@ public class TransformObject extends DefaultObject {
         DocumentModel document = session.getDocument(new IdRef(documentId));
 
         DynamicTransformationService service = Framework.getService(DynamicTransformationService.class);
-        Transformation transformation = new TransformationBuilder(document).width(width).height(height).cropBox(crop).cropRatio(autoCropRatio).format(format).build();
+        Transformation transformation = new TransformationBuilder(document)
+                .width(width)
+                .height(height)
+                .cropBox(crop)
+                .cropRatio(autoCropRatio)
+                .format(format)
+                .textWatermark(textWatermark)
+                .build();
 
         Blob result = service.transform(document, transformation);
 

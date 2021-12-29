@@ -119,4 +119,49 @@ public class TestDynamicTransformationService {
         Assert.assertEquals(100,resultInfo.getHeight());
     }
 
+    @Test
+    public void testWatermarkText() {
+        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
+        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
+        blob.setMimeType("image/jpeg");
+        doc.setPropertyValue("file:content", (Serializable) blob);
+        doc = session.saveDocument(doc);
+
+        CropBox box = new CropBox(0,100,100,200);
+        Transformation transformation = new TransformationBuilder(doc).cropBox(box).height(100).textWatermark("Hello Nuxeo").build();
+
+        Blob result = transformationService.transform(doc,transformation);
+        Assert.assertEquals("image/jpeg",result.getMimeType());
+
+        Assert.assertNotNull(result);
+
+        ImageInfo resultInfo = imagingService.getImageInfo(result);
+        Assert.assertEquals(50,resultInfo.getWidth());
+        Assert.assertEquals(100,resultInfo.getHeight());
+    }
+
+    @Test
+    public void testWatermarkBlob() {
+        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
+        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
+        blob.setMimeType("image/jpeg");
+        doc.setPropertyValue("file:content", (Serializable) blob);
+        doc = session.saveDocument(doc);
+
+        Blob watermarkBlob = new FileBlob(new File(getClass().getResource("/files/text.png").getPath()));
+        watermarkBlob.setMimeType("image/png");
+
+        CropBox box = new CropBox(0,100,100,200);
+        Transformation transformation = new TransformationBuilder(doc).cropBox(box).height(100).imageWatermark(watermarkBlob).build();
+
+        Blob result = transformationService.transform(doc,transformation);
+        Assert.assertEquals("image/jpeg",result.getMimeType());
+
+        Assert.assertNotNull(result);
+
+        ImageInfo resultInfo = imagingService.getImageInfo(result);
+        Assert.assertEquals(50,resultInfo.getWidth());
+        Assert.assertEquals(100,resultInfo.getHeight());
+    }
+
 }

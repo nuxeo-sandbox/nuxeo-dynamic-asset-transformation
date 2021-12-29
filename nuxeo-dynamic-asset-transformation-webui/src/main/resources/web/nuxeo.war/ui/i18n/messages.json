@@ -6,6 +6,7 @@
   "label.action.transform.ratio":"Aspect Ratio",
   "label.action.transform.top":"Top offset",
   "label.action.transform.left":"Left Offset",
+  "label.action.transform.watermark":"Watermark Text",
   "label.dialog.button.close":"Close",
   "label.action.transform.download": "Download",
   "label.action.transform.download.url": "Download URL",
@@ -19,5 +20,6 @@
   "label.dialog.button.save.derivative": "Save As Derivative",
   "label.action.save.rendition.success": "Rendition successfully saved",
   "label.action.save.derivative.success": "Derivative successfully created",
-  "label.action.save.failure": "Failed to save"
+  "label.action.save.failure": "Failed to save",
+  "label.action.transform.download.as": "Download As"
 }

@@ -19,6 +19,8 @@
 
 package org.nuxeo.labs.asset.transformation.api;
 
+import org.nuxeo.ecm.core.api.Blob;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -27,67 +29,76 @@ public interface Transformation {
     String DEFAULT_FORMAT = "jpg";
 
     /**
-     *
      * @return the target width of the transformation
      */
     long getWidth();
 
     /**
-     *
      * @param width the target width of the transformation
      */
     void setWidth(long width);
 
     /**
-     *
      * @return the target height of the transformation
      */
     long getHeight();
 
     /**
-     *
      * @param height the target height of the transformation
      */
     void setHeight(long height);
 
     /**
-     *
      * @return the target file format of the transformation
      */
     String getFormat();
 
     /**
-     *
      * @param format the target format of the transformation
      */
     void setFormat(String format);
 
     /**
-     *
      * @return the crop box coordinates of the transformation.
      */
     CropBox getCropBox();
 
     /**
-     *
      * @param box the crop box of the transformation
      */
     void setCropBox(CropBox box);
 
     /**
-     *
      * @param ratio the target image size ratio
      */
     void setCropRatio(double ratio);
 
     /**
-     *
      * @return the target image size ratio
      */
     double getCropRatio();
 
     /**
-     *
+     * @param text watermark to add
+     */
+    void setTextWatermark(String text);
+
+    /**
+     * @return the text watermark
+     */
+    String getTextWatermark();
+
+    /**
+     * @param image the watermark image to add
+     */
+    void setImageWatermark(Blob image);
+
+    /**
+     * @return the image watermark
+     */
+    Blob getImageWatermark();
+
+    /**
      * @return a map of the transformation parameters
      */
     Map<String, Serializable> toMap();

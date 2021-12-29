@@ -12,4 +12,25 @@
         </converter>
     </extension>
 
+    <extension point="converter" target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl">
+        <converter class="org.nuxeo.labs.asset.transformation.converter.Text2WatermarkImageConverter" name="text2WatermarkImage">
+            <sourceMimeType>text/plain</sourceMimeType>
+            <destinationMimeType>image/png</destinationMimeType>
+            <parameters>
+                <parameter name="CommandLineName">text2WatermarkImage</parameter>
+            </parameters>
+        </converter>
+    </extension>
+
+    <extension point="converter" target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl">
+        <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="composeWatermarkedImage">
+            <sourceMimeType>image/*</sourceMimeType>
+            <sourceMimeType>application/photoshop</sourceMimeType>
+            <sourceMimeType>application/illustrator</sourceMimeType>
+            <parameters>
+                <parameter name="CommandLineName">composeWatermarkedImage</parameter>
+            </parameters>
+        </converter>
+    </extension>
+
 </component>
