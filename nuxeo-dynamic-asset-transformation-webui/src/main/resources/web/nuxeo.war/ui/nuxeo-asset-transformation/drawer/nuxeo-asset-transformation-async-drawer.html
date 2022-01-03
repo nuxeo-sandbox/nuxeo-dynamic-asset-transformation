@@ -1,0 +1,74 @@
+<link rel="import" href="nuxeo-asset-transformation-async-job.html">
+
+
+<dom-module id="nuxeo-asset-transformation-async-drawer">
+    <template>
+        <style include="nuxeo-styles">
+            :host {
+                display: block;
+                height: 100%;
+            }
+
+            .list-item {
+                height:92px;
+                border-bottom: 1px solid var(--nuxeo-border);
+                padding-left: 16px;
+            }
+
+            .empty {
+                opacity: 0.5;
+                display: block;
+                font-weight: 300;
+                padding: 1.5em 0.7em;
+                text-align: center;
+                font-size: 1.1rem;
+            }
+        </style>
+
+        <iron-localstorage id="storage" name="ondemand" value="{{jobs}}"></iron-localstorage>
+
+        <div class="header">
+            <h5>Jobs</h5>
+        </div>
+
+        <template is="dom-if" if="[[_noJobs(jobs)]]">
+            <div class="empty">[[i18n('label.drawer.async.no.job')]]</div>
+        </template>
+
+        <template is="dom-repeat" items="[[jobs]]">
+            <nuxeo-asset-transformation-async-job class="list-item" url="[[item.url]]" doc-id="[[item.uid]]" params="[[item.params]]"></nuxeo-asset-transformation-async-job>
+        </template>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'nuxeo-asset-transformation-async-drawer',
+            behaviors: [Nuxeo.RoutingBehavior, Nuxeo.I18nBehavior],
+            properties: {},
+
+            listeners: {
+                'remove-async-job': '_removeAsyncJob',
+            },
+
+            ready:function() {
+                setInterval(() => {
+                    this.$.storage.reload();
+                },1000)
+            },
+
+            _removeAsyncJob:function(e) {
+                var key = e.detail;
+                var position = this.jobs.findIndex(item => item.url === key);
+                if (position>=0) {
+                    this.splice('jobs',position,1);
+                }
+            },
+
+            _noJobs: function(jobs) {
+                return !jobs || jobs.length === 0;
+            }
+
+        });
+    </script>
+</dom-module>

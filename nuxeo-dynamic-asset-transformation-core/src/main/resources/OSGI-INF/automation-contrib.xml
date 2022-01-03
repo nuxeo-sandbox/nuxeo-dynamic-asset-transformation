@@ -3,6 +3,7 @@
 
     <extension point="operations" target="org.nuxeo.ecm.core.operation.OperationServiceComponent">
         <operation class="org.nuxeo.labs.asset.transformation.automation.ImageTransformOp"/>
+        <operation class="org.nuxeo.labs.asset.transformation.automation.VideoTransformOp"/>
         <operation class="org.nuxeo.labs.asset.transformation.automation.AddPictureViewOp"/>
     </extension>
 

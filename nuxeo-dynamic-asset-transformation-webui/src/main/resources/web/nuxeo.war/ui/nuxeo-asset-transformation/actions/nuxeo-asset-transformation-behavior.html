@@ -33,6 +33,12 @@
                     observer: '_resizeHeightChanged'
                 },
 
+                // width and height must be a multiple of step
+                step: {
+                    type: Number,
+                    value: 1
+                },
+
                 targetRatio: {
                     type: Number
                 },
@@ -87,7 +93,7 @@
 
             _resizeWidthChanged: function(width) {
                 if (width >= this.min && this.targetRatio && Math.round(width / this.effectiveRatio) != this.height) {
-                    let newHeight = Math.round(width / this.targetRatio);
+                    let newHeight = this.step * Math.round(width / (this.targetRatio * this.step));
                     //effective ratio must be set before height
                     this.effectiveRatio = width / newHeight;
                     this.height = newHeight;
@@ -97,7 +103,7 @@
 
             _resizeHeightChanged: function(height) {
                 if (height >= this.min && this.targetRatio && Math.round(height * this.effectiveRatio) != this.width) {
-                    let newWidth = Math.round(height * this.targetRatio);
+                    let newWidth = this.step * Math.round(height * (this.targetRatio / this.step));
                     //effective ratio must be set before width
                     this.effectiveRatio = newWidth / height;
                     this.width = newWidth;
@@ -114,4 +120,3 @@
 
     })();
 </script>
-

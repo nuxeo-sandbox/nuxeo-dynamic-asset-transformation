@@ -1,11 +1,11 @@
 <link rel="import" href="nuxeo-asset-transformation-behavior.html">
 
 <!--
-`nuxeo-asset-transformation-download-as`
+`nuxeo-asset-transformation-image-download-as`
 @group Nuxeo UI
-@element nuxeo-asset-transformation-download-as
+@element nuxeo-asset-transformation-image-download-as
 -->
-<dom-module id="nuxeo-asset-transformation-download-as">
+<dom-module id="nuxeo-asset-transformation-image-download-as">
     <template>
         <style include="nuxeo-styles nuxeo-action-button-styles">
             .content {
@@ -104,7 +104,7 @@
 
     <script>
         Polymer({
-            is: 'nuxeo-asset-transformation-download-as',
+            is: 'nuxeo-asset-transformation-image-download-as',
             behaviors: [Nuxeo.LayoutBehavior, Nuxeo.AssetTransformationBehavior],
             properties: {
 
@@ -133,7 +133,7 @@
                  */
                 icon: {
                     type: String,
-                    value: 'iconset_name:icon_name'
+                    value: 'icons:save'
                 },
 
                 textWatermark: {
@@ -160,8 +160,10 @@
             /**
              * Useful callback to execute some action after the dialog is closed. Can be removed if it's not necessary.
              */
-            _dialogClosed: function() {
-                this.$.form.reset();
+            _dialogClosed: function(e) {
+                if (e.srcElement.id === "dialog") {
+                    this.$.form.reset();
+                }
             },
 
             _ok: function() {

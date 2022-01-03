@@ -11,7 +11,7 @@ import org.nuxeo.ecm.core.io.download.DownloadService;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.ecm.webengine.model.impl.DefaultObject;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
-import org.nuxeo.labs.asset.transformation.api.TransformationBuilder;
+import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuilder;
 import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
 import org.nuxeo.runtime.api.Framework;
 
@@ -57,7 +57,7 @@ public class TransformObject extends DefaultObject {
         DocumentModel document = session.getDocument(new IdRef(documentId));
 
         DynamicTransformationService service = Framework.getService(DynamicTransformationService.class);
-        Transformation transformation = new TransformationBuilder(document)
+        Transformation transformation = new ImageTransformationBuilder(document)
                 .width(width)
                 .height(height)
                 .cropBox(crop)

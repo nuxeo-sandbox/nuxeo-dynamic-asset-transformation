@@ -20,6 +20,7 @@
 package org.nuxeo.labs.asset.transformation.api;
 
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
+import org.nuxeo.ecm.platform.video.VideoInfo;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -64,7 +65,15 @@ public class CropBox {
     }
 
     public CropBox(ImageInfo imageInfo, double cropRatio) {
-        this(0, 0, imageInfo.getWidth(), imageInfo.getHeight());
+        this(imageInfo.getWidth(), imageInfo.getHeight(), cropRatio);
+    }
+
+    public CropBox(VideoInfo videoInfo, double cropRatio) {
+        this(videoInfo.getWidth(), videoInfo.getHeight(),cropRatio);
+    }
+
+    public CropBox(long width, long height, double cropRatio) {
+        this(0, 0, width, height);
         double originalRatio = getRatio();
 
         if (originalRatio == cropRatio) {

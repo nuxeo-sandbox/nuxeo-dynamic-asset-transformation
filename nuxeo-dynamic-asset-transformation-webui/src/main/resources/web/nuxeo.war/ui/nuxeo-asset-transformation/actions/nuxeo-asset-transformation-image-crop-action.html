@@ -1,16 +1,16 @@
 <link rel="import" href="nuxeo-asset-transformation-behavior.html">
 
 <!--
-  `nuxeo-asset-transformation-crop-action`
+  `nuxeo-asset-transformation-image-crop-action`
   @group Nuxeo UI
-  @element nuxeo-asset-transformation-crop-action
+  @element nuxeo-asset-transformation-image-crop-action
   -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.js"
         integrity="sha512-ZK6m9vADamSl5fxBPtXw6ho6A4TuX89HUbcfvxa2v2NYNT/7l8yFGJ3JlXyMN4hlNbz0il4k6DvqbIW5CCwqkw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<dom-module id="nuxeo-asset-transformation-crop-action">
+<dom-module id="nuxeo-asset-transformation-image-crop-action">
     <template>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.css"
@@ -248,7 +248,7 @@
 
     <script>
         Polymer({
-            is: 'nuxeo-asset-transformation-crop-action',
+            is: 'nuxeo-asset-transformation-image-crop-action',
             behaviors: [Nuxeo.AssetTransformationBehavior, Nuxeo.I18nBehavior,Nuxeo.FiltersBehavior,Nuxeo.RoutingBehavior,Polymer.IronResizableBehavior],
             properties: {
                 showLabel: {

@@ -34,7 +34,7 @@ import org.nuxeo.ecm.platform.picture.api.ImagingService;
 import org.nuxeo.labs.asset.transformation.TestFeature;
 import org.nuxeo.labs.asset.transformation.api.CropBox;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
-import org.nuxeo.labs.asset.transformation.api.TransformationBuilder;
+import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuilder;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
@@ -64,7 +64,7 @@ public class TestDynamicTransformationService {
         doc.setPropertyValue("file:content", (Serializable) blob);
         doc = session.saveDocument(doc);
 
-        Transformation transformation = new TransformationBuilder(doc).format("png").height(100).build();
+        Transformation transformation = new ImageTransformationBuilder(doc).format("png").height(100).build();
 
         Blob result = transformationService.transform(doc,transformation);
 
@@ -86,7 +86,7 @@ public class TestDynamicTransformationService {
         doc = session.saveDocument(doc);
 
         CropBox box = new CropBox(0,100,100,200);
-        Transformation transformation = new TransformationBuilder(doc).cropBox(box).build();
+        Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).build();
 
         Blob result = transformationService.transform(doc,transformation);
 
@@ -107,7 +107,7 @@ public class TestDynamicTransformationService {
         doc = session.saveDocument(doc);
 
         CropBox box = new CropBox(0,100,100,200);
-        Transformation transformation = new TransformationBuilder(doc).cropBox(box).height(100).build();
+        Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).height(100).build();
 
         Blob result = transformationService.transform(doc,transformation);
         Assert.assertEquals("image/jpeg",result.getMimeType());
@@ -128,7 +128,7 @@ public class TestDynamicTransformationService {
         doc = session.saveDocument(doc);
 
         CropBox box = new CropBox(0,100,100,200);
-        Transformation transformation = new TransformationBuilder(doc).cropBox(box).height(100).textWatermark("Hello Nuxeo").build();
+        Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).height(100).textWatermark("Hello Nuxeo").build();
 
         Blob result = transformationService.transform(doc,transformation);
         Assert.assertEquals("image/jpeg",result.getMimeType());
@@ -152,7 +152,7 @@ public class TestDynamicTransformationService {
         watermarkBlob.setMimeType("image/png");
 
         CropBox box = new CropBox(0,100,100,200);
-        Transformation transformation = new TransformationBuilder(doc).cropBox(box).height(100).imageWatermark(watermarkBlob).build();
+        Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).height(100).imageWatermark(watermarkBlob).build();
 
         Blob result = transformationService.transform(doc,transformation);
         Assert.assertEquals("image/jpeg",result.getMimeType());

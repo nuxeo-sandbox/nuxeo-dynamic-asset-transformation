@@ -17,16 +17,18 @@
  *     Michael Vachette
  */
 
-package org.nuxeo.labs.asset.transformation.api;
+package org.nuxeo.labs.asset.transformation.impl;
 
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.labs.asset.transformation.api.CropBox;
+import org.nuxeo.labs.asset.transformation.api.Transformation;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class TransformationImpl implements Transformation {
+public class ImageTransformationImpl implements Transformation {
 
     protected long width;
     protected long height;
@@ -111,7 +113,7 @@ public class TransformationImpl implements Transformation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TransformationImpl that = (TransformationImpl) o;
+        ImageTransformationImpl that = (ImageTransformationImpl) o;
         return width == that.width && height == that.height && Double.compare(that.ratio, ratio) == 0 &&
                 Objects.equals(format, that.format) && Objects.equals(cropBox, that.cropBox) &&
                 Objects.equals(textWatermark, that.textWatermark) && Objects.equals(imageWatermark, that.imageWatermark);

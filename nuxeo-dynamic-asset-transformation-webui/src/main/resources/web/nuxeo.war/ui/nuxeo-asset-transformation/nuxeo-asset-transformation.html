@@ -15,8 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<link rel="import" href="actions/nuxeo-asset-transformation-crop-action.html">
-<link rel="import" href="actions/nuxeo-asset-transformation-download-as.html">
+<link rel="import" href="actions/nuxeo-asset-transformation-image-crop-action.html">
+<link rel="import" href="actions/nuxeo-asset-transformation-image-download-as.html">
+<link rel="import" href="actions/nuxeo-asset-transformation-video-download-as.html">
+<link rel="import" href="drawer/nuxeo-asset-transformation-async-drawer.html">
 
 <!-- Contribution of element 'nuxeo-asset-transformation-action' for slot 'DOCUMENT_ACTIONS' -->
 
@@ -24,25 +26,51 @@ limitations under the License.
     <template>
         <nuxeo-filter document="[[document]]" facet="Picture">
             <template>
-                <nuxeo-asset-transformation-crop-action document="[[document]]" icon="image:crop">
-                </nuxeo-asset-transformation-crop-action>
+                <nuxeo-asset-transformation-image-crop-action document="[[document]]" icon="image:crop">
+                </nuxeo-asset-transformation-image-crop-action>
             </template>
         </nuxeo-filter>
     </template>
 </nuxeo-slot-content>
 
 
-<!-- Contribution of element 'nuxeo-asset-transformation-download-as' for slot 'BLOB_ACTIONS' -->
+<!-- Contribution of element 'nuxeo-asset-transformation-image-download-as' for slot 'BLOB_ACTIONS' -->
 <nuxeo-slot-content name="DownloadPictureAs" slot="BLOB_ACTIONS">
     <template>
         <nuxeo-filter document="[[document]]" facet="Picture">
             <template>
                 <template is="dom-if" if="[[xpath === 'file:content']]">
-                    <nuxeo-asset-transformation-download-as document="[[document]]" icon="icons:save">
-                    </nuxeo-asset-transformation-download-as>
+                    <nuxeo-asset-transformation-image-download-as document="[[document]]">
+                    </nuxeo-asset-transformation-image-download-as>
                 </template>
             </template>
         </nuxeo-filter>
+    </template>
+</nuxeo-slot-content>
+
+<!-- Contribution of element 'nuxeo-asset-transformation-download-as' for slot 'BLOB_ACTIONS' -->
+<nuxeo-slot-content name="DownloadVideoAs" slot="BLOB_ACTIONS">
+    <template>
+        <nuxeo-filter document="[[document]]" facet="Video">
+            <template>
+                <template is="dom-if" if="[[xpath === 'file:content']]">
+                    <nuxeo-asset-transformation-video-download-as document="[[document]]" min="160" step="2">
+                    </nuxeo-asset-transformation-video-download-as>
+                </template>
+            </template>
+        </nuxeo-filter>
+    </template>
+</nuxeo-slot-content>
+
+<nuxeo-slot-content name="jobs" slot="DRAWER_ITEMS" order="95">
+    <template>
+        <nuxeo-menu-icon label="My Jobs" name="jobs" icon="icons:schedule"></nuxeo-menu-icon>
+    </template>
+</nuxeo-slot-content>
+
+<nuxeo-slot-content name="jobs" slot="DRAWER_PAGES">
+    <template>
+        <nuxeo-asset-transformation-async-drawer name="jobs" label="My Jobs"></nuxeo-asset-transformation-async-drawer>
     </template>
 </nuxeo-slot-content>
 

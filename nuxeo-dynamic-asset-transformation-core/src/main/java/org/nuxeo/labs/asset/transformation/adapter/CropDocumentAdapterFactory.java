@@ -17,7 +17,7 @@
  *     Michael Vachette
  */
 
-package org.nuxeo.labs.asset.transformation.api;
+package org.nuxeo.labs.asset.transformation.adapter;
 
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.adapter.DocumentAdapterFactory;

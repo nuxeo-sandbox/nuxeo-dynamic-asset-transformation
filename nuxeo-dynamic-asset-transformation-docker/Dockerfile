@@ -13,6 +13,17 @@ LABEL com.customer.sample.version=${VERSION}
 LABEL com.customer.sample.scm-ref=${SCM_REF}
 LABEL com.customer.sample.build-tag=${BUILD_TAG}
 
+# We need to be root to run yum commands
+USER 0
+
+RUN yum -y localinstall --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \
+    && rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-el-7 \
+    && yum -y install ffmpeg mediainfo x264 x265
+
+# Set back original (nuxeo) user
+USER 900
+
+
 COPY --chown=nuxeo:0 target/nuxeo-dynamic-asset-transformation*.zip /home/nuxeo/local-packages/
 
 RUN /install-packages.sh --offline /home/nuxeo/local-packages/nuxeo-dynamic-asset-transformation*.zip

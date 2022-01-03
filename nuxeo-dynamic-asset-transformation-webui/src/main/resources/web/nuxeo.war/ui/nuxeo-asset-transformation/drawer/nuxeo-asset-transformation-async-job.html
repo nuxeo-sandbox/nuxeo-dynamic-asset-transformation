@@ -1,0 +1,105 @@
+<dom-module id="nuxeo-asset-transformation-async-job">
+    <template>
+        <style include="nuxeo-styles">
+            :host {
+                display: block;
+                height: 100%;
+            }
+        </style>
+
+        <nuxeo-connection id="nx"></nuxeo-connection>
+
+        <nuxeo-document auto doc-id="[[docId]]" response="{{doc}}"></nuxeo-document>
+
+        <a href="[[urlFor('document',docId)]]">[[doc.title]]</a>
+
+        <div>Conversion to [[params.format]] [[params.width]]x[[params.height]]</div>
+
+        <template is="dom-if" if="[[done]]">
+            <a href="[[_computeDownloadUrl(url,done)]]">
+                <paper-icon-button id="download" icon="nuxeo:download"></paper-icon-button>
+                <paper-tooltip for="download">[[i18n('label.action.transform.download')]]</paper-tooltip>
+            </a>
+            <paper-icon-button id="delete" icon="nuxeo:delete" on-tap="_remove"></paper-icon-button>
+            <paper-tooltip for="delete">[[i18n('command.delete')]]</paper-tooltip>
+        </template>
+        <template is="dom-if" if="[[!done]]">
+            <paper-icon-button id="cancel" icon="icons:cancel" on-tap="_cancel"></paper-icon-button>
+            <paper-tooltip for="cancel">[[i18n('command.cancel')]]</paper-tooltip>
+        </template>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'nuxeo-asset-transformation-async-job',
+            behaviors: [Nuxeo.RoutingBehavior, Nuxeo.I18nBehavior],
+            properties: {
+                url: {
+                    type: String,
+                    observer: '_pollResult'
+                },
+
+                docId:String,
+
+                params:Object,
+
+                done: {
+                    type: Boolean,
+                    value:false
+                },
+
+                pollInterval: {
+                    type: Number,
+                    value: 5000,
+                },
+
+                actualDownloadUrl: String
+
+            },
+
+            _pollResult: function(url) {
+                if (!url) {
+                    return;
+                }
+                this.$.nx.http(url).then(res => {
+                    if (res === "RUNNING") {
+                        window.setTimeout(this._pollResult.bind(this), this.pollInterval, url);
+                    } else if (res.status === 200){
+                        this.actualDownloadUrl = res.url;
+                        this.done = true;
+                    }
+                }).catch(err=> {
+                    console.log('error fetching job '+ url);
+                    this._remove();
+                });
+            },
+
+            _computeDownloadUrl: function(url,done) {
+                return this.actualDownloadUrl;
+            },
+
+            _isRunning: function(status) {
+                return status === 'RUNNING';
+            },
+
+            _remove: function() {
+                this.fire('remove-async-job',this.url);
+            },
+
+            _cancel: function() {
+                let cancelUrl = this.url.substring(0,this.url.lastIndexOf('/'));
+                fetch(cancelUrl,{method: 'DELETE'}).then(res => {
+                    console.log('cancel successful'+ this.url);
+                }).catch(err => {
+                    console.log('error cancelling '+ this.url);
+                }).finally(() => {
+                    this._remove();
+                });
+            }
+
+        });
+    </script>
+</dom-module>
+
+

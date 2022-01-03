@@ -21,5 +21,7 @@
   "label.action.save.rendition.success": "Rendition successfully saved",
   "label.action.save.derivative.success": "Derivative successfully created",
   "label.action.save.failure": "Failed to save",
-  "label.action.transform.download.as": "Download As"
+  "label.action.transform.download.as": "Download As",
+  "label.drawer.async.no.job": "You don't have any scheduled job",
+  "label.drawer.async.job.title": "Jobs"
 }

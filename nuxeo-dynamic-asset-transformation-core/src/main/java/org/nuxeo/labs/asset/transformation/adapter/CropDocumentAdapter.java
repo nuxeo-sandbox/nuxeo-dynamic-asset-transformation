@@ -17,9 +17,10 @@
  *     Michael Vachette
  */
 
-package org.nuxeo.labs.asset.transformation.api;
+package org.nuxeo.labs.asset.transformation.adapter;
 
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.labs.asset.transformation.api.CropBox;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class CropDocumentAdapter {
       this.doc = doc;
     }
 
-    public Map<String,CropBox> getCrops() {
+    public Map<String, CropBox> getCrops() {
         Map<String,CropBox> result = new HashMap<>();
         List<Map<String, Serializable>> crops = (List<Map<String, Serializable>>) doc.getPropertyValue(CROPS_PROPERTY);
         for(Map<String, Serializable> crop: crops) {

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2021 Nuxeo (http://nuxeo.com/) and others.
+ * (C) Copyright 2022 Nuxeo (http://nuxeo.com/) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,16 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.platform.video.VideoDocument;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
-import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuilder;
+import org.nuxeo.labs.asset.transformation.impl.builder.VideoTransformationBuilder;
 import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
 
-@Operation(id =  ImageTransformOp.ID, category = Constants.CAT_DOCUMENT, label = "Image Transformation", description = "Perform image transformation such as crop, resize and format")
-public class ImageTransformOp {
+@Operation(id =  VideoTransformOp.ID, category = Constants.CAT_DOCUMENT, label = "Video Transformation",
+        description = "Perform video transformation such as resize and format change")
+public class VideoTransformOp {
 
-    public static final String ID = "Blob.ImageTransform";
+    public static final String ID = "Blob.VideoTransform";
 
     @Param(name = "width", required = false)
     long width;
@@ -47,9 +49,6 @@ public class ImageTransformOp {
     @Param(name = "crop", required = false)
     String crop;
 
-    @Param(name = "autoCropRatio", required = false)
-    double autoCropRatio;
-
     @Param(name = "textWatermark", required = false)
     String textWatermark;
 
@@ -61,17 +60,15 @@ public class ImageTransformOp {
 
     @OperationMethod
     public Blob run(DocumentModel document) {
-        Transformation transformation = new ImageTransformationBuilder(document)
+        VideoDocument videoDocument = document.getAdapter(VideoDocument.class);
+        Transformation transformation = new VideoTransformationBuilder(document)
                 .width(width)
                 .height(height)
                 .cropBox(crop)
-                .cropRatio(autoCropRatio)
                 .format(format)
                 .textWatermark(textWatermark)
                 .imageWatermark(imageWatermark)
                 .build();
-        return transformationService.transform(document, transformation);
+        return transformationService.transformVideo(videoDocument.getVideo(), transformation);
     }
-
-
 }

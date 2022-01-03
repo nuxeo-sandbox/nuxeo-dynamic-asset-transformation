@@ -1,8 +1,8 @@
 <component name="org.nuxeo.labs.asset.transformation.adapters">
 
     <extension point="adapters" target="org.nuxeo.ecm.core.api.DocumentAdapterService">
-        <adapter class="org.nuxeo.labs.asset.transformation.api.CropDocumentAdapter"
-                 factory="org.nuxeo.labs.asset.transformation.api.CropDocumentAdapterFactory"/>
+        <adapter class="org.nuxeo.labs.asset.transformation.adapter.CropDocumentAdapter"
+                 factory="org.nuxeo.labs.asset.transformation.adapter.CropDocumentAdapterFactory"/>
     </extension>
 
 </component>

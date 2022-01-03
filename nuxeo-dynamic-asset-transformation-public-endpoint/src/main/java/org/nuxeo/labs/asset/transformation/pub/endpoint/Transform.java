@@ -29,7 +29,7 @@ import org.nuxeo.ecm.core.transientstore.api.TransientStore;
 import org.nuxeo.ecm.core.transientstore.api.TransientStoreService;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
-import org.nuxeo.labs.asset.transformation.api.TransformationBuilder;
+import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuilder;
 import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
 import org.nuxeo.labs.download.link.service.PublicDownloadLinkService;
 import org.nuxeo.runtime.api.Framework;
@@ -73,7 +73,7 @@ public class Transform {
                 return buildError(Response.Status.NOT_FOUND);
             } else {
                 DynamicTransformationService service = Framework.getService(DynamicTransformationService.class);
-                Transformation transformation = new TransformationBuilder(document)
+                Transformation transformation = new ImageTransformationBuilder(document)
                         .width(width)
                         .height(height)
                         .cropBox(crop)

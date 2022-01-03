@@ -29,6 +29,11 @@ import org.nuxeo.ecm.core.api.blobholder.SimpleBlobHolder;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.convert.api.ConversionService;
 import org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry;
+import org.nuxeo.ecm.platform.picture.api.ImageInfo;
+import org.nuxeo.ecm.platform.picture.api.PictureView;
+import org.nuxeo.ecm.platform.picture.api.PictureViewImpl;
+import org.nuxeo.ecm.platform.video.Video;
+import org.nuxeo.ecm.platform.video.VideoDocument;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
 import org.nuxeo.runtime.api.Framework;
 
@@ -37,12 +42,30 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.nuxeo.ecm.platform.picture.api.ImagingDocumentConstants.PICTURE_FACET;
+import static org.nuxeo.ecm.platform.video.VideoConstants.VIDEO_FACET;
+
 public class DynamicTransformationServiceImpl implements DynamicTransformationService {
 
     @Override
     public Blob transform(DocumentModel doc, Transformation transformation) {
+        if (doc.hasFacet(PICTURE_FACET)) {
+            ImageInfo imageInfo = ImageInfo.fromMap((Map<String, Serializable>) doc.getPropertyValue("picture:info"));
+            PictureView pictureView = new PictureViewImpl();
+            pictureView.setBlob((Blob) doc.getPropertyValue("file:content"));
+            pictureView.setImageInfo(imageInfo);
+            return transformPicture(pictureView, transformation);
+        } else if (doc.hasFacet(VIDEO_FACET)) {
+            VideoDocument videoDocument = doc.getAdapter(VideoDocument.class);
+            return transformVideo(videoDocument.getVideo(),transformation);
+        } else {
+            throw new NuxeoException(String.format("Document %s cannot be transformed",doc.getId()));
+        }
+    }
 
-        Blob blob = (Blob) doc.getPropertyValue("file:content");
+    @Override
+    public Blob transformPicture(PictureView pictureView, Transformation transformation) {
+        Blob blob = pictureView.getBlob();
 
         ConversionService conversionService = Framework.getService(ConversionService.class);
         BlobHolder conversionResult = conversionService.convert("dynamicImageResizer", new SimpleBlobHolder(blob), transformation.toMap());
@@ -71,6 +94,19 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         } catch (IOException e) {
             throw new NuxeoException(e);
         }
+    }
+
+    @Override
+    public Blob transformVideo(Video video, Transformation transformation) {
+        Blob blob = video.getBlob();
+        ConversionService conversionService = Framework.getService(ConversionService.class);
+        BlobHolder conversionResult = conversionService.convert("dynamicVideoTransform", new SimpleBlobHolder(blob), transformation.toMap());
+        Blob convertedBlob = conversionResult.getBlob();
+        MimetypeRegistry registry = Framework.getService(MimetypeRegistry.class);
+        String mimetype = registry.getMimetypeFromExtension(transformation.getFormat());
+        convertedBlob.setFilename(getTargetFileName(blob, transformation));
+        convertedBlob.setMimeType(mimetype);
+        return convertedBlob;
     }
 
     public Blob getWatermarkBlob(Transformation transformation) {

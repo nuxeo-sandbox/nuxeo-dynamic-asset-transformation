@@ -26,8 +26,6 @@ import java.util.Map;
 
 public interface Transformation {
 
-    String DEFAULT_FORMAT = "jpg";
-
     /**
      * @return the target width of the transformation
      */

@@ -21,10 +21,34 @@ package org.nuxeo.labs.asset.transformation.service;
 
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.platform.picture.api.PictureView;
+import org.nuxeo.ecm.platform.video.Video;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
 
 public interface DynamicTransformationService {
 
+    /**
+     * Transform the document main media file
+     * @param doc
+     * @param transformation
+     * @return the transformed media file
+     */
     Blob transform(DocumentModel doc, Transformation transformation);
+
+    /**
+     * Transform the document main media file
+     * @param pictureView the input picture view which contains the blob and the image info
+     * @param transformation
+     * @return the transformed picture view
+     */
+    Blob transformPicture(PictureView pictureView, Transformation transformation);
+
+    /**
+     * Transform the document main media file
+     * @param video the input video which contains the blob and the video info
+     * @param transformation
+     * @return the transformed video
+     */
+    Blob transformVideo(Video video, Transformation transformation);
 
 }
