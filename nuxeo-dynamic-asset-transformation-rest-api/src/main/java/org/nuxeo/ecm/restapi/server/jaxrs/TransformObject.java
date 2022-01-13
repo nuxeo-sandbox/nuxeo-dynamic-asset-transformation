@@ -44,7 +44,10 @@ public class TransformObject extends DefaultObject {
             @QueryParam("format") String format,
             @QueryParam("crop") String crop,
             @QueryParam("autoCropRatio") double autoCropRatio,
-            @QueryParam("textWatermark") String textWatermark
+            @QueryParam("textWatermark") String textWatermark,
+            @QueryParam("colorSpace") String colorSpace,
+            @QueryParam("backgroundColor") String backgroundColor,
+            @QueryParam("compressionLevel") int compressionLevel
     ) {
 
         boolean acceptJson = false;
@@ -64,6 +67,9 @@ public class TransformObject extends DefaultObject {
                 .cropRatio(autoCropRatio)
                 .format(format)
                 .textWatermark(textWatermark)
+                .colorSpace(colorSpace)
+                .backgroundColor(backgroundColor)
+                .compressionLevel(compressionLevel)
                 .build();
 
         Blob result = service.transform(document, transformation);

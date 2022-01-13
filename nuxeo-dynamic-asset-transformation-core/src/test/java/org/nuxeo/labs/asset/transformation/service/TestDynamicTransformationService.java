@@ -42,6 +42,8 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.Serializable;
 
+import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
+
 @RunWith(FeaturesRunner.class)
 @Features({TestFeature.class})
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
@@ -64,7 +66,7 @@ public class TestDynamicTransformationService {
         doc.setPropertyValue("file:content", (Serializable) blob);
         doc = session.saveDocument(doc);
 
-        Transformation transformation = new ImageTransformationBuilder(doc).format("png").height(100).build();
+        Transformation transformation = new ImageTransformationBuilder(doc).format(PNG).height(100).build();
 
         Blob result = transformationService.transform(doc,transformation);
 
@@ -74,7 +76,7 @@ public class TestDynamicTransformationService {
         ImageInfo resultInfo = imagingService.getImageInfo(result);
         Assert.assertEquals(150,resultInfo.getWidth());
         Assert.assertEquals(100,resultInfo.getHeight());
-        Assert.assertEquals("png",resultInfo.getFormat().toLowerCase());
+        Assert.assertEquals(PNG,resultInfo.getFormat().toLowerCase());
     }
 
     @Test

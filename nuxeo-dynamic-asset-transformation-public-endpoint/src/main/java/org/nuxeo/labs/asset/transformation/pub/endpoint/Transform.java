@@ -62,7 +62,10 @@ public class Transform {
             @QueryParam("format") String format,
             @QueryParam("crop") String crop,
             @QueryParam("autoCropRatio") double autoCropRatio,
-            @QueryParam("textWatermark") String textWatermark
+            @QueryParam("textWatermark") String textWatermark,
+            @QueryParam("colorSpace") String colorSpace,
+            @QueryParam("backgroundColor") String backgroundColor,
+            @QueryParam("compressionLevel") int compressionLevel
     ) {
 
         return Framework.doPrivileged(() -> {
@@ -80,6 +83,9 @@ public class Transform {
                         .cropRatio(autoCropRatio)
                         .format(format)
                         .textWatermark(textWatermark)
+                        .colorSpace(colorSpace)
+                        .backgroundColor(backgroundColor)
+                        .compressionLevel(compressionLevel)
                         .build();
                 Blob renditionBlob = service.transform(document, transformation);
                 TransientStoreService transientStoreService = Framework.getService(TransientStoreService.class);

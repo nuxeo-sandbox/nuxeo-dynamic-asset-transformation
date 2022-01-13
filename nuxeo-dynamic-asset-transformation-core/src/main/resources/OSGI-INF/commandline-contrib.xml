@@ -7,8 +7,8 @@
 
         <command name="dynamicImageResizerCli" enabled="true">
             <commandLine>convert</commandLine>
-            <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet  #{sourceFilePath}[0] -flatten -gravity NorthWest -crop #{crop} -resize #{width}x#{height}! -strip -sampling-factor 4:2:0 -quality 80 -colorspace sRGB  #{format}:#{targetFilePath}</parameterString>
-            <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet #{sourceFilePath}[0] -flatten -gravity NorthWest -crop #{crop} -resize #{width}x#{height}! -strip -sampling-factor 4:2:0 -quality 80 -colorspace sRGB #{format}:#{targetFilePath}</winParameterString>
+            <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet  #{sourceFilePath}[0] -background #{backgroundColor} -flatten -gravity NorthWest -crop #{crop} -resize #{width}x#{height}! -strip -sampling-factor 4:2:0 -quality #{compressionLevel} -colorspace #{colorSpace} -alpha remove #{format}:#{targetFilePath}</parameterString>
+            <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet #{sourceFilePath}[0] -background #{backgroundColor} -flatten -gravity NorthWest -crop #{crop} -resize #{width}x#{height}! -strip -sampling-factor 4:2:0 -quality #{compressionLevel} -colorspace #{colorSpace} -alpha remove #{format}:#{targetFilePath}</winParameterString>
             <installationDirective>You need to install ImageMagick.</installationDirective>
         </command>
 

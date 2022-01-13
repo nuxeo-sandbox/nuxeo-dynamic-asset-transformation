@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
@@ -36,11 +37,14 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
 import javax.inject.Inject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.nuxeo.labs.asset.transformation.TestFeature.HEIGHT;
 import static org.nuxeo.labs.asset.transformation.TestFeature.WIDTH;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.JPG;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
 
 @RunWith(FeaturesRunner.class)
 @Features({TestFeature.class})
@@ -56,7 +60,7 @@ public class TestTransformation {
         Transformation transformation = new ImageTransformationBuilder(doc).build();
         Assert.assertEquals(WIDTH,transformation.getWidth());
         Assert.assertEquals(TestFeature.HEIGHT,transformation.getHeight());
-        Assert.assertEquals("jpg",transformation.getFormat());
+        Assert.assertEquals(JPG,transformation.getFormat());
     }
 
     @Test
@@ -65,18 +69,33 @@ public class TestTransformation {
         Transformation transformation = new ImageTransformationBuilder(imageInfo).build();
         Assert.assertEquals(WIDTH,transformation.getWidth());
         Assert.assertEquals(TestFeature.HEIGHT,transformation.getHeight());
-        Assert.assertEquals("jpg",transformation.getFormat());
+        Assert.assertEquals(JPG,transformation.getFormat());
+        
     }
 
     @Test
-    public void testWithAllParameters() {
+    public void testWithAllParameters() throws IOException {
         ImageInfo imageInfo = TestFeature.getImageInfo();
         CropBox box = new CropBox(0,100,100,100);
-        Transformation transformation = new ImageTransformationBuilder(imageInfo).width(50).height(50).cropBox(box).format("png").build();
+        Transformation transformation = new ImageTransformationBuilder(imageInfo)
+                .width(50)
+                .height(50)
+                .cropBox(box)
+                .format(PNG)
+                .colorSpace("RGB")
+                .textWatermark("Hello")
+                .imageWatermark(new StringBlob("TheBlob"))
+                .backgroundColor("white")
+                .compressionLevel(10)
+                .build();
         Assert.assertEquals(50,transformation.getWidth());
         Assert.assertEquals(50,transformation.getHeight());
-        Assert.assertEquals("png",transformation.getFormat());
+        Assert.assertEquals(PNG,transformation.getFormat());
         Assert.assertEquals(box,transformation.getCropBox());
+        Assert.assertEquals("RGB",transformation.getColorSpace());
+        Assert.assertEquals("white",transformation.getBackgroundColor());
+        Assert.assertEquals("Hello",transformation.getTextWatermark());
+        Assert.assertEquals("TheBlob",transformation.getImageWatermark().getString());
     }
 
     @Test
@@ -85,16 +104,16 @@ public class TestTransformation {
         Transformation transformation = new ImageTransformationBuilder(imageInfo).width(600).build();
         Assert.assertEquals(600,transformation.getWidth());
         Assert.assertEquals(400,transformation.getHeight());
-        Assert.assertEquals("jpg",transformation.getFormat());
+        Assert.assertEquals(JPG,transformation.getFormat());
     }
 
     @Test
     public void testKeepOriginalRatioFromHeight() {
         ImageInfo imageInfo = TestFeature.getImageInfo();
-        Transformation transformation = new ImageTransformationBuilder(imageInfo).height(400).format("png").build();
+        Transformation transformation = new ImageTransformationBuilder(imageInfo).height(400).format(PNG).build();
         Assert.assertEquals(600,transformation.getWidth());
         Assert.assertEquals(400,transformation.getHeight());
-        Assert.assertEquals("png",transformation.getFormat());
+        Assert.assertEquals(PNG,transformation.getFormat());
     }
 
     @Test

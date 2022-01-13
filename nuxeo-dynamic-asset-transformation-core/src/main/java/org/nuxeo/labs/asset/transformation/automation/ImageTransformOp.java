@@ -56,6 +56,15 @@ public class ImageTransformOp {
     @Param(name = "imageWatermark", required = false)
     Blob imageWatermark;
 
+    @Param(name = "colorSpace", required = false)
+    String colorSpace;
+
+    @Param(name = "backgroundColor", required = false)
+    String backgroundColor;
+
+    @Param(name = "compressionLevel", required = false)
+    int compressionLevel;
+
     @Context
     DynamicTransformationService transformationService;
 
@@ -69,6 +78,9 @@ public class ImageTransformOp {
                 .format(format)
                 .textWatermark(textWatermark)
                 .imageWatermark(imageWatermark)
+                .colorSpace(colorSpace)
+                .backgroundColor(backgroundColor)
+                .compressionLevel(compressionLevel)
                 .build();
         return transformationService.transform(document, transformation);
     }

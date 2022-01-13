@@ -60,7 +60,6 @@
                                           options="[[formatOptions]]" selected="{{format}}">
                             </nuxeo-select>
                         </div>
-
                         <nuxeo-input name="width"
                                      role="widget"
                                      label="[[i18n('label.action.transform.width')]]"
@@ -77,7 +76,29 @@
                                      min="[[min]]"
                                      step="1">
                         </nuxeo-input>
-
+                        <template is="dom-if" if="[[_isJpeg(format)]]">
+                            <nuxeo-input name="background"
+                                         role="widget"
+                                         label="[[i18n('label.action.transform.background.color')]]"
+                                         value="{{backgroundColor}}"
+                                         type="text">
+                            </nuxeo-input>
+                        </template>
+                        <nuxeo-input name="compression"
+                                     role="widget"
+                                     label="[[_getCompressionLevelLabel(format)]]"
+                                     value="{{compressionLevel}}"
+                                     type="number"
+                                     min="10"
+                                     max="100"
+                                     setp="10">
+                        </nuxeo-input>
+                        <nuxeo-input name="colorspace"
+                                     role="widget"
+                                     label="[[i18n('label.action.transform.colorspace')]]"
+                                     value="{{colorSpace}}"
+                                     type="text">
+                        </nuxeo-input>
                         <nuxeo-input name="watermark"
                                      role="widget"
                                      label="[[i18n('label.action.transform.watermark')]]"
@@ -136,6 +157,21 @@
                     value: 'icons:save'
                 },
 
+                backgroundColor: {
+                    type: String,
+                    value: 'white'
+                },
+
+                colorSpace: {
+                    type: String,
+                    value: 'sRGB'
+                },
+
+                compressionLevel: {
+                    type: Number,
+                    value: 90
+                },
+
                 textWatermark: {
                     type: String,
                     value: 'COPYRIGHT NUXEO PAM 2022'
@@ -166,16 +202,34 @@
                 }
             },
 
+            _isJpeg: function (format) {
+              return format === 'jpg';
+            },
+
+            _getCompressionLevelLabel: function(format) {
+                if (format === 'png') {
+                    return this.i18n('label.action.transform.compression.level');
+                } else {
+                    return this.i18n('label.action.transform.quality');
+                }
+            },
+
             _ok: function() {
                 if (!this.$.form.validate()) return;
 
                 this.$.downloadGetter.path =`/transform/${this.document.uid}`;
                 this.$.downloadGetter.params = {
                     format : this.format,
+                    colorSpace: this.colorSpace,
+                    compressionLevel: this.compressionLevel,
                     width: this.width,
                     height: this.height,
                     textWatermark: this.textWatermark
                 };
+
+                if (this._isJpeg(this.format)) {
+                    this.$.downloadGetter.params.backgroundColor = this.backgroundColor;
+                }
 
                 this.$.progress.disabled = false;
                 this.$.proceed.disabled = true;

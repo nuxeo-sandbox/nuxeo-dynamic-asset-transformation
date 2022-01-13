@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.nuxeo.ecm.platform.picture.api.ImagingDocumentConstants.PICTURE_FACET;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.JPG;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.SRGB;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.TRANSPARENT;
 
 public class ImageTransformationBuilder extends AbstractTransformationBuilder {
 
@@ -71,6 +74,21 @@ public class ImageTransformationBuilder extends AbstractTransformationBuilder {
 
     @Override
     protected String getDefaultFormat() {
-        return "jpg";
+        return JPG;
+    }
+
+    @Override
+    protected String getDefaultColorSpace() {
+        return SRGB;
+    }
+
+    @Override
+    protected String getDefaultBackgroundColor() {
+        return TRANSPARENT;
+    }
+
+    @Override
+    protected int getDefaultCompressionLevel() {
+        return 90;
     }
 }

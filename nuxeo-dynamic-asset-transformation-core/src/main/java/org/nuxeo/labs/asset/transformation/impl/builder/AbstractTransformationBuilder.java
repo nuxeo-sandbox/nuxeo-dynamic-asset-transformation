@@ -34,6 +34,9 @@ public abstract class AbstractTransformationBuilder {
     protected double cropRatio = 0;
     protected String textWatermark = null;
     protected Blob imageWatermark = null;
+    protected String colorSpace = null;
+    protected String backgroundColor = null;
+    protected int compressionLevel = 0;
 
 
     public AbstractTransformationBuilder width(long width) {
@@ -76,6 +79,21 @@ public abstract class AbstractTransformationBuilder {
         return this;
     }
 
+    public AbstractTransformationBuilder colorSpace(String colorSpace) {
+        this.colorSpace = colorSpace;
+        return this;
+    }
+
+    public AbstractTransformationBuilder backgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+        return this;
+    }
+
+    public AbstractTransformationBuilder compressionLevel(int compressionLevel) {
+        this.compressionLevel = compressionLevel;
+        return this;
+    }
+
     public Transformation build() {
 
         Transformation transformation = new ImageTransformationImpl();
@@ -106,10 +124,20 @@ public abstract class AbstractTransformationBuilder {
         transformation.setTextWatermark(this.textWatermark);
         transformation.setImageWatermark(this.imageWatermark);
 
+        transformation.setColorSpace(StringUtils.isNotEmpty(this.colorSpace) ? this.colorSpace : getDefaultColorSpace());
+        transformation.setBackgroundColor(StringUtils.isNotEmpty(this.backgroundColor) ? this.backgroundColor : getDefaultBackgroundColor());
+        transformation.setCompressionLevel(this.compressionLevel > 0 ? this.compressionLevel : getDefaultCompressionLevel());
+
         return transformation;
     }
 
     protected abstract CropBox getCropBox();
 
     protected abstract String getDefaultFormat();
+
+    protected abstract String getDefaultColorSpace();
+
+    protected abstract String getDefaultBackgroundColor();
+
+    protected abstract int getDefaultCompressionLevel();
 }

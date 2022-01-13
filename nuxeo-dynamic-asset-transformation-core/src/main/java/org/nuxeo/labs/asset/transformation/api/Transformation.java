@@ -97,6 +97,43 @@ public interface Transformation {
     Blob getImageWatermark();
 
     /**
+     *
+     * @param colorSpace colorspace name
+     */
+    void setColorSpace(String colorSpace);
+
+    /**
+     *
+     * @return colorspace name
+     */
+    String getColorSpace();
+
+    /**
+     *
+     * @param backgroundColor
+     */
+    void setBackgroundColor(String backgroundColor);
+
+    /**
+     *
+     * @return the background color
+     */
+    String getBackgroundColor();
+
+    /**
+     *
+     * @param compressionLevel the compression level
+     */
+    void setCompressionLevel(int compressionLevel);
+
+    /**
+     *
+     * @return the compression level as an integer
+     */
+    int getCompressionLevel();
+
+
+    /**
      * @return a map of the transformation parameters
      */
     Map<String, Serializable> toMap();

@@ -53,4 +53,19 @@ public class VideoTransformationBuilder extends AbstractTransformationBuilder{
     protected String getDefaultFormat() {
         return "mp4";
     }
+
+    @Override
+    protected String getDefaultColorSpace() {
+        return "sRGB";
+    }
+
+    @Override
+    protected String getDefaultBackgroundColor() {
+        return "transparent";
+    }
+
+    @Override
+    protected int getDefaultCompressionLevel() {
+        return 90;
+    }
 }

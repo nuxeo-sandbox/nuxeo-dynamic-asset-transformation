@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.Serializable;
 
 import static org.junit.Assert.assertEquals;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
 
 @RunWith(FeaturesRunner.class)
 @Features({RestServerFeature.class, TransactionalFeature.class, AutomationFeature.class})
@@ -84,7 +85,7 @@ public class TestTransformAPI extends BaseTest {
 
         MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
         queryParams.add("height","80");
-        queryParams.add("format","png");
+        queryParams.add("format",PNG);
         ClientResponse response = getResponse(RequestType.GET, "/transform/"+picture.getId(),queryParams);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
