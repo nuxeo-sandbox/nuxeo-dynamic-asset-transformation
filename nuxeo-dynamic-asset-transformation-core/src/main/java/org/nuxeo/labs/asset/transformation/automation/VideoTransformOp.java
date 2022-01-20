@@ -46,6 +46,12 @@ public class VideoTransformOp {
     @Param(name = "format", required = false)
     String format;
 
+    @Param(name = "videoCodec", required = false)
+    String videoCodec;
+
+    @Param(name = "audioCodec", required = false)
+    String auidoCodec;
+
     @Param(name = "crop", required = false)
     String crop;
 
@@ -62,6 +68,8 @@ public class VideoTransformOp {
     public Blob run(DocumentModel document) {
         VideoDocument videoDocument = document.getAdapter(VideoDocument.class);
         Transformation transformation = new VideoTransformationBuilder(document)
+                .videoCodec(videoCodec)
+                .audioCodec(auidoCodec)
                 .width(width)
                 .height(height)
                 .cropBox(crop)

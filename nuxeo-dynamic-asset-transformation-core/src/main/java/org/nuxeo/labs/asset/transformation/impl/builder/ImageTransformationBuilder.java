@@ -23,6 +23,8 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 import org.nuxeo.labs.asset.transformation.adapter.CropDocumentAdapter;
 import org.nuxeo.labs.asset.transformation.api.CropBox;
+import org.nuxeo.labs.asset.transformation.api.Transformation;
+import org.nuxeo.labs.asset.transformation.impl.ImageTransformationImpl;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -33,12 +35,16 @@ import static org.nuxeo.labs.asset.transformation.impl.Constants.JPG;
 import static org.nuxeo.labs.asset.transformation.impl.Constants.SRGB;
 import static org.nuxeo.labs.asset.transformation.impl.Constants.TRANSPARENT;
 
-public class ImageTransformationBuilder extends AbstractTransformationBuilder {
+public class ImageTransformationBuilder extends AbstractTransformationBuilder<ImageTransformationBuilder,ImageTransformationImpl> {
 
     protected DocumentModel doc;
     protected ImageInfo imageInfo;
     protected Map<String,CropBox> cropPresets = new HashMap<>();
 
+    @Override
+    public ImageTransformationBuilder getThis() {
+        return this;
+    }
 
     public ImageTransformationBuilder(DocumentModel doc) {
         if (!doc.hasFacet(PICTURE_FACET)) {
@@ -61,7 +67,12 @@ public class ImageTransformationBuilder extends AbstractTransformationBuilder {
         this.imageInfo = info;
         this.cropPresets = cropPresets;
     }
-    
+
+    @Override
+    protected ImageTransformationImpl getNewEmptyTransformation() {
+        return new ImageTransformationImpl();
+    }
+
     protected CropBox getCropBox() {
         if (this.cropRatio > 0) {
             //get preset if it exists

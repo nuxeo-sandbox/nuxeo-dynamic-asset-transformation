@@ -30,6 +30,7 @@ import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 import org.nuxeo.labs.asset.transformation.TestFeature;
+import org.nuxeo.labs.asset.transformation.impl.VideoTransformationImpl;
 import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuilder;
 import org.nuxeo.labs.asset.transformation.impl.builder.VideoTransformationBuilder;
 import org.nuxeo.runtime.test.runner.Features;
@@ -146,20 +147,35 @@ public class TestTransformation {
 
     @Test
     public void testWithVideoInfo() {
-        Transformation transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).build();
+        VideoTransformationImpl transformation = (VideoTransformationImpl) new VideoTransformationBuilder(TestFeature.getVideoInfo()).build();
         Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(WIDTH,transformation.getWidth());
         Assert.assertEquals(HEIGHT,transformation.getHeight());
         Assert.assertEquals("mp4",transformation.getFormat());
+        Assert.assertEquals("libx264",transformation.getVideoCodec());
+        Assert.assertEquals("aac",transformation.getAudioCodec());
     }
 
     @Test
     public void testVideoDocumentConstructor() {
         DocumentModel doc = TestFeature.getDocWithVideoInfo(session);
-        Transformation transformation = new VideoTransformationBuilder(doc).build();
+        VideoTransformationImpl transformation = (VideoTransformationImpl) new VideoTransformationBuilder(doc).format("webm").build();
+        Assert.assertEquals(WIDTH,transformation.getWidth());
+        Assert.assertEquals(HEIGHT,transformation.getHeight());
+        Assert.assertEquals("webm",transformation.getFormat());
+        Assert.assertEquals("libvpx-vp9",transformation.getVideoCodec());
+        Assert.assertEquals("libvorbis",transformation.getAudioCodec());
+    }
+
+    @Test
+    public void testWithVideoAllFormatInfo() {
+        VideoTransformationImpl transformation = (VideoTransformationImpl) new VideoTransformationBuilder(TestFeature.getVideoInfo()).audioCodec("libvorbis").videoCodec("libx265").format("mp4").build();
+        Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(WIDTH,transformation.getWidth());
         Assert.assertEquals(HEIGHT,transformation.getHeight());
         Assert.assertEquals("mp4",transformation.getFormat());
+        Assert.assertEquals("libx265",transformation.getVideoCodec());
+        Assert.assertEquals("libvorbis",transformation.getAudioCodec());
     }
 
 }

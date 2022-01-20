@@ -23,14 +23,14 @@
             }
 
             .acknowledge {
-                margin-top:24px;
+                margin-top: 24px;
             }
 
             #progress {
                 margin: 0px;
                 margin-top: 16px;
                 padding: 0px;
-                width:100%;
+                width: 100%;
             }
 
             .buttons {
@@ -39,7 +39,8 @@
 
         </style>
 
-        <nuxeo-operation id="transformOp" op="Blob.VideoTransform" input="[[document.uid]]" schemas="*" async></nuxeo-operation>
+        <nuxeo-operation id="transformOp" op="Blob.VideoTransform" input="[[document.uid]]" schemas="*"
+                         async></nuxeo-operation>
 
         <iron-localstorage id="storage" name="ondemand" value="{{jobs}}"></iron-localstorage>
 
@@ -63,6 +64,24 @@
                             </nuxeo-select>
                         </div>
 
+                        <div role="widget">
+                            <label>[[i18n('label.action.transform.video.codec')]]</label>
+                            <nuxeo-select role="widget"
+                                          name="videoCodec"
+                                          placeholder="[[i18n('label.action.transform.video.codec')]]"
+                                          options="[[_getVideoCodecs(format)]]" selected="{{videoCodec}}">
+                            </nuxeo-select>
+                        </div>
+
+                        <div role="widget">
+                            <label>[[i18n('label.action.transform.audio.codec')]]</label>
+                            <nuxeo-select role="widget"
+                                          name="videoCodec"
+                                          placeholder="[[i18n('label.action.transform.audio.codec')]]"
+                                          options="[[_getAudioCodecs(format)]]" selected="{{audioCodec}}">
+                            </nuxeo-select>
+                        </div>
+
                         <nuxeo-input name="width"
                                      role="widget"
                                      label="[[i18n('label.action.transform.width')]]"
@@ -83,11 +102,11 @@
                         </nuxeo-input>
 
                         <!--nuxeo-input name="watermark"
-                                     role="widget"
-                                     label="[[i18n('label.action.transform.watermark')]]"
-                                     value="{{textWatermark}}"
-                                     type="text">
-                        </nuxeo-input-->
+                                                 role="widget"
+                                                 label="[[i18n('label.action.transform.watermark')]]"
+                                                 value="{{textWatermark}}"
+                                                 type="text">
+                                    </nuxeo-input-->
 
                     </form>
                 </iron-form>
@@ -147,11 +166,63 @@
 
                 formatOptions: {
                     type: Array,
-                    value: function() {
+                    value: function () {
                         return [
                             {
                                 id: "mp4",
                                 label: "MP4",
+                                videoCodecs: ['libx264', 'libx265'],
+                                audioCodecs: ['aac', 'mp3', 'ac3']
+                            },
+                            {
+                                id: "webm",
+                                label: "WEBM",
+                                videoCodecs: ['libvpx-vp9'],
+                                audioCodecs: ['libvorbis']
+                            },
+                        ];
+                    }
+                },
+
+                videoCodecOptions: {
+                    type: Array,
+                    value: function () {
+                        return [
+                            {
+                                id: "libx264",
+                                label: "x264",
+                            },
+                            {
+                                id: "libx265",
+                                label: "x265",
+                            },
+                            {
+                                id: "libvpx-vp9",
+                                label: "VP9",
+                            },
+                        ];
+                    }
+                },
+
+                audioCodecOptions: {
+                    type: Array,
+                    value: function () {
+                        return [
+                            {
+                                id: "aac",
+                                label: "AAC",
+                            },
+                            {
+                                id: "mp3",
+                                label: "MP3",
+                            },
+                            {
+                                id: "ac3",
+                                label: "AC3",
+                            },
+                            {
+                                id: "libvorbis",
+                                label: "Vorbis"
                             }
                         ];
                     }
@@ -159,13 +230,23 @@
 
                 format: {
                     type: String,
-                    value: "mp4"
-                }
+                    value: "mp4",
+                    observer: '_formatChanged'
+                },
 
+                videoCoec: {
+                    type: String,
+                    value: "libx264"
+                },
+
+                audioCodec: {
+                    type: String,
+                    value: "aac"
+                }
 
             },
 
-            _toggleDialog: function() {
+            _toggleDialog: function () {
                 this.$.dialog.toggle();
             },
 
@@ -175,21 +256,21 @@
              * Note that the "close" button already have a "dialog-dismiss" property that makes the button close the dialog
              * when clicked. If you don't need to perform additional actions, this method is not needed.
              */
-            _close: function() {
+            _close: function () {
                 // implement me
             },
 
             /**
              * Useful callback to execute some action after the dialog is closed. Can be removed if it's not necessary.
              */
-            _dialogClosed: function(e) {
+            _dialogClosed: function (e) {
                 if (e.srcElement.id === "dialog") {
                     this.$.form.reset();
                 }
             },
 
-            _srcChanged: function(document) {
-                if (!document || !this.hasFacet(document,'Video')) {
+            _srcChanged: function (document) {
+                if (!document || !this.hasFacet(document, 'Video')) {
                     return;
                 }
 
@@ -201,20 +282,48 @@
 
                 this.targetRatio = (view.width / view.height).toFixed(4);
                 this.width = view.width;
+            },
+
+            _formatChanged: function (format) {
+                if (!format) {
+                    return;
+                }
+
+                let formatOption = this.formatOptions.find(element => element.id === format);
+
+                if (!formatOption.videoCodecs.includes(this.videoCodec)) {
+                    this.videoCodec = formatOption.videoCodecs[0];
+                }
+
+                if (!formatOption.audioCodecs.includes(this.audioCodec)) {
+                    this.audioCodec = formatOption.audioCodecs[0];
+                }
 
             },
 
-            _ok: function() {
+            _getVideoCodecs: function (format) {
+                let formatOption = this.formatOptions.find(element => element.id === format);
+                return this.videoCodecOptions.filter(element => formatOption.videoCodecs.includes(element.id));
+            },
+
+            _getAudioCodecs: function (format) {
+                let formatOption = this.formatOptions.find(element => element.id === format);
+                return this.audioCodecOptions.filter(element => formatOption.audioCodecs.includes(element.id));
+            },
+
+            _ok: function () {
                 if (!this.$.form.validate()) return;
 
                 this.$.transformOp.params = {
                     width: this.width,
                     height: this.height,
                     textWatermark: this.textWatermark,
-                    format: this.format
+                    format: this.format,
+                    audioCodec: this.audioCodec,
+                    videoCodec: this.videoCodec
                 };
 
-                this.$.transformOp._poll = function(url) {
+                this.$.transformOp._poll = function (url) {
                     return Promise.resolve(url);
                 };
 
@@ -237,15 +346,17 @@
                                 width: this.width,
                                 height: this.height,
                                 textWatermark: this.textWatermark,
-                                format: this.format
+                                format: this.format,
+                                audioCodec: this.audioCodec,
+                                videoCodec: this.videoCodec
                             }
                         });
                     }
                     this.$.storage.save();
                     this._toggleDialog();
                 }).catch(error => {
-                    this.fire('notify', { message: this.i18n('label.action.download.failure') });
-                }).finally(function(){
+                    this.fire('notify', {message: this.i18n('label.action.download.failure')});
+                }).finally(function () {
                     this.$.progress.disabled = true;
                     this.$.proceed.disabled = false;
                 }.bind(this));

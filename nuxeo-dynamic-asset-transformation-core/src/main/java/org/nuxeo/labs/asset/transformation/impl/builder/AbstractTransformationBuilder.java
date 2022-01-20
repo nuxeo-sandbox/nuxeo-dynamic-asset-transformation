@@ -23,9 +23,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.labs.asset.transformation.api.CropBox;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
-import org.nuxeo.labs.asset.transformation.impl.ImageTransformationImpl;
 
-public abstract class AbstractTransformationBuilder {
+public abstract class AbstractTransformationBuilder<T extends AbstractTransformationBuilder<T,V>, V extends Transformation> {
 
     protected long width = 0;
     protected long height = 0;
@@ -38,65 +37,67 @@ public abstract class AbstractTransformationBuilder {
     protected String backgroundColor = null;
     protected int compressionLevel = 0;
 
+    /** The solution for the unchecked cast warning. */
+    public abstract T getThis();
 
-    public AbstractTransformationBuilder width(long width) {
+    public T width(long width) {
         this.width = width;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder height(long height) {
+    public T height(long height) {
         this.height = height;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder format(String format) {
+    public T format(String format) {
         this.format = format;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder cropBox(CropBox box) {
+    public T cropBox(CropBox box) {
         this.cropBox = box;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder cropRatio(double ratio) {
+    public T cropRatio(double ratio) {
         this.cropRatio = ratio;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder cropBox(String crop) {
+    public T cropBox(String crop) {
         this.cropBox = crop != null ? new CropBox(crop) : null;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder textWatermark(String text) {
+    public T textWatermark(String text) {
         this.textWatermark = text;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder imageWatermark(Blob image) {
+    public T imageWatermark(Blob image) {
         this.imageWatermark = image;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder colorSpace(String colorSpace) {
+    public T colorSpace(String colorSpace) {
         this.colorSpace = colorSpace;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder backgroundColor(String backgroundColor) {
+    public T backgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
-        return this;
+        return getThis();
     }
 
-    public AbstractTransformationBuilder compressionLevel(int compressionLevel) {
+    public T compressionLevel(int compressionLevel) {
         this.compressionLevel = compressionLevel;
-        return this;
+        return getThis();
     }
 
-    public Transformation build() {
+    public V build() {
 
-        Transformation transformation = new ImageTransformationImpl();
+        V transformation = getNewEmptyTransformation();
 
         //first, crop
         if (this.cropBox == null) {
@@ -130,6 +131,8 @@ public abstract class AbstractTransformationBuilder {
 
         return transformation;
     }
+
+    protected abstract V getNewEmptyTransformation();
 
     protected abstract CropBox getCropBox();
 

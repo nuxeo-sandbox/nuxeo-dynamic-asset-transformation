@@ -11,6 +11,8 @@
   "label.action.transform.compression.level": "Compression Level",
   "label.action.transform.quality": "Quality",
   "label.action.transform.colorspace": "Color Space",
+  "label.action.transform.video.codec": "Video Codec",
+  "label.action.transform.audio.codec": "Audio Codec",
   "label.dialog.button.close":"Close",
   "label.action.transform.download": "Download",
   "label.action.transform.download.url": "Download URL",
