@@ -68,6 +68,7 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         Blob blob = pictureView.getBlob();
 
         ConversionService conversionService = Framework.getService(ConversionService.class);
+
         BlobHolder conversionResult = conversionService.convert("dynamicImageResizer", new SimpleBlobHolder(blob), transformation.toMap());
         Blob convertedBlob = conversionResult.getBlob();
 

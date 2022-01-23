@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CropBox {
+public class CropBox implements Serializable {
 
     static Pattern p = Pattern.compile("([0-9]*),([0-9]*),([0-9]*),([0-9]*)");
 

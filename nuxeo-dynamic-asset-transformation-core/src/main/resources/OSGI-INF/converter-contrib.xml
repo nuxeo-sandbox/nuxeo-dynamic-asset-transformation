@@ -2,7 +2,7 @@
 <component name="org.nuxeo.labs.asset.transformation.converter">
 
     <extension point="converter" target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl">
-        <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="dynamicImageResizer">
+        <converter class="org.nuxeo.labs.asset.transformation.converter.DynamicImageConverter" name="dynamicImageResizer">
             <sourceMimeType>image/*</sourceMimeType>
             <sourceMimeType>application/photoshop</sourceMimeType>
             <sourceMimeType>application/illustrator</sourceMimeType>
@@ -29,7 +29,7 @@
             </parameters>
         </converter>
 
-        <converter name="dynamicVideoTransform" class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter">
+        <converter name="dynamicVideoTransform" class="org.nuxeo.labs.asset.transformation.converter.DynamicVideoConverter">
             <sourceMimeType>video/*</sourceMimeType>
             <parameters>
                 <parameter name="CommandLineName">dynamicVideoTransformCli</parameter>

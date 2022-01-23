@@ -68,19 +68,45 @@
                             <label>[[i18n('label.action.transform.video.codec')]]</label>
                             <nuxeo-select role="widget"
                                           name="videoCodec"
-                                          placeholder="[[i18n('label.action.transform.video.codec')]]"
                                           options="[[_getVideoCodecs(format)]]" selected="{{videoCodec}}">
                             </nuxeo-select>
                         </div>
 
+                        <nuxeo-input name="compressionLevel"
+                                     role="widget"
+                                     label="[[i18n('label.action.transform.compression.level')]]"
+                                     value="{{compressionLevel}}"
+                                     type="number"
+                                     min="1"
+                                     max="63"
+                                     setp="1">
+                        </nuxeo-input>
+
                         <div role="widget">
                             <label>[[i18n('label.action.transform.audio.codec')]]</label>
                             <nuxeo-select role="widget"
-                                          name="videoCodec"
-                                          placeholder="[[i18n('label.action.transform.audio.codec')]]"
+                                          name="audioCodec"
                                           options="[[_getAudioCodecs(format)]]" selected="{{audioCodec}}">
                             </nuxeo-select>
                         </div>
+
+                        <div role="widget">
+                            <label>[[i18n('label.action.transform.ratio')]]</label>
+                            <nuxeo-select role="widget"
+                                          name="cropFormat"
+                                          options="[[_getCropFormatOptions(document)]]" selected="{{cropFormat}}">
+                            </nuxeo-select>
+                        </div>
+                        <template is="dom-if" if="[[_isFreeCropRatio(cropFormat)]]">
+                            <nuxeo-input name="ratio"
+                                         role="widget"
+                                         label="[[i18n('label.action.transform.ratio')]]"
+                                         value="{{targetRatio}}"
+                                         type="number"
+                                         min="0.0001"
+                                         step="0.0001">
+                            </nuxeo-input>
+                        </template>
 
                         <nuxeo-input name="width"
                                      role="widget"
@@ -100,13 +126,6 @@
                                      max="3840"
                                      step="2">
                         </nuxeo-input>
-
-                        <!--nuxeo-input name="watermark"
-                                                 role="widget"
-                                                 label="[[i18n('label.action.transform.watermark')]]"
-                                                 value="{{textWatermark}}"
-                                                 type="text">
-                                    </nuxeo-input-->
 
                     </form>
                 </iron-form>
@@ -135,25 +154,16 @@
                     type: Object
                 },
 
-                /**
-                 * Label to display in the action button.
-                 */
                 label: {
                     type: String,
                     value: 'label.action.transform.download.as'
                 },
 
-                /**
-                 * `true` if the action should display the label, `false` otherwise.
-                 */
                 showLabel: {
                     type: Boolean,
                     value: false,
                 },
 
-                /**
-                 * Icon to use (iconset_name:icon_name) in the action button.
-                 */
                 icon: {
                     type: String,
                     value: 'icons:save'
@@ -163,6 +173,40 @@
                     type: String,
                     value: 'COPYRIGHT NUXEO PAM 2022'
                 },
+
+                cropFormat: {
+                    type: String,
+                    value: "0",
+                    observer: "_cropFormatChanged"
+                },
+
+                cropFormatOptions: {
+                    type: Array,
+                    value: function() {
+                        return [
+                            {
+                                id: "1.0001",
+                                label: "Square",
+                            },{
+                                id: "1.76",
+                                label: "16/9",
+                            },{
+                                id: "0.8",
+                                label: "Instagram Portrait Video"
+                            },{
+                                id: "1.91",
+                                label: "Instagram Landscape Video"
+                            },{
+                                id: "0.5625",
+                                label: "Instagram Stories"
+                            },{
+                                id: "0",
+                                label: "Free",
+                            },
+                        ];
+                    }
+                },
+
 
                 formatOptions: {
                     type: Array,
@@ -190,16 +234,16 @@
                         return [
                             {
                                 id: "libx264",
-                                label: "x264",
+                                label: "x264"
                             },
                             {
                                 id: "libx265",
-                                label: "x265",
+                                label: "x265"
                             },
                             {
                                 id: "libvpx-vp9",
-                                label: "VP9",
-                            },
+                                label: "VP9"
+                            }
                         ];
                     }
                 },
@@ -210,15 +254,15 @@
                         return [
                             {
                                 id: "aac",
-                                label: "AAC",
+                                label: "AAC"
                             },
                             {
                                 id: "mp3",
-                                label: "MP3",
+                                label: "MP3"
                             },
                             {
                                 id: "ac3",
-                                label: "AC3",
+                                label: "AC3"
                             },
                             {
                                 id: "libvorbis",
@@ -234,9 +278,14 @@
                     observer: '_formatChanged'
                 },
 
-                videoCoec: {
+                videoCodec: {
                     type: String,
                     value: "libx264"
+                },
+
+                compressionLevel: {
+                    type: Number,
+                    value: 30
                 },
 
                 audioCodec: {
@@ -246,23 +295,16 @@
 
             },
 
+            observers:['_targetRatioChanged(targetRatio)'],
+
             _toggleDialog: function () {
                 this.$.dialog.toggle();
             },
 
-            /**
-             * Callback executed when the user presses the "close" button.
-             *
-             * Note that the "close" button already have a "dialog-dismiss" property that makes the button close the dialog
-             * when clicked. If you don't need to perform additional actions, this method is not needed.
-             */
             _close: function () {
                 // implement me
             },
 
-            /**
-             * Useful callback to execute some action after the dialog is closed. Can be removed if it's not necessary.
-             */
             _dialogClosed: function (e) {
                 if (e.srcElement.id === "dialog") {
                     this.$.form.reset();
@@ -282,6 +324,27 @@
 
                 this.targetRatio = (view.width / view.height).toFixed(4);
                 this.width = view.width;
+
+                this.cropFormat = this.targetRatio;
+            },
+
+            _getCropFormatOptions(document) {
+                let view = document.properties['vid:info'];
+
+                if (!view) {
+                    return this.cropFormatOptions;
+                }
+
+                let originalRatio = (view.width / view.height).toFixed(4);
+
+                let allCropFormatOptions = Array.from(this.cropFormatOptions);
+
+                allCropFormatOptions.unshift({
+                    id: originalRatio,
+                    label: "Original",
+                });
+
+                return allCropFormatOptions;
             },
 
             _formatChanged: function (format) {
@@ -298,29 +361,53 @@
                 if (!formatOption.audioCodecs.includes(this.audioCodec)) {
                     this.audioCodec = formatOption.audioCodecs[0];
                 }
-
             },
 
-            _getVideoCodecs: function (format) {
+            _isFreeCropRatio: function(cropFormat) {
+                return cropFormat === '0';
+            },
+
+            _cropFormatChanged: function(cropFormat) {
+                if (cropFormat > "0") {
+                    this.targetRatio = Number.parseFloat(cropFormat);
+                }
+            },
+
+            _targetRatioChanged: function(targetRatio) {
+                let view = this.document.properties['vid:info'];
+                let originalRatio = (view.width / view.height).toFixed(4);
+
+                if (originalRatio < targetRatio) {
+                    // if target ratio is greater than the original image ratio, crop height
+                    this.height = this.step * Math.round(view.width / (targetRatio * this.step));
+                } else {
+                    // else if the target ratio is lower than the original image ratio, crop width
+                    this.width = this.step * Math.round(view.height * (targetRatio / this.step));
+                }
+            },
+
+            _getVideoCodecs: function(format) {
                 let formatOption = this.formatOptions.find(element => element.id === format);
                 return this.videoCodecOptions.filter(element => formatOption.videoCodecs.includes(element.id));
             },
 
-            _getAudioCodecs: function (format) {
+            _getAudioCodecs: function(format) {
                 let formatOption = this.formatOptions.find(element => element.id === format);
                 return this.audioCodecOptions.filter(element => formatOption.audioCodecs.includes(element.id));
             },
 
-            _ok: function () {
+            _ok: function() {
                 if (!this.$.form.validate()) return;
 
                 this.$.transformOp.params = {
                     width: this.width,
                     height: this.height,
+                    autoCropRatio: this.targetRatio,
                     textWatermark: this.textWatermark,
                     format: this.format,
                     audioCodec: this.audioCodec,
-                    videoCodec: this.videoCodec
+                    videoCodec: this.videoCodec,
+                    compressionLevel: this.compressionLevel
                 };
 
                 this.$.transformOp._poll = function (url) {
@@ -345,10 +432,12 @@
                                 type: 'VideoConversion',
                                 width: this.width,
                                 height: this.height,
+                                autoCropRatio: this.targetRatio,
                                 textWatermark: this.textWatermark,
                                 format: this.format,
                                 audioCodec: this.audioCodec,
-                                videoCodec: this.videoCodec
+                                videoCodec: this.videoCodec,
+                                compressionLevel: this.compressionLevel
                             }
                         });
                     }

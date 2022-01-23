@@ -52,6 +52,9 @@ public class VideoTransformOp {
     @Param(name = "audioCodec", required = false)
     String auidoCodec;
 
+    @Param(name = "autoCropRatio", required = false)
+    double autoCropRatio;
+
     @Param(name = "crop", required = false)
     String crop;
 
@@ -60,6 +63,9 @@ public class VideoTransformOp {
 
     @Param(name = "imageWatermark", required = false)
     Blob imageWatermark;
+
+    @Param(name = "compressionLevel", required = false)
+    int compressionLevel;
 
     @Context
     DynamicTransformationService transformationService;
@@ -72,10 +78,12 @@ public class VideoTransformOp {
                 .audioCodec(auidoCodec)
                 .width(width)
                 .height(height)
+                .cropRatio(autoCropRatio)
                 .cropBox(crop)
                 .format(format)
                 .textWatermark(textWatermark)
                 .imageWatermark(imageWatermark)
+                .compressionLevel(compressionLevel)
                 .build();
         return transformationService.transformVideo(videoDocument.getVideo(), transformation);
     }

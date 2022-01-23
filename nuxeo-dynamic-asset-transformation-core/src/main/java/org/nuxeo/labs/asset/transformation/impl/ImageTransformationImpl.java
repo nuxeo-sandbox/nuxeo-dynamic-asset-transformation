@@ -161,7 +161,7 @@ public class ImageTransformationImpl implements Transformation {
         map.put("width", "" + width);
         map.put("height", "" + height);
         map.put("format", format);
-        map.put("crop", cropBox.toString());
+        map.put("crop", cropBox);
         map.put("textWatermark",textWatermark);
         map.put("colorSpace",colorSpace);
         map.put("backgroundColor",backgroundColor);

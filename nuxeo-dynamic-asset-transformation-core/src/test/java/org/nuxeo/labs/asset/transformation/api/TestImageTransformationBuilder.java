@@ -50,7 +50,7 @@ import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
 @RunWith(FeaturesRunner.class)
 @Features({TestFeature.class})
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
-public class TestTransformation {
+public class TestImageTransformationBuilder {
 
     @Inject
     protected CoreSession session;
@@ -147,7 +147,7 @@ public class TestTransformation {
 
     @Test
     public void testWithVideoInfo() {
-        VideoTransformationImpl transformation = (VideoTransformationImpl) new VideoTransformationBuilder(TestFeature.getVideoInfo()).build();
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).build();
         Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(WIDTH,transformation.getWidth());
         Assert.assertEquals(HEIGHT,transformation.getHeight());
@@ -159,7 +159,7 @@ public class TestTransformation {
     @Test
     public void testVideoDocumentConstructor() {
         DocumentModel doc = TestFeature.getDocWithVideoInfo(session);
-        VideoTransformationImpl transformation = (VideoTransformationImpl) new VideoTransformationBuilder(doc).format("webm").build();
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(doc).format("webm").build();
         Assert.assertEquals(WIDTH,transformation.getWidth());
         Assert.assertEquals(HEIGHT,transformation.getHeight());
         Assert.assertEquals("webm",transformation.getFormat());
@@ -169,13 +169,30 @@ public class TestTransformation {
 
     @Test
     public void testWithVideoAllFormatInfo() {
-        VideoTransformationImpl transformation = (VideoTransformationImpl) new VideoTransformationBuilder(TestFeature.getVideoInfo()).audioCodec("libvorbis").videoCodec("libx265").format("mp4").build();
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).audioCodec("libvorbis").videoCodec("libx265").format("mp4").build();
         Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(WIDTH,transformation.getWidth());
         Assert.assertEquals(HEIGHT,transformation.getHeight());
         Assert.assertEquals("mp4",transformation.getFormat());
         Assert.assertEquals("libx265",transformation.getVideoCodec());
         Assert.assertEquals("libvorbis",transformation.getAudioCodec());
+    }
+
+    @Test
+    public void testWithVideoCropRatio() {
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropRatio(1.0d).build();
+        Assert.assertNotNull(transformation.getCropBox());
+        Assert.assertEquals(HEIGHT,transformation.getWidth());
+        Assert.assertEquals(HEIGHT,transformation.getHeight());
+    }
+
+    @Test
+    public void testWithVideoCrop() {
+        CropBox box = new CropBox(100,100,50,50);
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropBox(box).build();
+        Assert.assertEquals(box,transformation.getCropBox());
+        Assert.assertEquals(box.getWidth(),transformation.getWidth());
+        Assert.assertEquals(box.getHeight(),transformation.getHeight());
     }
 
 }

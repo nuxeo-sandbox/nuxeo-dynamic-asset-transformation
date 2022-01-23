@@ -25,7 +25,6 @@ import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.platform.video.VideoDocument;
 import org.nuxeo.ecm.platform.video.VideoInfo;
 import org.nuxeo.labs.asset.transformation.api.CropBox;
-import org.nuxeo.labs.asset.transformation.api.Transformation;
 import org.nuxeo.labs.asset.transformation.impl.VideoTransformationImpl;
 
 import static org.nuxeo.ecm.platform.video.VideoConstants.VIDEO_FACET;
@@ -36,6 +35,8 @@ public class VideoTransformationBuilder extends AbstractTransformationBuilder<Vi
     protected VideoInfo videoInfo;
     protected String videoCodec;
     protected String audioCodec;
+    protected long fromTimeInMs;
+    protected long toTimeInMs;
 
     @Override
     public VideoTransformationBuilder getThis() {
@@ -53,6 +54,16 @@ public class VideoTransformationBuilder extends AbstractTransformationBuilder<Vi
 
     public VideoTransformationBuilder(VideoInfo info) {
         this.videoInfo = info;
+    }
+
+    public VideoTransformationBuilder fromTimeInMs(long fromTimeInMs) {
+        this.fromTimeInMs = fromTimeInMs;
+        return this;
+    }
+
+    public VideoTransformationBuilder toTimeInMs(long toTimeInMs) {
+        this.toTimeInMs = toTimeInMs;
+        return this;
     }
 
     public VideoTransformationBuilder videoCodec(String videoCodec) {
@@ -98,7 +109,11 @@ public class VideoTransformationBuilder extends AbstractTransformationBuilder<Vi
 
     @Override
     protected CropBox getCropBox() {
-        return new CropBox(0,0,this.videoInfo.getWidth(), this.videoInfo.getHeight());
+        if (this.cropRatio > 0) {
+            return new CropBox(this.videoInfo,this.cropRatio);
+        } else {
+            return new CropBox(0,0,this.videoInfo.getWidth(), this.videoInfo.getHeight());
+        }
     }
 
     @Override
@@ -118,6 +133,6 @@ public class VideoTransformationBuilder extends AbstractTransformationBuilder<Vi
 
     @Override
     protected int getDefaultCompressionLevel() {
-        return 90;
+        return 30;
     }
 }
