@@ -92,6 +92,26 @@ public class TestVideoTransformationBuilder {
     }
 
     @Test
+    public void testWithVideoStringIntCropRatio() {
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo())
+                                                                                                           .cropRatio(
+                                                                                                                   "1")
+                                                                                                           .build();
+        Assert.assertNotNull(transformation.getCropBox());
+        Assert.assertEquals(HEIGHT, transformation.getWidth());
+        Assert.assertEquals(HEIGHT, transformation.getHeight());
+    }
+
+    @Test
+    public void testWithVideoStringFloatCropRatio() {
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropRatio(
+                "1.00").build();
+        Assert.assertNotNull(transformation.getCropBox());
+        Assert.assertEquals(HEIGHT, transformation.getWidth());
+        Assert.assertEquals(HEIGHT, transformation.getHeight());
+    }
+
+    @Test
     public void testWithVideoCrop() {
         CropBox box = new CropBox(100, 100, 50, 50);
         VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropBox(box)

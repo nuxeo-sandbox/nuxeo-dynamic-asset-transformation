@@ -74,6 +74,13 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
         return getThis();
     }
 
+    public T cropRatio(String ratio) {
+        if (StringUtils.isNotEmpty(ratio)) {
+            this.cropRatio = Double.parseDouble(ratio);
+        }
+        return getThis();
+    }
+
     public T cropBox(String crop) {
         this.cropBox = crop != null ? new CropBox(crop) : null;
         return getThis();

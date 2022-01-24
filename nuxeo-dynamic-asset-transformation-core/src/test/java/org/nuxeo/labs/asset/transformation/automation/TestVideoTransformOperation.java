@@ -64,7 +64,7 @@ public class TestVideoTransformOperation {
 
         OperationContext ctx = new OperationContext(session);
         Map<String, Object> params = new HashMap<>();
-        params.put("autoCropRatio", 1.0d);
+        params.put("autoCropRatio", "1");
         ctx.setInput(doc);
         Blob transformedImage = (Blob) automationService.run(ctx, VideoTransformOp.ID, params);
         Assert.assertNotNull(transformedImage);

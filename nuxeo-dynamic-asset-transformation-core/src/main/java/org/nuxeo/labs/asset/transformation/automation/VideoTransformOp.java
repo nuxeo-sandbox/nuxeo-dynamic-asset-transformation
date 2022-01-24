@@ -51,8 +51,10 @@ public class VideoTransformOp {
     @Param(name = "audioCodec", required = false)
     String auidoCodec;
 
+    // using a string because automation type adapters don't support integer to float conversion
+    // and web browsers will stringify integer numbers without decimals
     @Param(name = "autoCropRatio", required = false)
-    double autoCropRatio;
+    String autoCropRatio;
 
     @Param(name = "crop", required = false)
     String crop;

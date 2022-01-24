@@ -182,24 +182,24 @@
 
                 cropFormatOptions: {
                     type: Array,
-                    value: function() {
+                    value: function () {
                         return [
                             {
-                                id: "1.0001",
+                                id: "1.00",
                                 label: "Square",
-                            },{
+                            }, {
                                 id: "1.76",
                                 label: "16/9",
-                            },{
+                            }, {
                                 id: "0.8",
                                 label: "Instagram Portrait Video"
-                            },{
+                            }, {
                                 id: "1.91",
                                 label: "Instagram Landscape Video"
-                            },{
+                            }, {
                                 id: "0.5625",
                                 label: "Instagram Stories"
-                            },{
+                            }, {
                                 id: "0",
                                 label: "Free",
                             },
@@ -295,7 +295,7 @@
 
             },
 
-            observers:['_targetRatioChanged(targetRatio)'],
+            observers: ['_targetRatioChanged(targetRatio)'],
 
             _toggleDialog: function () {
                 this.$.dialog.toggle();
@@ -363,17 +363,17 @@
                 }
             },
 
-            _isFreeCropRatio: function(cropFormat) {
+            _isFreeCropRatio: function (cropFormat) {
                 return cropFormat === '0';
             },
 
-            _cropFormatChanged: function(cropFormat) {
+            _cropFormatChanged: function (cropFormat) {
                 if (cropFormat > "0") {
                     this.targetRatio = Number.parseFloat(cropFormat);
                 }
             },
 
-            _targetRatioChanged: function(targetRatio) {
+            _targetRatioChanged: function (targetRatio) {
                 let view = this.document.properties['vid:info'];
                 let originalRatio = (view.width / view.height).toFixed(4);
 
@@ -386,23 +386,25 @@
                 }
             },
 
-            _getVideoCodecs: function(format) {
+            _getVideoCodecs: function (format) {
                 let formatOption = this.formatOptions.find(element => element.id === format);
                 return this.videoCodecOptions.filter(element => formatOption.videoCodecs.includes(element.id));
             },
 
-            _getAudioCodecs: function(format) {
+            _getAudioCodecs: function (format) {
                 let formatOption = this.formatOptions.find(element => element.id === format);
                 return this.audioCodecOptions.filter(element => formatOption.audioCodecs.includes(element.id));
             },
 
-            _ok: function() {
+            _ok: function () {
                 if (!this.$.form.validate()) return;
+
+                let cropRatio = typeof this.targetRatio === 'string' ? this.targetRatio : this.targetRatio.toFixed(4);
 
                 this.$.transformOp.params = {
                     width: this.width,
                     height: this.height,
-                    autoCropRatio: this.targetRatio,
+                    autoCropRatio: cropRatio,
                     textWatermark: this.textWatermark,
                     format: this.format,
                     audioCodec: this.audioCodec,
@@ -432,7 +434,7 @@
                                 type: 'VideoConversion',
                                 width: this.width,
                                 height: this.height,
-                                autoCropRatio: this.targetRatio,
+                                autoCropRatio: cropRatio,
                                 textWatermark: this.textWatermark,
                                 format: this.format,
                                 audioCodec: this.audioCodec,
@@ -453,4 +455,3 @@
         });
     </script>
 </dom-module>
-

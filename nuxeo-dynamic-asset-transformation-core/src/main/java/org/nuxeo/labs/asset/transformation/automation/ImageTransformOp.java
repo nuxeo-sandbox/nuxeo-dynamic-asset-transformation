@@ -47,8 +47,10 @@ public class ImageTransformOp {
     @Param(name = "crop", required = false)
     String crop;
 
+    // using a string because automation type adapters don't support integer to float conversion
+    // and web browsers will stringify integer numbers without decimals
     @Param(name = "autoCropRatio", required = false)
-    double autoCropRatio;
+    String autoCropRatio;
 
     @Param(name = "textWatermark", required = false)
     String textWatermark;
