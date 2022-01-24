@@ -30,7 +30,7 @@ import org.nuxeo.labs.asset.transformation.api.Transformation;
 import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuilder;
 import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
 
-@Operation(id =  ImageTransformOp.ID, category = Constants.CAT_DOCUMENT, label = "Image Transformation", description = "Perform image transformation such as crop, resize and format")
+@Operation(id = ImageTransformOp.ID, category = Constants.CAT_DOCUMENT, label = "Image Transformation", description = "Perform image transformation such as crop, resize and format")
 public class ImageTransformOp {
 
     public static final String ID = "Blob.ImageTransform";
@@ -70,20 +70,18 @@ public class ImageTransformOp {
 
     @OperationMethod
     public Blob run(DocumentModel document) {
-        Transformation transformation = new ImageTransformationBuilder(document)
-                .width(width)
-                .height(height)
-                .cropBox(crop)
-                .cropRatio(autoCropRatio)
-                .format(format)
-                .textWatermark(textWatermark)
-                .imageWatermark(imageWatermark)
-                .colorSpace(colorSpace)
-                .backgroundColor(backgroundColor)
-                .compressionLevel(compressionLevel)
-                .build();
+        Transformation transformation = new ImageTransformationBuilder(document).width(width)
+                                                                                .height(height)
+                                                                                .cropBox(crop)
+                                                                                .cropRatio(autoCropRatio)
+                                                                                .format(format)
+                                                                                .textWatermark(textWatermark)
+                                                                                .imageWatermark(imageWatermark)
+                                                                                .colorSpace(colorSpace)
+                                                                                .backgroundColor(backgroundColor)
+                                                                                .compressionLevel(compressionLevel)
+                                                                                .build();
         return transformationService.transform(document, transformation);
     }
-
 
 }

@@ -19,6 +19,13 @@
 
 package org.nuxeo.labs.asset.transformation.automation;
 
+import java.io.File;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,14 +43,8 @@ import org.nuxeo.labs.asset.transformation.TestFeature;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
-import javax.inject.Inject;
-import java.io.File;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 @RunWith(FeaturesRunner.class)
-@Features({TestFeature.class})
+@Features({ TestFeature.class })
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
 public class TestImageTransformOperation {
 

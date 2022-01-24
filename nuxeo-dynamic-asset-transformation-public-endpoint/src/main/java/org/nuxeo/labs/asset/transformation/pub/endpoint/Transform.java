@@ -18,6 +18,15 @@
  */
 package org.nuxeo.labs.asset.transformation.pub.endpoint;
 
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.core.api.Blob;
@@ -34,14 +43,6 @@ import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
 import org.nuxeo.labs.download.link.service.PublicDownloadLinkService;
 import org.nuxeo.runtime.api.Framework;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-import java.util.List;
-
 /**
  * Endpoint to get a dynamic rendition of an asset using an authentication token
  */
@@ -54,45 +55,39 @@ public class Transform {
 
     @GET
     @Path("/{repository}/{id}")
-    public Object getTransform(
-            @PathParam("repository") String repository,
-            @PathParam("id") String documentId,
-            @QueryParam("width") long width,
-            @QueryParam("height") long height,
-            @QueryParam("format") String format,
-            @QueryParam("crop") String crop,
-            @QueryParam("autoCropRatio") double autoCropRatio,
-            @QueryParam("textWatermark") String textWatermark,
-            @QueryParam("colorSpace") String colorSpace,
+    public Object getTransform(@PathParam("repository") String repository, @PathParam("id") String documentId,
+            @QueryParam("width") long width, @QueryParam("height") long height, @QueryParam("format") String format,
+            @QueryParam("crop") String crop, @QueryParam("autoCropRatio") double autoCropRatio,
+            @QueryParam("textWatermark") String textWatermark, @QueryParam("colorSpace") String colorSpace,
             @QueryParam("backgroundColor") String backgroundColor,
-            @QueryParam("compressionLevel") int compressionLevel
-    ) {
+            @QueryParam("compressionLevel") int compressionLevel) {
 
         return Framework.doPrivileged(() -> {
             CoreSession session = CoreInstance.getCoreSessionSystem(repository);
             DocumentModel document = session.getDocument(new IdRef(documentId));
             PublicDownloadLinkService downloadLinkService = Framework.getService(PublicDownloadLinkService.class);
-            if (!downloadLinkService.hasPublicDownloadPermission(document,"file:content")) {
+            if (!downloadLinkService.hasPublicDownloadPermission(document, "file:content")) {
                 return buildError(Response.Status.NOT_FOUND);
             } else {
                 DynamicTransformationService service = Framework.getService(DynamicTransformationService.class);
-                Transformation transformation = new ImageTransformationBuilder(document)
-                        .width(width)
-                        .height(height)
-                        .cropBox(crop)
-                        .cropRatio(autoCropRatio)
-                        .format(format)
-                        .textWatermark(textWatermark)
-                        .colorSpace(colorSpace)
-                        .backgroundColor(backgroundColor)
-                        .compressionLevel(compressionLevel)
-                        .build();
+                Transformation transformation = new ImageTransformationBuilder(document).width(width)
+                                                                                        .height(height)
+                                                                                        .cropBox(crop)
+                                                                                        .cropRatio(autoCropRatio)
+                                                                                        .format(format)
+                                                                                        .textWatermark(textWatermark)
+                                                                                        .colorSpace(colorSpace)
+                                                                                        .backgroundColor(
+                                                                                                backgroundColor)
+                                                                                        .compressionLevel(
+                                                                                                compressionLevel)
+                                                                                        .build();
                 Blob renditionBlob = service.transform(document, transformation);
                 TransientStoreService transientStoreService = Framework.getService(TransientStoreService.class);
                 TransientStore store = transientStoreService.getStore("image-transformation");
                 String key = document.getId() + transformation;
-                store.putBlobs(key,List.of(renditionBlob));
-                store.setCompleted(key,true);
+                store.putBlobs(key, List.of(renditionBlob));
+                store.setCompleted(key, true);
                 return store.getBlobs(key).get(0);
             }
         });

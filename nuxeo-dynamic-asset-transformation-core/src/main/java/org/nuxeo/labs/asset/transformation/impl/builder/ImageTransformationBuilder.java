@@ -19,32 +19,29 @@
 
 package org.nuxeo.labs.asset.transformation.impl.builder;
 
-import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.platform.picture.api.ImageInfo;
-import org.nuxeo.labs.asset.transformation.adapter.CropDocumentAdapter;
-import org.nuxeo.labs.asset.transformation.api.CropBox;
-import org.nuxeo.labs.asset.transformation.api.Transformation;
-import org.nuxeo.labs.asset.transformation.impl.ImageTransformationImpl;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.nuxeo.ecm.platform.picture.api.ImagingDocumentConstants.PICTURE_FACET;
 import static org.nuxeo.labs.asset.transformation.impl.Constants.JPG;
 import static org.nuxeo.labs.asset.transformation.impl.Constants.SRGB;
 import static org.nuxeo.labs.asset.transformation.impl.Constants.TRANSPARENT;
 
-public class ImageTransformationBuilder extends AbstractTransformationBuilder<ImageTransformationBuilder,ImageTransformationImpl> {
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.platform.picture.api.ImageInfo;
+import org.nuxeo.labs.asset.transformation.adapter.CropDocumentAdapter;
+import org.nuxeo.labs.asset.transformation.api.CropBox;
+import org.nuxeo.labs.asset.transformation.impl.ImageTransformationImpl;
+
+public class ImageTransformationBuilder
+        extends AbstractTransformationBuilder<ImageTransformationBuilder, ImageTransformationImpl> {
 
     protected DocumentModel doc;
-    protected ImageInfo imageInfo;
-    protected Map<String,CropBox> cropPresets = new HashMap<>();
 
-    @Override
-    public ImageTransformationBuilder getThis() {
-        return this;
-    }
+    protected ImageInfo imageInfo;
+
+    protected Map<String, CropBox> cropPresets = new HashMap<>();
 
     public ImageTransformationBuilder(DocumentModel doc) {
         if (!doc.hasFacet(PICTURE_FACET)) {
@@ -63,9 +60,14 @@ public class ImageTransformationBuilder extends AbstractTransformationBuilder<Im
         this.imageInfo = info;
     }
 
-    public ImageTransformationBuilder(ImageInfo info, Map<String,CropBox> cropPresets) {
+    public ImageTransformationBuilder(ImageInfo info, Map<String, CropBox> cropPresets) {
         this.imageInfo = info;
         this.cropPresets = cropPresets;
+    }
+
+    @Override
+    public ImageTransformationBuilder getThis() {
+        return this;
     }
 
     @Override
@@ -75,11 +77,11 @@ public class ImageTransformationBuilder extends AbstractTransformationBuilder<Im
 
     protected CropBox getCropBox() {
         if (this.cropRatio > 0) {
-            //get preset if it exists
-            CropBox box = cropPresets.get(String.format("%.2f",cropRatio));
-            return box != null ? box : new CropBox(this.imageInfo,this.cropRatio);
+            // get preset if it exists
+            CropBox box = cropPresets.get(String.format("%.2f", cropRatio));
+            return box != null ? box : new CropBox(this.imageInfo, this.cropRatio);
         } else {
-            return new CropBox(0,0,this.imageInfo.getWidth(), this.imageInfo.getHeight());
+            return new CropBox(0, 0, this.imageInfo.getWidth(), this.imageInfo.getHeight());
         }
     }
 

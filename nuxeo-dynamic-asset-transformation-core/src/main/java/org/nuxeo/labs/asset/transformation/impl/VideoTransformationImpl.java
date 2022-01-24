@@ -26,8 +26,11 @@ import java.util.Objects;
 public class VideoTransformationImpl extends ImageTransformationImpl {
 
     protected String videoCodec;
+
     protected String audioCodec;
+
     protected long fromTimeInMs;
+
     protected long toTimeInMs;
 
     public String getVideoCodec() {
@@ -64,11 +67,15 @@ public class VideoTransformationImpl extends ImageTransformationImpl {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof VideoTransformationImpl)) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof VideoTransformationImpl))
+            return false;
+        if (!super.equals(o))
+            return false;
         VideoTransformationImpl that = (VideoTransformationImpl) o;
-        return fromTimeInMs == that.fromTimeInMs && toTimeInMs == that.toTimeInMs && Objects.equals(videoCodec, that.videoCodec) && Objects.equals(audioCodec, that.audioCodec);
+        return fromTimeInMs == that.fromTimeInMs && toTimeInMs == that.toTimeInMs
+                && Objects.equals(videoCodec, that.videoCodec) && Objects.equals(audioCodec, that.audioCodec);
     }
 
     @Override
@@ -78,11 +85,11 @@ public class VideoTransformationImpl extends ImageTransformationImpl {
 
     @Override
     public Map<String, Serializable> toMap() {
-        Map<String, Serializable> map =  super.toMap();
+        Map<String, Serializable> map = super.toMap();
         map.put("videoCodec", videoCodec);
         map.put("audioCodec", audioCodec);
-        map.put("fromTimeInMs",""+fromTimeInMs);
-        map.put("toTimeInMs",""+toTimeInMs);
+        map.put("fromTimeInMs", "" + fromTimeInMs);
+        map.put("toTimeInMs", "" + toTimeInMs);
         return map;
     }
 }

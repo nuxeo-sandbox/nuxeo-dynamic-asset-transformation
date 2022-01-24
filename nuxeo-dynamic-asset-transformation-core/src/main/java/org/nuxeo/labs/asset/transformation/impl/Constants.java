@@ -21,8 +21,12 @@ package org.nuxeo.labs.asset.transformation.impl;
 
 public abstract class Constants {
     public static String JPG = "jpg";
+
     public static String PNG = "png";
+
     public static String MP4 = "mp4";
+
     public static String SRGB = "sRGB";
+
     public static String TRANSPARENT = "transparent";
 }

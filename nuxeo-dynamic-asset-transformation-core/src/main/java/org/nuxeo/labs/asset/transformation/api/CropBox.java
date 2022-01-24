@@ -19,22 +19,25 @@
 
 package org.nuxeo.labs.asset.transformation.api;
 
-import org.nuxeo.ecm.platform.picture.api.ImageInfo;
-import org.nuxeo.ecm.platform.video.VideoInfo;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.nuxeo.ecm.platform.picture.api.ImageInfo;
+import org.nuxeo.ecm.platform.video.VideoInfo;
+
 public class CropBox implements Serializable {
 
     static Pattern p = Pattern.compile("([0-9]*),([0-9]*),([0-9]*),([0-9]*)");
 
     long top;
+
     long left;
+
     long width;
+
     long height;
 
     public CropBox(String crop) {
@@ -69,7 +72,7 @@ public class CropBox implements Serializable {
     }
 
     public CropBox(VideoInfo videoInfo, double cropRatio) {
-        this(videoInfo.getWidth(), videoInfo.getHeight(),cropRatio);
+        this(videoInfo.getWidth(), videoInfo.getHeight(), cropRatio);
     }
 
     public CropBox(long width, long height, double cropRatio) {

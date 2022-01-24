@@ -33,8 +33,7 @@ import org.nuxeo.ecm.platform.picture.api.PictureView;
 import org.nuxeo.ecm.platform.picture.api.PictureViewImpl;
 import org.nuxeo.ecm.platform.picture.api.adapters.MultiviewPicture;
 
-
-@Operation(id =  AddPictureViewOp.ID, category = Constants.CAT_DOCUMENT, label = "Add Picture View", description = "Add an picture view to a document which holds the Picture Facet")
+@Operation(id = AddPictureViewOp.ID, category = Constants.CAT_DOCUMENT, label = "Add Picture View", description = "Add an picture view to a document which holds the Picture Facet")
 public class AddPictureViewOp {
 
     public static final String ID = "Picture.AddView";
@@ -67,7 +66,7 @@ public class AddPictureViewOp {
         pictureView.setBlob(blob);
         pictureView.setImageInfo(imageInfo);
         adapter.addView(pictureView);
-        if(save) {
+        if (save) {
             session.saveDocument(document);
         }
         return document;

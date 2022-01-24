@@ -19,31 +19,45 @@
 
 package org.nuxeo.labs.asset.transformation.impl;
 
-import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.labs.asset.transformation.api.CropBox;
-import org.nuxeo.labs.asset.transformation.api.Transformation;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.labs.asset.transformation.api.CropBox;
+import org.nuxeo.labs.asset.transformation.api.Transformation;
+
 public class ImageTransformationImpl implements Transformation {
 
     protected long width;
+
     protected long height;
+
     protected String format;
+
     protected CropBox cropBox;
+
     protected double ratio;
+
     protected String textWatermark;
+
     protected Blob imageWatermark;
+
     protected int compressionLevel;
+
     protected String colorSpace;
+
     protected String backgroundColor;
 
     @Override
     public int getCompressionLevel() {
         return compressionLevel;
+    }
+
+    @Override
+    public void setCompressionLevel(int compressionLevel) {
+        this.compressionLevel = compressionLevel;
     }
 
     @Override
@@ -118,11 +132,6 @@ public class ImageTransformationImpl implements Transformation {
     }
 
     @Override
-    public void setCompressionLevel(int compressionLevel) {
-        this.compressionLevel = compressionLevel;
-    }
-
-    @Override
     public String getColorSpace() {
         return colorSpace;
     }
@@ -144,15 +153,22 @@ public class ImageTransformationImpl implements Transformation {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ImageTransformationImpl that = (ImageTransformationImpl) o;
-        return width == that.width && height == that.height && Double.compare(that.ratio, ratio) == 0 && compressionLevel == that.compressionLevel && Objects.equals(format, that.format) && Objects.equals(cropBox, that.cropBox) && Objects.equals(textWatermark, that.textWatermark) && Objects.equals(imageWatermark, that.imageWatermark) && Objects.equals(colorSpace, that.colorSpace) && Objects.equals(backgroundColor, that.backgroundColor);
+        return width == that.width && height == that.height && Double.compare(that.ratio, ratio) == 0
+                && compressionLevel == that.compressionLevel && Objects.equals(format, that.format)
+                && Objects.equals(cropBox, that.cropBox) && Objects.equals(textWatermark, that.textWatermark)
+                && Objects.equals(imageWatermark, that.imageWatermark) && Objects.equals(colorSpace, that.colorSpace)
+                && Objects.equals(backgroundColor, that.backgroundColor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(width, height, format, cropBox, ratio, textWatermark, imageWatermark, compressionLevel, colorSpace, backgroundColor);
+        return Objects.hash(width, height, format, cropBox, ratio, textWatermark, imageWatermark, compressionLevel,
+                colorSpace, backgroundColor);
     }
 
     @Override
@@ -162,10 +178,10 @@ public class ImageTransformationImpl implements Transformation {
         map.put("height", "" + height);
         map.put("format", format);
         map.put("crop", cropBox);
-        map.put("textWatermark",textWatermark);
-        map.put("colorSpace",colorSpace);
-        map.put("backgroundColor",backgroundColor);
-        map.put("compressionLevel","" + compressionLevel);
+        map.put("textWatermark", textWatermark);
+        map.put("colorSpace", colorSpace);
+        map.put("backgroundColor", backgroundColor);
+        map.put("compressionLevel", "" + compressionLevel);
         return map;
     }
 

@@ -19,8 +19,16 @@
 
 package org.nuxeo.ecm.restapi.server.jaxrs;
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import static org.junit.Assert.assertEquals;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
+
+import java.io.File;
+import java.io.Serializable;
+
+import javax.inject.Inject;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,24 +47,14 @@ import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.TransactionalFeature;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.Serializable;
-
-import static org.junit.Assert.assertEquals;
-import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 @RunWith(FeaturesRunner.class)
-@Features({RestServerFeature.class, TransactionalFeature.class, AutomationFeature.class})
+@Features({ RestServerFeature.class, TransactionalFeature.class, AutomationFeature.class })
 @RepositoryConfig(cleanup = Granularity.METHOD)
-@Deploy({
-        "org.nuxeo.ecm.platform.picture.core",
-        "org.nuxeo.ecm.platform.tag",
-        "nuxeo-dynamic-asset-transformation-core",
-        "nuxeo-dynamic-asset-transformation-rest-api"
-})
+@Deploy({ "org.nuxeo.ecm.platform.picture.core", "org.nuxeo.ecm.platform.tag",
+        "nuxeo-dynamic-asset-transformation-core", "nuxeo-dynamic-asset-transformation-rest-api" })
 public class TestTransformAPI extends BaseTest {
 
     @Inject
@@ -73,8 +71,9 @@ public class TestTransformAPI extends BaseTest {
 
     @Test
     public void testCallAPI() {
-        //create document
-        DocumentModel picture = session.createDocumentModel(session.getRootDocument().getPathAsString(),"Picture","Picture");
+        // create document
+        DocumentModel picture = session.createDocumentModel(session.getRootDocument().getPathAsString(), "Picture",
+                "Picture");
         Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
         blob.setMimeType("image/jpg");
         picture.setPropertyValue("file:content", (Serializable) blob);
@@ -84,9 +83,9 @@ public class TestTransformAPI extends BaseTest {
         transactionalFeature.nextTransaction();
 
         MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-        queryParams.add("height","80");
-        queryParams.add("format",PNG);
-        ClientResponse response = getResponse(RequestType.GET, "/transform/"+picture.getId(),queryParams);
+        queryParams.add("height", "80");
+        queryParams.add("format", PNG);
+        ClientResponse response = getResponse(RequestType.GET, "/transform/" + picture.getId(), queryParams);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 

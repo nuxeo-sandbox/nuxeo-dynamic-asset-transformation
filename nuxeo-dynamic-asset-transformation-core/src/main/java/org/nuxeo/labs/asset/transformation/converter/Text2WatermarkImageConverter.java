@@ -19,13 +19,13 @@
 
 package org.nuxeo.labs.asset.transformation.converter;
 
-import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
-import org.nuxeo.ecm.core.convert.api.ConversionException;
-import org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
+import org.nuxeo.ecm.core.convert.api.ConversionException;
+import org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter;
 
 public class Text2WatermarkImageConverter extends CommandLineConverter {
 
@@ -34,8 +34,9 @@ public class Text2WatermarkImageConverter extends CommandLineConverter {
         String text = (String) parameters.get("textWatermark");
         int imageWidth = Integer.parseInt((String) parameters.get("width"));
 
-        int watermarkMaxRepeat = Integer.parseInt(this.initParameters.getOrDefault("watermarkMaxRepeat","4"));
-        int watermarkMinRepeatWidthInPx = Integer.parseInt(this.initParameters.getOrDefault("watermarkMinRepeatWidthInPx","256"));
+        int watermarkMaxRepeat = Integer.parseInt(this.initParameters.getOrDefault("watermarkMaxRepeat", "4"));
+        int watermarkMinRepeatWidthInPx = Integer.parseInt(
+                this.initParameters.getOrDefault("watermarkMinRepeatWidthInPx", "256"));
 
         int watermarkWidth;
 
@@ -50,11 +51,12 @@ public class Text2WatermarkImageConverter extends CommandLineConverter {
             watermarkWidth = watermarkMinRepeatWidthInPx;
         }
 
-        //try to fit text
+        // try to fit text
         int pointSize = Math.max(watermarkWidth / text.length(), 1);
         Map<String, Serializable> params = new HashMap<>();
         params.put("textWatermark", text);
-        params.put("color", parameters.getOrDefault("textColor",this.initParameters.getOrDefault("textColor","graya(50%, 0.8)")));
+        params.put("color",
+                parameters.getOrDefault("textColor", this.initParameters.getOrDefault("textColor", "graya(50%, 0.8)")));
         params.put("pointSize", "" + pointSize);
         params.put("width", "" + watermarkWidth);
         params.put("height", "" + watermarkWidth);

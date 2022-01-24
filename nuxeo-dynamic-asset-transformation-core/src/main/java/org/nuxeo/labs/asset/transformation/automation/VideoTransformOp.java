@@ -31,8 +31,7 @@ import org.nuxeo.labs.asset.transformation.api.Transformation;
 import org.nuxeo.labs.asset.transformation.impl.builder.VideoTransformationBuilder;
 import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
 
-@Operation(id =  VideoTransformOp.ID, category = Constants.CAT_DOCUMENT, label = "Video Transformation",
-        description = "Perform video transformation such as resize and format change")
+@Operation(id = VideoTransformOp.ID, category = Constants.CAT_DOCUMENT, label = "Video Transformation", description = "Perform video transformation such as resize and format change")
 public class VideoTransformOp {
 
     public static final String ID = "Blob.VideoTransform";
@@ -73,18 +72,17 @@ public class VideoTransformOp {
     @OperationMethod
     public Blob run(DocumentModel document) {
         VideoDocument videoDocument = document.getAdapter(VideoDocument.class);
-        Transformation transformation = new VideoTransformationBuilder(document)
-                .videoCodec(videoCodec)
-                .audioCodec(auidoCodec)
-                .width(width)
-                .height(height)
-                .cropRatio(autoCropRatio)
-                .cropBox(crop)
-                .format(format)
-                .textWatermark(textWatermark)
-                .imageWatermark(imageWatermark)
-                .compressionLevel(compressionLevel)
-                .build();
+        Transformation transformation = new VideoTransformationBuilder(document).videoCodec(videoCodec)
+                                                                                .audioCodec(auidoCodec)
+                                                                                .width(width)
+                                                                                .height(height)
+                                                                                .cropRatio(autoCropRatio)
+                                                                                .cropBox(crop)
+                                                                                .format(format)
+                                                                                .textWatermark(textWatermark)
+                                                                                .imageWatermark(imageWatermark)
+                                                                                .compressionLevel(compressionLevel)
+                                                                                .build();
         return transformationService.transformVideo(videoDocument.getVideo(), transformation);
     }
 }

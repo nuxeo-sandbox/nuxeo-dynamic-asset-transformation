@@ -19,6 +19,17 @@
 
 package org.nuxeo.labs.asset.transformation.api;
 
+import static org.nuxeo.labs.asset.transformation.TestFeature.HEIGHT;
+import static org.nuxeo.labs.asset.transformation.TestFeature.WIDTH;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.JPG;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,19 +47,8 @@ import org.nuxeo.labs.asset.transformation.impl.builder.VideoTransformationBuild
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
-import javax.inject.Inject;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.nuxeo.labs.asset.transformation.TestFeature.HEIGHT;
-import static org.nuxeo.labs.asset.transformation.TestFeature.WIDTH;
-import static org.nuxeo.labs.asset.transformation.impl.Constants.JPG;
-import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
-
 @RunWith(FeaturesRunner.class)
-@Features({TestFeature.class})
+@Features({ TestFeature.class })
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
 public class TestImageTransformationBuilder {
 
@@ -59,70 +59,70 @@ public class TestImageTransformationBuilder {
     public void testDocConstructor() {
         DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
         Transformation transformation = new ImageTransformationBuilder(doc).build();
-        Assert.assertEquals(WIDTH,transformation.getWidth());
-        Assert.assertEquals(TestFeature.HEIGHT,transformation.getHeight());
-        Assert.assertEquals(JPG,transformation.getFormat());
+        Assert.assertEquals(WIDTH, transformation.getWidth());
+        Assert.assertEquals(TestFeature.HEIGHT, transformation.getHeight());
+        Assert.assertEquals(JPG, transformation.getFormat());
     }
 
     @Test
     public void testWithNoParameters() {
         ImageInfo imageInfo = TestFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).build();
-        Assert.assertEquals(WIDTH,transformation.getWidth());
-        Assert.assertEquals(TestFeature.HEIGHT,transformation.getHeight());
-        Assert.assertEquals(JPG,transformation.getFormat());
-        
+        Assert.assertEquals(WIDTH, transformation.getWidth());
+        Assert.assertEquals(TestFeature.HEIGHT, transformation.getHeight());
+        Assert.assertEquals(JPG, transformation.getFormat());
+
     }
 
     @Test
     public void testWithAllParameters() throws IOException {
         ImageInfo imageInfo = TestFeature.getImageInfo();
-        CropBox box = new CropBox(0,100,100,100);
-        Transformation transformation = new ImageTransformationBuilder(imageInfo)
-                .width(50)
-                .height(50)
-                .cropBox(box)
-                .format(PNG)
-                .colorSpace("RGB")
-                .textWatermark("Hello")
-                .imageWatermark(new StringBlob("TheBlob"))
-                .backgroundColor("white")
-                .compressionLevel(10)
-                .build();
-        Assert.assertEquals(50,transformation.getWidth());
-        Assert.assertEquals(50,transformation.getHeight());
-        Assert.assertEquals(PNG,transformation.getFormat());
-        Assert.assertEquals(box,transformation.getCropBox());
-        Assert.assertEquals("RGB",transformation.getColorSpace());
-        Assert.assertEquals("white",transformation.getBackgroundColor());
-        Assert.assertEquals("Hello",transformation.getTextWatermark());
-        Assert.assertEquals("TheBlob",transformation.getImageWatermark().getString());
+        CropBox box = new CropBox(0, 100, 100, 100);
+        Transformation transformation = new ImageTransformationBuilder(imageInfo).width(50)
+                                                                                 .height(50)
+                                                                                 .cropBox(box)
+                                                                                 .format(PNG)
+                                                                                 .colorSpace("RGB")
+                                                                                 .textWatermark("Hello")
+                                                                                 .imageWatermark(
+                                                                                         new StringBlob("TheBlob"))
+                                                                                 .backgroundColor("white")
+                                                                                 .compressionLevel(10)
+                                                                                 .build();
+        Assert.assertEquals(50, transformation.getWidth());
+        Assert.assertEquals(50, transformation.getHeight());
+        Assert.assertEquals(PNG, transformation.getFormat());
+        Assert.assertEquals(box, transformation.getCropBox());
+        Assert.assertEquals("RGB", transformation.getColorSpace());
+        Assert.assertEquals("white", transformation.getBackgroundColor());
+        Assert.assertEquals("Hello", transformation.getTextWatermark());
+        Assert.assertEquals("TheBlob", transformation.getImageWatermark().getString());
     }
 
     @Test
     public void testKeepOriginalRatioFromWidth() {
         ImageInfo imageInfo = TestFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).width(600).build();
-        Assert.assertEquals(600,transformation.getWidth());
-        Assert.assertEquals(400,transformation.getHeight());
-        Assert.assertEquals(JPG,transformation.getFormat());
+        Assert.assertEquals(600, transformation.getWidth());
+        Assert.assertEquals(400, transformation.getHeight());
+        Assert.assertEquals(JPG, transformation.getFormat());
     }
 
     @Test
     public void testKeepOriginalRatioFromHeight() {
         ImageInfo imageInfo = TestFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).height(400).format(PNG).build();
-        Assert.assertEquals(600,transformation.getWidth());
-        Assert.assertEquals(400,transformation.getHeight());
-        Assert.assertEquals(PNG,transformation.getFormat());
+        Assert.assertEquals(600, transformation.getWidth());
+        Assert.assertEquals(400, transformation.getHeight());
+        Assert.assertEquals(PNG, transformation.getFormat());
     }
 
     @Test
     public void testWithCropRatio() {
         ImageInfo imageInfo = TestFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).cropRatio(1.0).build();
-        Assert.assertEquals(TestFeature.HEIGHT,transformation.getWidth());
-        Assert.assertEquals(TestFeature.HEIGHT,transformation.getHeight());
+        Assert.assertEquals(TestFeature.HEIGHT, transformation.getWidth());
+        Assert.assertEquals(TestFeature.HEIGHT, transformation.getHeight());
     }
 
     @Test
@@ -130,69 +130,74 @@ public class TestImageTransformationBuilder {
         ImageInfo imageInfo = TestFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).build();
         Assert.assertNotNull(transformation.getCropBox());
-        Assert.assertEquals(WIDTH,transformation.getCropBox().getWidth());
-        Assert.assertEquals(HEIGHT,transformation.getCropBox().getHeight());
+        Assert.assertEquals(WIDTH, transformation.getCropBox().getWidth());
+        Assert.assertEquals(HEIGHT, transformation.getCropBox().getHeight());
     }
 
     @Test
     public void testWithPreset() {
         ImageInfo imageInfo = TestFeature.getImageInfo();
-        Map<String,CropBox> cropPresets = new HashMap<>();
-        cropPresets.put("2.00",new CropBox(0,0,200,100));
+        Map<String, CropBox> cropPresets = new HashMap<>();
+        cropPresets.put("2.00", new CropBox(0, 0, 200, 100));
         Transformation transformation = new ImageTransformationBuilder(imageInfo, cropPresets).cropRatio(2.0).build();
         Assert.assertNotNull(transformation.getCropBox());
-        Assert.assertEquals(200,transformation.getCropBox().getWidth());
-        Assert.assertEquals(100,transformation.getCropBox().getHeight());
+        Assert.assertEquals(200, transformation.getCropBox().getWidth());
+        Assert.assertEquals(100, transformation.getCropBox().getHeight());
     }
 
     @Test
     public void testWithVideoInfo() {
         VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).build();
         Assert.assertNotNull(transformation.getCropBox());
-        Assert.assertEquals(WIDTH,transformation.getWidth());
-        Assert.assertEquals(HEIGHT,transformation.getHeight());
-        Assert.assertEquals("mp4",transformation.getFormat());
-        Assert.assertEquals("libx264",transformation.getVideoCodec());
-        Assert.assertEquals("aac",transformation.getAudioCodec());
+        Assert.assertEquals(WIDTH, transformation.getWidth());
+        Assert.assertEquals(HEIGHT, transformation.getHeight());
+        Assert.assertEquals("mp4", transformation.getFormat());
+        Assert.assertEquals("libx264", transformation.getVideoCodec());
+        Assert.assertEquals("aac", transformation.getAudioCodec());
     }
 
     @Test
     public void testVideoDocumentConstructor() {
         DocumentModel doc = TestFeature.getDocWithVideoInfo(session);
         VideoTransformationImpl transformation = new VideoTransformationBuilder(doc).format("webm").build();
-        Assert.assertEquals(WIDTH,transformation.getWidth());
-        Assert.assertEquals(HEIGHT,transformation.getHeight());
-        Assert.assertEquals("webm",transformation.getFormat());
-        Assert.assertEquals("libvpx-vp9",transformation.getVideoCodec());
-        Assert.assertEquals("libvorbis",transformation.getAudioCodec());
+        Assert.assertEquals(WIDTH, transformation.getWidth());
+        Assert.assertEquals(HEIGHT, transformation.getHeight());
+        Assert.assertEquals("webm", transformation.getFormat());
+        Assert.assertEquals("libvpx-vp9", transformation.getVideoCodec());
+        Assert.assertEquals("libvorbis", transformation.getAudioCodec());
     }
 
     @Test
     public void testWithVideoAllFormatInfo() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).audioCodec("libvorbis").videoCodec("libx265").format("mp4").build();
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).audioCodec(
+                "libvorbis").videoCodec("libx265").format("mp4").build();
         Assert.assertNotNull(transformation.getCropBox());
-        Assert.assertEquals(WIDTH,transformation.getWidth());
-        Assert.assertEquals(HEIGHT,transformation.getHeight());
-        Assert.assertEquals("mp4",transformation.getFormat());
-        Assert.assertEquals("libx265",transformation.getVideoCodec());
-        Assert.assertEquals("libvorbis",transformation.getAudioCodec());
+        Assert.assertEquals(WIDTH, transformation.getWidth());
+        Assert.assertEquals(HEIGHT, transformation.getHeight());
+        Assert.assertEquals("mp4", transformation.getFormat());
+        Assert.assertEquals("libx265", transformation.getVideoCodec());
+        Assert.assertEquals("libvorbis", transformation.getAudioCodec());
     }
 
     @Test
     public void testWithVideoCropRatio() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropRatio(1.0d).build();
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo())
+                                                                                                           .cropRatio(
+                                                                                                                   1.0d)
+                                                                                                           .build();
         Assert.assertNotNull(transformation.getCropBox());
-        Assert.assertEquals(HEIGHT,transformation.getWidth());
-        Assert.assertEquals(HEIGHT,transformation.getHeight());
+        Assert.assertEquals(HEIGHT, transformation.getWidth());
+        Assert.assertEquals(HEIGHT, transformation.getHeight());
     }
 
     @Test
     public void testWithVideoCrop() {
-        CropBox box = new CropBox(100,100,50,50);
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropBox(box).build();
-        Assert.assertEquals(box,transformation.getCropBox());
-        Assert.assertEquals(box.getWidth(),transformation.getWidth());
-        Assert.assertEquals(box.getHeight(),transformation.getHeight());
+        CropBox box = new CropBox(100, 100, 50, 50);
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropBox(box)
+                                                                                                           .build();
+        Assert.assertEquals(box, transformation.getCropBox());
+        Assert.assertEquals(box.getWidth(), transformation.getWidth());
+        Assert.assertEquals(box.getHeight(), transformation.getHeight());
     }
 
 }

@@ -29,6 +29,7 @@ public interface DynamicTransformationService {
 
     /**
      * Transform the document main media file
+     * 
      * @param doc
      * @param transformation
      * @return the transformed media file
@@ -37,6 +38,7 @@ public interface DynamicTransformationService {
 
     /**
      * Transform the document main media file
+     * 
      * @param pictureView the input picture view which contains the blob and the image info
      * @param transformation
      * @return the transformed picture view
@@ -45,6 +47,7 @@ public interface DynamicTransformationService {
 
     /**
      * Transform the document main media file
+     * 
      * @param video the input video which contains the blob and the video info
      * @param transformation
      * @return the transformed video

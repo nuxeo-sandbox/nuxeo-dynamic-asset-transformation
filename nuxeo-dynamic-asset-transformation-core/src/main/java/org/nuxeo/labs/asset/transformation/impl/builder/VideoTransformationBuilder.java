@@ -19,6 +19,8 @@
 
 package org.nuxeo.labs.asset.transformation.impl.builder;
 
+import static org.nuxeo.ecm.platform.video.VideoConstants.VIDEO_FACET;
+
 import org.apache.commons.lang3.StringUtils;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoException;
@@ -27,21 +29,20 @@ import org.nuxeo.ecm.platform.video.VideoInfo;
 import org.nuxeo.labs.asset.transformation.api.CropBox;
 import org.nuxeo.labs.asset.transformation.impl.VideoTransformationImpl;
 
-import static org.nuxeo.ecm.platform.video.VideoConstants.VIDEO_FACET;
-
-public class VideoTransformationBuilder extends AbstractTransformationBuilder<VideoTransformationBuilder, VideoTransformationImpl>{
+public class VideoTransformationBuilder
+        extends AbstractTransformationBuilder<VideoTransformationBuilder, VideoTransformationImpl> {
 
     protected DocumentModel doc;
-    protected VideoInfo videoInfo;
-    protected String videoCodec;
-    protected String audioCodec;
-    protected long fromTimeInMs;
-    protected long toTimeInMs;
 
-    @Override
-    public VideoTransformationBuilder getThis() {
-        return this;
-    }
+    protected VideoInfo videoInfo;
+
+    protected String videoCodec;
+
+    protected String audioCodec;
+
+    protected long fromTimeInMs;
+
+    protected long toTimeInMs;
 
     public VideoTransformationBuilder(DocumentModel doc) {
         if (!doc.hasFacet(VIDEO_FACET)) {
@@ -54,6 +55,11 @@ public class VideoTransformationBuilder extends AbstractTransformationBuilder<Vi
 
     public VideoTransformationBuilder(VideoInfo info) {
         this.videoInfo = info;
+    }
+
+    @Override
+    public VideoTransformationBuilder getThis() {
+        return this;
     }
 
     public VideoTransformationBuilder fromTimeInMs(long fromTimeInMs) {
@@ -81,9 +87,14 @@ public class VideoTransformationBuilder extends AbstractTransformationBuilder<Vi
         VideoTransformationImpl transformation = super.build();
         if (StringUtils.isBlank(videoCodec)) {
             switch (transformation.getFormat()) {
-                case "mp4": transformation.setVideoCodec("libx264");break;
-                case "webm": transformation.setVideoCodec("libvpx-vp9");break;
-                default: throw new NuxeoException("no default codec for format "+transformation.getFormat());
+            case "mp4":
+                transformation.setVideoCodec("libx264");
+                break;
+            case "webm":
+                transformation.setVideoCodec("libvpx-vp9");
+                break;
+            default:
+                throw new NuxeoException("no default codec for format " + transformation.getFormat());
             }
         } else {
             transformation.setVideoCodec(videoCodec);
@@ -91,9 +102,14 @@ public class VideoTransformationBuilder extends AbstractTransformationBuilder<Vi
 
         if (StringUtils.isBlank(audioCodec)) {
             switch (transformation.getFormat()) {
-                case "mp4": transformation.setAudioCodec("aac");break;
-                case "webm": transformation.setAudioCodec("libvorbis");break;
-                default: throw new NuxeoException("no default audio for format "+transformation.getFormat());
+            case "mp4":
+                transformation.setAudioCodec("aac");
+                break;
+            case "webm":
+                transformation.setAudioCodec("libvorbis");
+                break;
+            default:
+                throw new NuxeoException("no default audio for format " + transformation.getFormat());
             }
         } else {
             transformation.setAudioCodec(audioCodec);
@@ -110,9 +126,9 @@ public class VideoTransformationBuilder extends AbstractTransformationBuilder<Vi
     @Override
     protected CropBox getCropBox() {
         if (this.cropRatio > 0) {
-            return new CropBox(this.videoInfo,this.cropRatio);
+            return new CropBox(this.videoInfo, this.cropRatio);
         } else {
-            return new CropBox(0,0,this.videoInfo.getWidth(), this.videoInfo.getHeight());
+            return new CropBox(0, 0, this.videoInfo.getWidth(), this.videoInfo.getHeight());
         }
     }
 

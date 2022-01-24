@@ -19,6 +19,12 @@
 
 package org.nuxeo.labs.asset.transformation.automation;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,18 +45,10 @@ import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
-import javax.inject.Inject;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 @RunWith(FeaturesRunner.class)
-@Features({TestFeature.class})
+@Features({ TestFeature.class })
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
-@Deploy({
-    "org.nuxeo.ecm.platform.picture.core",
-    "org.nuxeo.ecm.platform.tag"
-})
+@Deploy({ "org.nuxeo.ecm.platform.picture.core", "org.nuxeo.ecm.platform.tag" })
 public class TestAddPictureViewOperation {
 
     @Inject
@@ -69,9 +67,9 @@ public class TestAddPictureViewOperation {
 
         OperationContext ctx = new OperationContext(session);
         Map<String, Object> params = new HashMap<>();
-        params.put("blob",blob);
-        params.put("viewTitle","TheView");
-        params.put("viewDescription","TheView");
+        params.put("blob", blob);
+        params.put("viewTitle", "TheView");
+        params.put("viewDescription", "TheView");
         ctx.setInput(doc);
         doc = (DocumentModel) automationService.run(ctx, AddPictureViewOp.ID, params);
         Assert.assertNotNull(doc);

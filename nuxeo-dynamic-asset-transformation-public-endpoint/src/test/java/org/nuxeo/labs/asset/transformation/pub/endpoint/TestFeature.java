@@ -19,6 +19,9 @@
 
 package org.nuxeo.labs.asset.transformation.pub.endpoint;
 
+import java.io.File;
+import java.io.Serializable;
+
 import org.nuxeo.ecm.automation.test.AutomationFeature;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -30,37 +33,31 @@ import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.RunnerFeature;
 
-import java.io.File;
-import java.io.Serializable;
-
-@Features({WebEngineFeature.class, AutomationFeature.class})
-@Deploy({
-        "org.nuxeo.ecm.platform.picture.core",
-        "org.nuxeo.ecm.platform.tag",
-        "org.nuxeo.ecm.platform.web.common",
-        "nuxeo-public-download-link-core",
-        "nuxeo-dynamic-asset-transformation-core",
-        "nuxeo-dynamic-asset-transformation-pub-endpoint"
-})
+@Features({ WebEngineFeature.class, AutomationFeature.class })
+@Deploy({ "org.nuxeo.ecm.platform.picture.core", "org.nuxeo.ecm.platform.tag", "org.nuxeo.ecm.platform.web.common",
+        "nuxeo-public-download-link-core", "nuxeo-dynamic-asset-transformation-core",
+        "nuxeo-dynamic-asset-transformation-pub-endpoint" })
 public class TestFeature implements RunnerFeature {
 
     public static final int WIDTH = 300;
-    public static final int HEIGHT = 200;
 
-    public DocumentModel getDocWithPictureInfo(CoreSession session) {
-        DocumentModel doc = session.createDocumentModel(session.getRootDocument().getPathAsString(),"Picture","Picture");
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
-        blob.setMimeType("image/jpg");
-        doc.setPropertyValue("file:content", (Serializable) blob);
-        ImageInfo imageInfo = getImageInfo();
-        doc.setPropertyValue("picture:info", (Serializable) imageInfo.toMap());
-        return session.createDocument(doc);
-    }
+    public static final int HEIGHT = 200;
 
     public static ImageInfo getImageInfo() {
         ImageInfo imageInfo = new ImageInfo();
         imageInfo.setWidth(WIDTH);
         imageInfo.setHeight(HEIGHT);
         return imageInfo;
+    }
+
+    public DocumentModel getDocWithPictureInfo(CoreSession session) {
+        DocumentModel doc = session.createDocumentModel(session.getRootDocument().getPathAsString(), "Picture",
+                "Picture");
+        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
+        blob.setMimeType("image/jpg");
+        doc.setPropertyValue("file:content", (Serializable) blob);
+        ImageInfo imageInfo = getImageInfo();
+        doc.setPropertyValue("picture:info", (Serializable) imageInfo.toMap());
+        return session.createDocument(doc);
     }
 }

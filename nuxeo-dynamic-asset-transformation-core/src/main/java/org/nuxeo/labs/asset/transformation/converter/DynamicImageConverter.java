@@ -19,22 +19,23 @@
 
 package org.nuxeo.labs.asset.transformation.converter;
 
+import java.io.Serializable;
+import java.util.Map;
+
 import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
 import org.nuxeo.ecm.core.convert.api.ConversionException;
 import org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter;
 import org.nuxeo.labs.asset.transformation.api.CropBox;
 
-import java.io.Serializable;
-import java.util.Map;
-
 public class DynamicImageConverter extends CommandLineConverter {
 
     @Override
     public BlobHolder convert(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
-        //Convert cropbox to imagemagick format
+        // Convert cropbox to imagemagick format
         CropBox cropBox = (CropBox) parameters.get("crop");
-        String IMcrop = String.format("%dx%d+%d+%d", cropBox.getWidth(), cropBox.getHeight(), cropBox.getLeft(), cropBox.getTop());
-        parameters.put("crop",IMcrop);
-        return super.convert(blobHolder,parameters);
+        String IMcrop = String.format("%dx%d+%d+%d", cropBox.getWidth(), cropBox.getHeight(), cropBox.getLeft(),
+                cropBox.getTop());
+        parameters.put("crop", IMcrop);
+        return super.convert(blobHolder, parameters);
     }
 }

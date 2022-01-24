@@ -19,9 +19,10 @@
 
 package org.nuxeo.labs.asset.transformation.pub.endpoint;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import static org.junit.Assert.assertEquals;
+
+import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,12 +36,12 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.ServletContainerFeature;
 import org.nuxeo.runtime.test.runner.TransactionalFeature;
 
-import javax.inject.Inject;
-
-import static org.junit.Assert.assertEquals;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 @RunWith(FeaturesRunner.class)
-@Features({TestFeature.class})
+@Features({ TestFeature.class })
 
 @RepositoryConfig(cleanup = Granularity.METHOD)
 public class TestTransform {
@@ -62,7 +63,6 @@ public class TestTransform {
     @Inject
     protected PublicDownloadLinkService publicDownloadLinkService;
 
-
     @Before
     public void setup() {
         client = Client.create();
@@ -72,9 +72,13 @@ public class TestTransform {
     @Test
     public void testValidRequest() {
         DocumentModel doc = testFeature.getDocWithPictureInfo(session);
-        String token = publicDownloadLinkService.setPublicDownloadPermission(doc,"file:content");
+        String token = publicDownloadLinkService.setPublicDownloadPermission(doc, "file:content");
         transactionalFeature.nextTransaction();
-        WebResource webResource = client.resource(getBaseURL()).path("public").path("transform").path(doc.getRepositoryName()).path(doc.getId());
+        WebResource webResource = client.resource(getBaseURL())
+                                        .path("public")
+                                        .path("transform")
+                                        .path(doc.getRepositoryName())
+                                        .path(doc.getId());
         System.out.println(webResource);
         ClientResponse response = webResource.get(ClientResponse.class);
         assertEquals(200, response.getStatus());
@@ -84,7 +88,11 @@ public class TestTransform {
     public void testNoTokenRequest() {
         DocumentModel doc = testFeature.getDocWithPictureInfo(session);
         transactionalFeature.nextTransaction();
-        WebResource webResource = client.resource(getBaseURL()).path("public").path("transform").path(doc.getRepositoryName()).path(doc.getId());
+        WebResource webResource = client.resource(getBaseURL())
+                                        .path("public")
+                                        .path("transform")
+                                        .path(doc.getRepositoryName())
+                                        .path(doc.getId());
         System.out.println(webResource);
         ClientResponse response = webResource.get(ClientResponse.class);
         assertEquals(404, response.getStatus());

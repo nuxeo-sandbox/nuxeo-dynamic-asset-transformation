@@ -19,10 +19,10 @@
 
 package org.nuxeo.labs.asset.transformation.api;
 
-import org.nuxeo.ecm.core.api.Blob;
-
 import java.io.Serializable;
 import java.util.Map;
+
+import org.nuxeo.ecm.core.api.Blob;
 
 public interface Transformation {
 
@@ -67,19 +67,14 @@ public interface Transformation {
     void setCropBox(CropBox box);
 
     /**
-     * @param ratio the target image size ratio
-     */
-    void setCropRatio(double ratio);
-
-    /**
      * @return the target image size ratio
      */
     double getCropRatio();
 
     /**
-     * @param text watermark to add
+     * @param ratio the target image size ratio
      */
-    void setTextWatermark(String text);
+    void setCropRatio(double ratio);
 
     /**
      * @return the text watermark
@@ -87,9 +82,9 @@ public interface Transformation {
     String getTextWatermark();
 
     /**
-     * @param image the watermark image to add
+     * @param text watermark to add
      */
-    void setImageWatermark(Blob image);
+    void setTextWatermark(String text);
 
     /**
      * @return the image watermark
@@ -97,41 +92,39 @@ public interface Transformation {
     Blob getImageWatermark();
 
     /**
-     *
-     * @param colorSpace colorspace name
+     * @param image the watermark image to add
      */
-    void setColorSpace(String colorSpace);
+    void setImageWatermark(Blob image);
 
     /**
-     *
      * @return colorspace name
      */
     String getColorSpace();
 
     /**
-     *
-     * @param backgroundColor
+     * @param colorSpace colorspace name
      */
-    void setBackgroundColor(String backgroundColor);
+    void setColorSpace(String colorSpace);
 
     /**
-     *
      * @return the background color
      */
     String getBackgroundColor();
 
     /**
-     *
-     * @param compressionLevel the compression level
+     * @param backgroundColor
      */
-    void setCompressionLevel(int compressionLevel);
+    void setBackgroundColor(String backgroundColor);
 
     /**
-     *
      * @return the compression level as an integer
      */
     int getCompressionLevel();
 
+    /**
+     * @param compressionLevel the compression level
+     */
+    void setCompressionLevel(int compressionLevel);
 
     /**
      * @return a map of the transformation parameters

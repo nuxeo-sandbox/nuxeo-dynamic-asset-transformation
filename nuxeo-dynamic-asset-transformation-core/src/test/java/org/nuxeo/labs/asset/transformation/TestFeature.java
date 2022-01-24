@@ -19,6 +19,11 @@
 
 package org.nuxeo.labs.asset.transformation;
 
+import static org.nuxeo.ecm.platform.video.VideoConstants.INFO_PROPERTY;
+
+import java.io.Serializable;
+import java.util.HashMap;
+
 import org.nuxeo.ecm.automation.test.AutomationFeature;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -28,23 +33,14 @@ import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.RunnerFeature;
 
-import java.io.Serializable;
-import java.util.HashMap;
-
-import static org.nuxeo.ecm.platform.video.VideoConstants.INFO_PROPERTY;
-
-@Features({AutomationFeature.class})
-@Deploy({
-        "org.nuxeo.ecm.platform.picture.core",
-        "org.nuxeo.ecm.platform.tag",
-        "org.nuxeo.ecm.platform.video",
+@Features({ AutomationFeature.class })
+@Deploy({ "org.nuxeo.ecm.platform.picture.core", "org.nuxeo.ecm.platform.tag", "org.nuxeo.ecm.platform.video",
         "nuxeo-dynamic-asset-transformation-core",
-        "nuxeo-dynamic-asset-transformation-core:disable-video-listener.xml"
-})
+        "nuxeo-dynamic-asset-transformation-core:disable-video-listener.xml" })
 public class TestFeature implements RunnerFeature {
 
-
     public static final int WIDTH = 300;
+
     public static final int HEIGHT = 200;
 
     public static ImageInfo getImageInfo() {
@@ -55,7 +51,8 @@ public class TestFeature implements RunnerFeature {
     }
 
     public static DocumentModel getDocWithPictureInfo(CoreSession session) {
-        DocumentModel doc = session.createDocumentModel(session.getRootDocument().getPathAsString(),"Picture","Picture");
+        DocumentModel doc = session.createDocumentModel(session.getRootDocument().getPathAsString(), "Picture",
+                "Picture");
         doc.setPropertyValue("picture:info", (Serializable) getImageInfo().toMap());
         return session.createDocument(doc);
     }
@@ -68,7 +65,7 @@ public class TestFeature implements RunnerFeature {
     }
 
     public static DocumentModel getDocWithVideoInfo(CoreSession session) {
-        DocumentModel doc = session.createDocumentModel(session.getRootDocument().getPathAsString(),"Video","Video");
+        DocumentModel doc = session.createDocumentModel(session.getRootDocument().getPathAsString(), "Video", "Video");
         doc.setPropertyValue(INFO_PROPERTY, (Serializable) getVideoInfo().toMap());
         return session.createDocument(doc);
     }

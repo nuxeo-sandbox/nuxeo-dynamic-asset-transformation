@@ -24,17 +24,26 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.labs.asset.transformation.api.CropBox;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
 
-public abstract class AbstractTransformationBuilder<T extends AbstractTransformationBuilder<T,V>, V extends Transformation> {
+public abstract class AbstractTransformationBuilder<T extends AbstractTransformationBuilder<T, V>, V extends Transformation> {
 
     protected long width = 0;
+
     protected long height = 0;
-    protected String format ;
+
+    protected String format;
+
     protected CropBox cropBox = null;
+
     protected double cropRatio = 0;
+
     protected String textWatermark = null;
+
     protected Blob imageWatermark = null;
+
     protected String colorSpace = null;
+
     protected String backgroundColor = null;
+
     protected int compressionLevel = 0;
 
     /** The solution for the unchecked cast warning. */
@@ -99,7 +108,7 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
 
         V transformation = getNewEmptyTransformation();
 
-        //first, crop
+        // first, crop
         if (this.cropBox == null) {
             this.cropBox = getCropBox();
         }
@@ -109,8 +118,8 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
         double imageRatio = cropBox.getRatio();
 
         if (this.width <= 0 && this.height <= 0) {
-          this.width = cropBox.getWidth();
-          this.height = cropBox.getHeight();
+            this.width = cropBox.getWidth();
+            this.height = cropBox.getHeight();
         } else if (this.width <= 0) {
             this.width = (int) (this.height * imageRatio);
         } else if (this.height <= 0) {
@@ -125,9 +134,12 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
         transformation.setTextWatermark(this.textWatermark);
         transformation.setImageWatermark(this.imageWatermark);
 
-        transformation.setColorSpace(StringUtils.isNotEmpty(this.colorSpace) ? this.colorSpace : getDefaultColorSpace());
-        transformation.setBackgroundColor(StringUtils.isNotEmpty(this.backgroundColor) ? this.backgroundColor : getDefaultBackgroundColor());
-        transformation.setCompressionLevel(this.compressionLevel > 0 ? this.compressionLevel : getDefaultCompressionLevel());
+        transformation.setColorSpace(
+                StringUtils.isNotEmpty(this.colorSpace) ? this.colorSpace : getDefaultColorSpace());
+        transformation.setBackgroundColor(
+                StringUtils.isNotEmpty(this.backgroundColor) ? this.backgroundColor : getDefaultBackgroundColor());
+        transformation.setCompressionLevel(
+                this.compressionLevel > 0 ? this.compressionLevel : getDefaultCompressionLevel());
 
         return transformation;
     }

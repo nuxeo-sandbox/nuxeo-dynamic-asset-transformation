@@ -19,6 +19,13 @@
 
 package org.nuxeo.labs.asset.transformation.service;
 
+import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
+
+import java.io.File;
+import java.io.Serializable;
+
+import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,14 +45,8 @@ import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuild
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
-import javax.inject.Inject;
-import java.io.File;
-import java.io.Serializable;
-
-import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
-
 @RunWith(FeaturesRunner.class)
-@Features({TestFeature.class})
+@Features({ TestFeature.class })
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
 public class TestDynamicTransformationService {
 
@@ -68,15 +69,15 @@ public class TestDynamicTransformationService {
 
         Transformation transformation = new ImageTransformationBuilder(doc).format(PNG).height(100).build();
 
-        Blob result = transformationService.transform(doc,transformation);
+        Blob result = transformationService.transform(doc, transformation);
 
         Assert.assertNotNull(result);
-        Assert.assertEquals("image/png",result.getMimeType());
+        Assert.assertEquals("image/png", result.getMimeType());
 
         ImageInfo resultInfo = imagingService.getImageInfo(result);
-        Assert.assertEquals(150,resultInfo.getWidth());
-        Assert.assertEquals(100,resultInfo.getHeight());
-        Assert.assertEquals(PNG,resultInfo.getFormat().toLowerCase());
+        Assert.assertEquals(150, resultInfo.getWidth());
+        Assert.assertEquals(100, resultInfo.getHeight());
+        Assert.assertEquals(PNG, resultInfo.getFormat().toLowerCase());
     }
 
     @Test
@@ -87,17 +88,17 @@ public class TestDynamicTransformationService {
         doc.setPropertyValue("file:content", (Serializable) blob);
         doc = session.saveDocument(doc);
 
-        CropBox box = new CropBox(0,100,100,200);
+        CropBox box = new CropBox(0, 100, 100, 200);
         Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).build();
 
-        Blob result = transformationService.transform(doc,transformation);
+        Blob result = transformationService.transform(doc, transformation);
 
         Assert.assertNotNull(result);
-        Assert.assertEquals("image/jpeg",result.getMimeType());
+        Assert.assertEquals("image/jpeg", result.getMimeType());
 
         ImageInfo resultInfo = imagingService.getImageInfo(result);
-        Assert.assertEquals(100,resultInfo.getWidth());
-        Assert.assertEquals(200,resultInfo.getHeight());
+        Assert.assertEquals(100, resultInfo.getWidth());
+        Assert.assertEquals(200, resultInfo.getHeight());
     }
 
     @Test
@@ -108,17 +109,17 @@ public class TestDynamicTransformationService {
         doc.setPropertyValue("file:content", (Serializable) blob);
         doc = session.saveDocument(doc);
 
-        CropBox box = new CropBox(0,100,100,200);
+        CropBox box = new CropBox(0, 100, 100, 200);
         Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).height(100).build();
 
-        Blob result = transformationService.transform(doc,transformation);
-        Assert.assertEquals("image/jpeg",result.getMimeType());
+        Blob result = transformationService.transform(doc, transformation);
+        Assert.assertEquals("image/jpeg", result.getMimeType());
 
         Assert.assertNotNull(result);
 
         ImageInfo resultInfo = imagingService.getImageInfo(result);
-        Assert.assertEquals(50,resultInfo.getWidth());
-        Assert.assertEquals(100,resultInfo.getHeight());
+        Assert.assertEquals(50, resultInfo.getWidth());
+        Assert.assertEquals(100, resultInfo.getHeight());
     }
 
     @Test
@@ -129,17 +130,20 @@ public class TestDynamicTransformationService {
         doc.setPropertyValue("file:content", (Serializable) blob);
         doc = session.saveDocument(doc);
 
-        CropBox box = new CropBox(0,100,100,200);
-        Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).height(100).textWatermark("Hello Nuxeo").build();
+        CropBox box = new CropBox(0, 100, 100, 200);
+        Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box)
+                                                                           .height(100)
+                                                                           .textWatermark("Hello Nuxeo")
+                                                                           .build();
 
-        Blob result = transformationService.transform(doc,transformation);
-        Assert.assertEquals("image/jpeg",result.getMimeType());
+        Blob result = transformationService.transform(doc, transformation);
+        Assert.assertEquals("image/jpeg", result.getMimeType());
 
         Assert.assertNotNull(result);
 
         ImageInfo resultInfo = imagingService.getImageInfo(result);
-        Assert.assertEquals(50,resultInfo.getWidth());
-        Assert.assertEquals(100,resultInfo.getHeight());
+        Assert.assertEquals(50, resultInfo.getWidth());
+        Assert.assertEquals(100, resultInfo.getHeight());
     }
 
     @Test
@@ -153,17 +157,20 @@ public class TestDynamicTransformationService {
         Blob watermarkBlob = new FileBlob(new File(getClass().getResource("/files/text.png").getPath()));
         watermarkBlob.setMimeType("image/png");
 
-        CropBox box = new CropBox(0,100,100,200);
-        Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).height(100).imageWatermark(watermarkBlob).build();
+        CropBox box = new CropBox(0, 100, 100, 200);
+        Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box)
+                                                                           .height(100)
+                                                                           .imageWatermark(watermarkBlob)
+                                                                           .build();
 
-        Blob result = transformationService.transform(doc,transformation);
-        Assert.assertEquals("image/jpeg",result.getMimeType());
+        Blob result = transformationService.transform(doc, transformation);
+        Assert.assertEquals("image/jpeg", result.getMimeType());
 
         Assert.assertNotNull(result);
 
         ImageInfo resultInfo = imagingService.getImageInfo(result);
-        Assert.assertEquals(50,resultInfo.getWidth());
-        Assert.assertEquals(100,resultInfo.getHeight());
+        Assert.assertEquals(50, resultInfo.getWidth());
+        Assert.assertEquals(100, resultInfo.getHeight());
     }
 
 }

@@ -19,6 +19,14 @@
 
 package org.nuxeo.labs.asset.transformation.converter;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,15 +43,8 @@ import org.nuxeo.labs.asset.transformation.TestFeature;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
-import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 @RunWith(FeaturesRunner.class)
-@Features({TestFeature.class})
+@Features({ TestFeature.class })
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
 public class TestConverters {
 
@@ -53,15 +54,16 @@ public class TestConverters {
     @Test
     public void TestText2WatermarkConverter() {
         Map<String, Serializable> params = new HashMap<>();
-        params.put("textWatermark","Hello");
-        params.put("color","graya(50%, 0.5)");
-        params.put("pointSize","20");
-        params.put("width","240");
-        params.put("height","120");
-        BlobHolder result = conversionService.convert("text2WatermarkImage",new SimpleBlobHolder(new StringBlob("hello")),params);
+        params.put("textWatermark", "Hello");
+        params.put("color", "graya(50%, 0.5)");
+        params.put("pointSize", "20");
+        params.put("width", "240");
+        params.put("height", "120");
+        BlobHolder result = conversionService.convert("text2WatermarkImage",
+                new SimpleBlobHolder(new StringBlob("hello")), params);
         Blob watermarkImage = result.getBlob();
         Assert.assertNotNull(watermarkImage);
-        Assert.assertEquals("image/png",watermarkImage.getMimeType());
+        Assert.assertEquals("image/png", watermarkImage.getMimeType());
     }
 
     @Test
@@ -73,10 +75,11 @@ public class TestConverters {
         watermarkBlob.setMimeType("image/png");
 
         Map<String, Serializable> params = new HashMap<>();
-        params.put("format","jpeg");
-        params.put("watermarkFilePath",watermarkBlob.getCloseableFile().file.getPath());
+        params.put("format", "jpeg");
+        params.put("watermarkFilePath", watermarkBlob.getCloseableFile().file.getPath());
 
-        BlobHolder result = conversionService.convert("composeWatermarkedImage",new SimpleBlobHolder(inputBlob),params);
+        BlobHolder result = conversionService.convert("composeWatermarkedImage", new SimpleBlobHolder(inputBlob),
+                params);
         Blob resultBlob = result.getBlob();
         Assert.assertNotNull(resultBlob);
     }
