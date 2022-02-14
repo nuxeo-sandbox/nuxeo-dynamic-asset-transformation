@@ -49,7 +49,7 @@ public class VideoTransformOp {
     String videoCodec;
 
     @Param(name = "audioCodec", required = false)
-    String auidoCodec;
+    String audioCodec;
 
     // using a string because automation type adapters don't support integer to float conversion
     // and web browsers will stringify integer numbers without decimals
@@ -75,7 +75,7 @@ public class VideoTransformOp {
     public Blob run(DocumentModel document) {
         VideoDocument videoDocument = document.getAdapter(VideoDocument.class);
         Transformation transformation = new VideoTransformationBuilder(document).videoCodec(videoCodec)
-                                                                                .audioCodec(auidoCodec)
+                                                                                .audioCodec(audioCodec)
                                                                                 .width(width)
                                                                                 .height(height)
                                                                                 .cropRatio(autoCropRatio)
