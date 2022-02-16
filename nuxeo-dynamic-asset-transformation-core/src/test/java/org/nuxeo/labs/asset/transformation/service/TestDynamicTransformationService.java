@@ -22,7 +22,6 @@ package org.nuxeo.labs.asset.transformation.service;
 import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
 
 import java.io.File;
-import java.io.Serializable;
 
 import javax.inject.Inject;
 
@@ -51,6 +50,9 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 public class TestDynamicTransformationService {
 
     @Inject
+    protected TestFeature testFeature;
+
+    @Inject
     protected CoreSession session;
 
     @Inject
@@ -60,12 +62,8 @@ public class TestDynamicTransformationService {
     protected ImagingService imagingService;
 
     @Test
-    public void testResizeBlob() {
-        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
-        blob.setMimeType("image/jpeg");
-        doc.setPropertyValue("file:content", (Serializable) blob);
-        doc = session.saveDocument(doc);
+    public void testResizePicture() {
+        DocumentModel doc = testFeature.getDocWithPictureInfo(session);
 
         Transformation transformation = new ImageTransformationBuilder(doc).format(PNG).height(100).build();
 
@@ -81,12 +79,8 @@ public class TestDynamicTransformationService {
     }
 
     @Test
-    public void testCropBlob() {
-        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
-        blob.setMimeType("image/jpeg");
-        doc.setPropertyValue("file:content", (Serializable) blob);
-        doc = session.saveDocument(doc);
+    public void testCropPicture() {
+        DocumentModel doc = testFeature.getDocWithPictureInfo(session);
 
         CropBox box = new CropBox(0, 100, 100, 200);
         Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).build();
@@ -102,12 +96,8 @@ public class TestDynamicTransformationService {
     }
 
     @Test
-    public void testCropAndResizeBlob() {
-        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
-        blob.setMimeType("image/jpeg");
-        doc.setPropertyValue("file:content", (Serializable) blob);
-        doc = session.saveDocument(doc);
+    public void testCropAndResizePicture() {
+        DocumentModel doc = testFeature.getDocWithPictureInfo(session);
 
         CropBox box = new CropBox(0, 100, 100, 200);
         Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box).height(100).build();
@@ -123,12 +113,8 @@ public class TestDynamicTransformationService {
     }
 
     @Test
-    public void testWatermarkText() {
-        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
-        blob.setMimeType("image/jpeg");
-        doc.setPropertyValue("file:content", (Serializable) blob);
-        doc = session.saveDocument(doc);
+    public void testWatermarkPictureWithText() {
+        DocumentModel doc = testFeature.getDocWithPictureInfo(session);
 
         CropBox box = new CropBox(0, 100, 100, 200);
         Transformation transformation = new ImageTransformationBuilder(doc).cropBox(box)
@@ -147,12 +133,8 @@ public class TestDynamicTransformationService {
     }
 
     @Test
-    public void testWatermarkBlob() {
-        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
-        blob.setMimeType("image/jpeg");
-        doc.setPropertyValue("file:content", (Serializable) blob);
-        doc = session.saveDocument(doc);
+    public void testWatermarkPictureWithImage() {
+        DocumentModel doc = testFeature.getDocWithPictureInfo(session);
 
         Blob watermarkBlob = new FileBlob(new File(getClass().getResource("/files/text.png").getPath()));
         watermarkBlob.setMimeType("image/png");

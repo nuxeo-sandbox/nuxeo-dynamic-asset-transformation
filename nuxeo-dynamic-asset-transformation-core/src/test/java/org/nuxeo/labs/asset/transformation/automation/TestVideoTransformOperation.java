@@ -49,6 +49,9 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 public class TestVideoTransformOperation {
 
     @Inject
+    protected TestFeature testFeature;
+
+    @Inject
     protected CoreSession session;
 
     @Inject
@@ -56,18 +59,13 @@ public class TestVideoTransformOperation {
 
     @Test
     public void testOp() throws OperationException {
-        DocumentModel doc = TestFeature.getDocWithVideoInfo(session);
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/nuxeo.mp4").getPath()));
-        blob.setMimeType("video/mp4");
-        doc.setPropertyValue("file:content", (Serializable) blob);
-        doc = session.saveDocument(doc);
-
+        DocumentModel doc = testFeature.getDocWithVideoInfo(session);
         OperationContext ctx = new OperationContext(session);
         Map<String, Object> params = new HashMap<>();
         params.put("autoCropRatio", "1");
         ctx.setInput(doc);
-        Blob transformedImage = (Blob) automationService.run(ctx, VideoTransformOp.ID, params);
-        Assert.assertNotNull(transformedImage);
+        Blob transformedVideo = (Blob) automationService.run(ctx, VideoTransformOp.ID, params);
+        Assert.assertNotNull(transformedVideo);
     }
 
 }

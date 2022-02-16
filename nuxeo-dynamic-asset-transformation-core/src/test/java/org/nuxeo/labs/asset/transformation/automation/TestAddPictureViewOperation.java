@@ -52,6 +52,9 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 public class TestAddPictureViewOperation {
 
     @Inject
+    protected TestFeature testFeature;
+
+    @Inject
     protected CoreSession session;
 
     @Inject
@@ -59,7 +62,7 @@ public class TestAddPictureViewOperation {
 
     @Test
     public void testOp() throws OperationException {
-        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
+        DocumentModel doc = testFeature.getDocWithPictureInfo(session);
         doc = session.saveDocument(doc);
 
         Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));

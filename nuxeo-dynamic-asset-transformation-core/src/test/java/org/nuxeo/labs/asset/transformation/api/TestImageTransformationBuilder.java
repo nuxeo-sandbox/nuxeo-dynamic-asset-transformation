@@ -41,9 +41,7 @@ import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 import org.nuxeo.labs.asset.transformation.TestFeature;
-import org.nuxeo.labs.asset.transformation.impl.VideoTransformationImpl;
 import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuilder;
-import org.nuxeo.labs.asset.transformation.impl.builder.VideoTransformationBuilder;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
@@ -55,9 +53,12 @@ public class TestImageTransformationBuilder {
     @Inject
     protected CoreSession session;
 
+    @Inject
+    protected TestFeature testFeature;
+
     @Test
     public void testDocConstructor() {
-        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
+        DocumentModel doc = testFeature.getDocWithPictureInfo(session);
         Transformation transformation = new ImageTransformationBuilder(doc).build();
         Assert.assertEquals(WIDTH, transformation.getWidth());
         Assert.assertEquals(TestFeature.HEIGHT, transformation.getHeight());
@@ -143,61 +144,6 @@ public class TestImageTransformationBuilder {
         Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(200, transformation.getCropBox().getWidth());
         Assert.assertEquals(100, transformation.getCropBox().getHeight());
-    }
-
-    @Test
-    public void testWithVideoInfo() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).build();
-        Assert.assertNotNull(transformation.getCropBox());
-        Assert.assertEquals(WIDTH, transformation.getWidth());
-        Assert.assertEquals(HEIGHT, transformation.getHeight());
-        Assert.assertEquals("mp4", transformation.getFormat());
-        Assert.assertEquals("libx264", transformation.getVideoCodec());
-        Assert.assertEquals("aac", transformation.getAudioCodec());
-    }
-
-    @Test
-    public void testVideoDocumentConstructor() {
-        DocumentModel doc = TestFeature.getDocWithVideoInfo(session);
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(doc).format("webm").build();
-        Assert.assertEquals(WIDTH, transformation.getWidth());
-        Assert.assertEquals(HEIGHT, transformation.getHeight());
-        Assert.assertEquals("webm", transformation.getFormat());
-        Assert.assertEquals("libvpx-vp9", transformation.getVideoCodec());
-        Assert.assertEquals("libvorbis", transformation.getAudioCodec());
-    }
-
-    @Test
-    public void testWithVideoAllFormatInfo() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).audioCodec(
-                "libvorbis").videoCodec("libx265").format("mp4").build();
-        Assert.assertNotNull(transformation.getCropBox());
-        Assert.assertEquals(WIDTH, transformation.getWidth());
-        Assert.assertEquals(HEIGHT, transformation.getHeight());
-        Assert.assertEquals("mp4", transformation.getFormat());
-        Assert.assertEquals("libx265", transformation.getVideoCodec());
-        Assert.assertEquals("libvorbis", transformation.getAudioCodec());
-    }
-
-    @Test
-    public void testWithVideoCropRatio() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo())
-                                                                                                           .cropRatio(
-                                                                                                                   1.0d)
-                                                                                                           .build();
-        Assert.assertNotNull(transformation.getCropBox());
-        Assert.assertEquals(HEIGHT, transformation.getWidth());
-        Assert.assertEquals(HEIGHT, transformation.getHeight());
-    }
-
-    @Test
-    public void testWithVideoCrop() {
-        CropBox box = new CropBox(100, 100, 50, 50);
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropBox(box)
-                                                                                                           .build();
-        Assert.assertEquals(box, transformation.getCropBox());
-        Assert.assertEquals(box.getWidth(), transformation.getWidth());
-        Assert.assertEquals(box.getHeight(), transformation.getHeight());
     }
 
 }
