@@ -1,0 +1,13 @@
+<component name="org.nuxeo.labs.asset.transformation.webui.pp">
+
+    <extension point="providers" target="org.nuxeo.ecm.platform.query.api.PageProviderService">
+        <genericPageProvider class="org.nuxeo.elasticsearch.provider.ElasticSearchNxqlPageProvider" name="default_watermark_suggestion">
+            <pattern escapeParameters="true" quoteParameters="false">
+                SELECT * FROM Document WHERE ecm:fulltext LIKE '?*' AND ecm:mixinType != 'HiddenInNavigation'
+                AND ecm:mixinType = 'Picture' AND ecm:isVersion = 0 AND ecm:isTrashed = 0
+            </pattern>
+            <pageSize>10</pageSize>
+        </genericPageProvider>
+    </extension>
+
+</component>

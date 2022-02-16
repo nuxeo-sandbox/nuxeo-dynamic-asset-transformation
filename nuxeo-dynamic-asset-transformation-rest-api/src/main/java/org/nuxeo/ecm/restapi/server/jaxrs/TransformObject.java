@@ -40,8 +40,8 @@ public class TransformObject extends DefaultObject {
     public Object getTransform(@HeaderParam("accept") String acceptHeader, @PathParam("id") String documentId,
             @QueryParam("width") long width, @QueryParam("height") long height, @QueryParam("format") String format,
             @QueryParam("crop") String crop, @QueryParam("autoCropRatio") double autoCropRatio,
-            @QueryParam("textWatermark") String textWatermark, @QueryParam("colorSpace") String colorSpace,
-            @QueryParam("backgroundColor") String backgroundColor,
+            @QueryParam("textWatermark") String textWatermark, @QueryParam("watermarkId") String watermarkId,
+            @QueryParam("colorSpace") String colorSpace, @QueryParam("backgroundColor") String backgroundColor,
             @QueryParam("compressionLevel") int compressionLevel) {
 
         boolean acceptJson = false;
@@ -60,6 +60,7 @@ public class TransformObject extends DefaultObject {
                                                                                 .cropRatio(autoCropRatio)
                                                                                 .format(format)
                                                                                 .textWatermark(textWatermark)
+                                                                                .watermarkId(watermarkId)
                                                                                 .colorSpace(colorSpace)
                                                                                 .backgroundColor(backgroundColor)
                                                                                 .compressionLevel(compressionLevel)

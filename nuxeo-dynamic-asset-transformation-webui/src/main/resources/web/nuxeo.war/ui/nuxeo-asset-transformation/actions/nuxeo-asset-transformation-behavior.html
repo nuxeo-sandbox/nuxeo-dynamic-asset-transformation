@@ -1,6 +1,6 @@
 <script>
     var Nuxeo = Nuxeo || {};
-    (function() {
+    (function () {
 
         /**
          * @polymerBehavior Nuxeo.AssetTransformationBehaviorImpl
@@ -50,15 +50,15 @@
 
                 formatOptions: {
                     type: Array,
-                    value: function() {
+                    value: function () {
                         return [
                             {
                                 id: "jpg",
                                 label: "JPEG",
-                            },{
+                            }, {
                                 id: "png",
                                 label: "PNG",
-                            },{
+                            }, {
                                 id: "webp",
                                 label: "WEBP",
                             }
@@ -69,14 +69,33 @@
                 format: {
                     type: String,
                     value: "jpg"
+                },
+
+                textWatermark: {
+                    type: String,
+                    value: 'COPYRIGHT NUXEO PAM 2022'
+                },
+
+                watermarkDocumentPp: {
+                    type: String,
+                    value: "default_watermark_suggestion"
+                },
+
+                watermarkSuggestionHeaders: {
+                    type: Object,
+                    value: function () {
+                        return {
+                            'enrichers.document':'thumbnail'
+                        };
+                    }
                 }
 
             },
 
             observers: ['_srcChanged(document, srcPictureViewName)'],
 
-            _srcChanged: function(document, srcPictureViewName) {
-                if (!document || !this.hasFacet(document,'Picture') || !srcPictureViewName) {
+            _srcChanged: function (document, srcPictureViewName) {
+                if (!document || !this.hasFacet(document, 'Picture') || !srcPictureViewName) {
                     return;
                 }
 
@@ -91,7 +110,7 @@
 
             },
 
-            _resizeWidthChanged: function(width) {
+            _resizeWidthChanged: function (width) {
                 if (width >= this.min && this.targetRatio && Math.round(width / this.effectiveRatio) != this.height) {
                     let newHeight = this.step * Math.round(width / (this.targetRatio * this.step));
                     //effective ratio must be set before height
@@ -101,7 +120,7 @@
                 }
             },
 
-            _resizeHeightChanged: function(height) {
+            _resizeHeightChanged: function (height) {
                 if (height >= this.min && this.targetRatio && Math.round(height * this.effectiveRatio) != this.width) {
                     let newWidth = this.step * Math.round(height * (this.targetRatio / this.step));
                     //effective ratio must be set before width
@@ -109,8 +128,32 @@
                     this.width = newWidth;
 
                 }
-            }
+            },
 
+            thumbnailFormatter: function (doc) {
+                if (!doc.properties) {
+                    return `<span>${doc.title}</span>`;
+                } else {
+                    return `
+                        <div>
+                          <table width='100%'>
+                            <tbody>
+                              <tr>
+                                <td width='75px' style='text-align: center'>
+                                    <img src="${doc.contextParameters.thumbnail.url}" style='width: 75px; height: 75px; display: block; object-fit: cover;' >
+                                </td>
+                                <td>
+                                    <div style='margin-left:15px'>
+                                        <span name=\"suggestionValue\">${doc.title}</span>
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+		            `;
+                }
+            }
         };
 
         /** @polymerBehavior */

@@ -44,6 +44,8 @@ public class ImageTransformationImpl implements Transformation {
 
     protected Blob imageWatermark;
 
+    protected String watermarkId;
+
     protected int compressionLevel;
 
     protected String colorSpace;
@@ -129,6 +131,16 @@ public class ImageTransformationImpl implements Transformation {
     @Override
     public void setImageWatermark(Blob imageWatermark) {
         this.imageWatermark = imageWatermark;
+    }
+
+    @Override
+    public String getWatermarkId() {
+        return watermarkId;
+    }
+
+    @Override
+    public void setWatermarkId(String watermarkId) {
+        this.watermarkId = watermarkId;
     }
 
     @Override

@@ -21,6 +21,7 @@ package org.nuxeo.labs.asset.transformation.service;
 
 import static org.nuxeo.ecm.platform.picture.api.ImagingDocumentConstants.PICTURE_FACET;
 import static org.nuxeo.ecm.platform.video.VideoConstants.VIDEO_FACET;
+import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -30,7 +31,9 @@ import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
 import org.nuxeo.ecm.core.api.blobholder.SimpleBlobHolder;
@@ -43,6 +46,7 @@ import org.nuxeo.ecm.platform.picture.api.PictureViewImpl;
 import org.nuxeo.ecm.platform.video.Video;
 import org.nuxeo.ecm.platform.video.VideoDocument;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
+import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuilder;
 import org.nuxeo.runtime.api.Framework;
 
 public class DynamicTransformationServiceImpl implements DynamicTransformationService {
@@ -54,17 +58,16 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
             PictureView pictureView = new PictureViewImpl();
             pictureView.setBlob((Blob) doc.getPropertyValue("file:content"));
             pictureView.setImageInfo(imageInfo);
-            return transformPicture(pictureView, transformation);
+            return transformPicture(pictureView, transformation, doc.getCoreSession());
         } else if (doc.hasFacet(VIDEO_FACET)) {
             VideoDocument videoDocument = doc.getAdapter(VideoDocument.class);
-            return transformVideo(videoDocument.getVideo(), transformation);
+            return transformVideo(videoDocument.getVideo(), transformation, doc.getCoreSession());
         } else {
             throw new NuxeoException(String.format("Document %s cannot be transformed", doc.getId()));
         }
     }
 
-    @Override
-    public Blob transformPicture(PictureView pictureView, Transformation transformation) {
+    public Blob transformPicture(PictureView pictureView, Transformation transformation, CoreSession session) {
         Blob blob = pictureView.getBlob();
 
         ConversionService conversionService = Framework.getService(ConversionService.class);
@@ -79,7 +82,7 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         convertedBlob.setFilename(getTargetFileName(blob, transformation));
         convertedBlob.setMimeType(mimetype);
 
-        Blob watermarkBlob = getWatermarkBlob(transformation);
+        Blob watermarkBlob = getWatermarkBlob(transformation, session);
 
         if (watermarkBlob == null) {
             return convertedBlob;
@@ -99,12 +102,22 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         }
     }
 
-    @Override
-    public Blob transformVideo(Video video, Transformation transformation) {
+    public Blob transformVideo(Video video, Transformation transformation, CoreSession session) {
+        Map<String, Serializable> params = transformation.toMap();
+        Blob watermarkBlob = getWatermarkBlob(transformation, session);
+        String converterName = "dynamicVideoTransform";
+        if (watermarkBlob != null) {
+            try {
+                params.put("watermarkFilePath", watermarkBlob.getCloseableFile().file.getPath());
+            } catch (IOException e) {
+                throw new NuxeoException(e);
+            }
+            converterName = "dynamicVideoTransformWithWatermark";
+        }
+
         Blob blob = video.getBlob();
         ConversionService conversionService = Framework.getService(ConversionService.class);
-        BlobHolder conversionResult = conversionService.convert("dynamicVideoTransform", new SimpleBlobHolder(blob),
-                transformation.toMap());
+        BlobHolder conversionResult = conversionService.convert(converterName, new SimpleBlobHolder(blob), params);
         Blob convertedBlob = conversionResult.getBlob();
         MimetypeRegistry registry = Framework.getService(MimetypeRegistry.class);
         String mimetype = registry.getMimetypeFromExtension(transformation.getFormat());
@@ -113,11 +126,15 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         return convertedBlob;
     }
 
-    public Blob getWatermarkBlob(Transformation transformation) {
-        if (StringUtils.isNotEmpty(transformation.getTextWatermark())) {
+    public Blob getWatermarkBlob(Transformation transformation, CoreSession session) {
+        if (transformation.getImageWatermark() != null) {
+            return transformation.getImageWatermark();
+        } else if (StringUtils.isNotBlank(transformation.getWatermarkId())) {
+            return getWatermarkFromId(transformation.getWatermarkId(), transformation, session);
+        } else if (StringUtils.isNotBlank(transformation.getTextWatermark())) {
             return getWatermarkBlobFromText(transformation);
         } else {
-            return transformation.getImageWatermark();
+            return null;
         }
     }
 
@@ -126,6 +143,19 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         BlobHolder result = conversionService.convert("text2WatermarkImage",
                 new SimpleBlobHolder(new StringBlob(transformation.getTextWatermark())), transformation.toMap());
         return result.getBlob();
+    }
+
+    public Blob getWatermarkFromId(String watermarkId, Transformation transformation, CoreSession session) {
+        // assume the id is a documentId
+        DocumentModel watermarkDoc = session.getDocument(new IdRef(watermarkId));
+
+        long canvasWidth = transformation.getWidth();
+        long watermarkWidth = Math.max(canvasWidth / 4, 256);
+
+        Transformation watermarkTransformation = new ImageTransformationBuilder(watermarkDoc).width(watermarkWidth)
+                                                                                             .format(PNG)
+                                                                                             .build();
+        return transform(watermarkDoc, watermarkTransformation);
     }
 
     public String getTargetFileName(Blob blob, Transformation transformation) {

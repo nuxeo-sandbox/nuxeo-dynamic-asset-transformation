@@ -40,6 +40,8 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
 
     protected Blob imageWatermark = null;
 
+    protected String watermarkId = null;
+
     protected String colorSpace = null;
 
     protected String backgroundColor = null;
@@ -96,6 +98,11 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
         return getThis();
     }
 
+    public T watermarkId(String watermarkId) {
+        this.watermarkId = watermarkId;
+        return getThis();
+    }
+
     public T colorSpace(String colorSpace) {
         this.colorSpace = colorSpace;
         return getThis();
@@ -140,6 +147,7 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
 
         transformation.setTextWatermark(this.textWatermark);
         transformation.setImageWatermark(this.imageWatermark);
+        transformation.setWatermarkId(this.watermarkId);
 
         transformation.setColorSpace(
                 StringUtils.isNotEmpty(this.colorSpace) ? this.colorSpace : getDefaultColorSpace());

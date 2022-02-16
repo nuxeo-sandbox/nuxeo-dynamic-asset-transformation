@@ -87,6 +87,16 @@ public interface Transformation {
     void setTextWatermark(String text);
 
     /**
+     * @return a watermark identifier
+     */
+    String getWatermarkId();
+
+    /**
+     * @param watermarkId the watermark id
+     */
+    void setWatermarkId(String watermarkId);
+
+    /**
      * @return the image watermark
      */
     Blob getImageWatermark();

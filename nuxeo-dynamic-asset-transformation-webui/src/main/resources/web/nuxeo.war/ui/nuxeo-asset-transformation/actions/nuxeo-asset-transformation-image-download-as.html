@@ -105,7 +105,14 @@
                                      value="{{textWatermark}}"
                                      type="text">
                         </nuxeo-input>
-
+                        <nuxeo-document-suggestion name="watermarkImage" role="widget"
+                                                   value="{{watermarkDocumentId}}"
+                                                   label="Watermark Asset"
+                                                   min-chars="0"
+                                                   page-provider="[[watermarkDocumentPp]]"
+                                                   result-formatter="[[thumbnailFormatter]]"
+                                                   headers="[[watermarkSuggestionHeaders]]">
+                        </nuxeo-document-suggestion>
                     </form>
                 </iron-form>
 
@@ -170,11 +177,6 @@
                 compressionLevel: {
                     type: Number,
                     value: 90
-                },
-
-                textWatermark: {
-                    type: String,
-                    value: 'COPYRIGHT NUXEO PAM 2022'
                 }
 
             },
@@ -203,7 +205,7 @@
             },
 
             _isJpeg: function (format) {
-              return format === 'jpg';
+                return format === 'jpg';
             },
 
             _getCompressionLevelLabel: function(format) {
@@ -224,7 +226,8 @@
                     compressionLevel: this.compressionLevel,
                     width: this.width,
                     height: this.height,
-                    textWatermark: this.textWatermark
+                    textWatermark: this.textWatermark,
+                    watermarkId: this.watermarkDocumentId
                 };
 
                 if (this._isJpeg(this.format)) {
@@ -253,4 +256,5 @@
         });
     </script>
 </dom-module>
+
 

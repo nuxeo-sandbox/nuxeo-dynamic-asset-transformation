@@ -39,7 +39,7 @@
 
         </style>
 
-        <nuxeo-operation id="transformOp" op="Blob.VideoTransform" input="[[document.uid]]" schemas="*"
+        <nuxeo-operation id="transformOp" op="[[operationName]]" input="[[document.uid]]" schemas="*"
                          async></nuxeo-operation>
 
         <iron-localstorage id="storage" name="ondemand" value="{{jobs}}"></iron-localstorage>
@@ -126,6 +126,20 @@
                                      max="3840"
                                      step="2">
                         </nuxeo-input>
+                        <nuxeo-input name="watermark"
+                                     role="widget"
+                                     label="[[i18n('label.action.transform.watermark')]]"
+                                     value="{{textWatermark}}"
+                                     type="text">
+                        </nuxeo-input>
+                        <nuxeo-document-suggestion name="watermarkImage" role="widget"
+                                                   value="{{watermarkDocumentId}}"
+                                                   label="Watermark Asset"
+                                                   min-chars="0"
+                                                   page-provider="[[watermarkDocumentPp]]"
+                                                   result-formatter="[[thumbnailFormatter]]"
+                                                   headers="[[watermarkSuggestionHeaders]]">
+                        </nuxeo-document-suggestion>
 
                     </form>
                 </iron-form>
@@ -169,9 +183,9 @@
                     value: 'icons:save'
                 },
 
-                textWatermark: {
+                operationName: {
                     type: String,
-                    value: 'COPYRIGHT NUXEO PAM 2022'
+                    value: 'Blob.VideoTransform'
                 },
 
                 cropFormat: {
@@ -401,16 +415,19 @@
 
                 let cropRatio = typeof this.targetRatio === 'string' ? this.targetRatio : this.targetRatio.toFixed(4);
 
-                this.$.transformOp.params = {
+                let params = {
                     width: this.width,
                     height: this.height,
                     autoCropRatio: cropRatio,
                     textWatermark: this.textWatermark,
+                    watermarkId : this.watermarkDocumentId,
                     format: this.format,
                     audioCodec: this.audioCodec,
                     videoCodec: this.videoCodec,
                     compressionLevel: this.compressionLevel
                 };
+
+                this.$.transformOp.params = params;
 
                 this.$.transformOp._poll = function (url) {
                     return Promise.resolve(url);
@@ -430,17 +447,8 @@
                         this.jobs.push({
                             uid: this.document.uid,
                             url: response,
-                            params: {
-                                type: 'VideoConversion',
-                                width: this.width,
-                                height: this.height,
-                                autoCropRatio: cropRatio,
-                                textWatermark: this.textWatermark,
-                                format: this.format,
-                                audioCodec: this.audioCodec,
-                                videoCodec: this.videoCodec,
-                                compressionLevel: this.compressionLevel
-                            }
+                            type: 'VideoConversion',
+                            params: params
                         });
                     }
                     this.$.storage.save();

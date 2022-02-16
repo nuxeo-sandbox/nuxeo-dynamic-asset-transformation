@@ -58,8 +58,8 @@ public class Transform {
     public Object getTransform(@PathParam("repository") String repository, @PathParam("id") String documentId,
             @QueryParam("width") long width, @QueryParam("height") long height, @QueryParam("format") String format,
             @QueryParam("crop") String crop, @QueryParam("autoCropRatio") double autoCropRatio,
-            @QueryParam("textWatermark") String textWatermark, @QueryParam("colorSpace") String colorSpace,
-            @QueryParam("backgroundColor") String backgroundColor,
+            @QueryParam("textWatermark") String textWatermark, @QueryParam("watermarkId") String watermarkId,
+            @QueryParam("colorSpace") String colorSpace, @QueryParam("backgroundColor") String backgroundColor,
             @QueryParam("compressionLevel") int compressionLevel) {
 
         return Framework.doPrivileged(() -> {
@@ -68,28 +68,26 @@ public class Transform {
             PublicDownloadLinkService downloadLinkService = Framework.getService(PublicDownloadLinkService.class);
             if (!downloadLinkService.hasPublicDownloadPermission(document, "file:content")) {
                 return buildError(Response.Status.NOT_FOUND);
-            } else {
-                DynamicTransformationService service = Framework.getService(DynamicTransformationService.class);
-                Transformation transformation = new ImageTransformationBuilder(document).width(width)
-                                                                                        .height(height)
-                                                                                        .cropBox(crop)
-                                                                                        .cropRatio(autoCropRatio)
-                                                                                        .format(format)
-                                                                                        .textWatermark(textWatermark)
-                                                                                        .colorSpace(colorSpace)
-                                                                                        .backgroundColor(
-                                                                                                backgroundColor)
-                                                                                        .compressionLevel(
-                                                                                                compressionLevel)
-                                                                                        .build();
-                Blob renditionBlob = service.transform(document, transformation);
-                TransientStoreService transientStoreService = Framework.getService(TransientStoreService.class);
-                TransientStore store = transientStoreService.getStore("image-transformation");
-                String key = document.getId() + transformation;
-                store.putBlobs(key, List.of(renditionBlob));
-                store.setCompleted(key, true);
-                return store.getBlobs(key).get(0);
             }
+            DynamicTransformationService service = Framework.getService(DynamicTransformationService.class);
+            Transformation transformation = new ImageTransformationBuilder(document).width(width)
+                                                                                    .height(height)
+                                                                                    .cropBox(crop)
+                                                                                    .cropRatio(autoCropRatio)
+                                                                                    .format(format)
+                                                                                    .textWatermark(textWatermark)
+                                                                                    .watermarkId(watermarkId)
+                                                                                    .colorSpace(colorSpace)
+                                                                                    .backgroundColor(backgroundColor)
+                                                                                    .compressionLevel(compressionLevel)
+                                                                                    .build();
+            Blob renditionBlob = service.transform(document, transformation);
+            TransientStoreService transientStoreService = Framework.getService(TransientStoreService.class);
+            TransientStore store = transientStoreService.getStore("image-transformation");
+            String key = document.getId() + transformation;
+            store.putBlobs(key, List.of(renditionBlob));
+            store.setCompleted(key, true);
+            return store.getBlobs(key).get(0);
         });
     }
 

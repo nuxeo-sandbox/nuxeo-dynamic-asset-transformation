@@ -19,8 +19,6 @@
 
 package org.nuxeo.labs.asset.transformation.automation;
 
-import java.io.File;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +33,6 @@ import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
@@ -67,5 +64,4 @@ public class TestVideoTransformOperation {
         Blob transformedVideo = (Blob) automationService.run(ctx, VideoTransformOp.ID, params);
         Assert.assertNotNull(transformedVideo);
     }
-
 }

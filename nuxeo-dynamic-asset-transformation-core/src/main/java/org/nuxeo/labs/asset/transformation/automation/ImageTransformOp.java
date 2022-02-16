@@ -58,6 +58,9 @@ public class ImageTransformOp {
     @Param(name = "imageWatermark", required = false)
     Blob imageWatermark;
 
+    @Param(name = "watermarkId", required = false)
+    String watermarkId;
+
     @Param(name = "colorSpace", required = false)
     String colorSpace;
 
@@ -79,6 +82,7 @@ public class ImageTransformOp {
                                                                                 .format(format)
                                                                                 .textWatermark(textWatermark)
                                                                                 .imageWatermark(imageWatermark)
+                                                                                .watermarkId(watermarkId)
                                                                                 .colorSpace(colorSpace)
                                                                                 .backgroundColor(backgroundColor)
                                                                                 .compressionLevel(compressionLevel)

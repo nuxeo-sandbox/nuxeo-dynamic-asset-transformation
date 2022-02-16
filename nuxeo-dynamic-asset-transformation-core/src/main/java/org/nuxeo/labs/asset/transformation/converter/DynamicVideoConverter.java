@@ -33,9 +33,11 @@ public class DynamicVideoConverter extends CommandLineConverter {
     public BlobHolder convert(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
         // Convert cropbox to ffmpeg format
         CropBox cropBox = (CropBox) parameters.get("crop");
-        String ffmpegCrop = String.format("crop=%d:%d:%d:%d", cropBox.getWidth(), cropBox.getHeight(),
-                cropBox.getLeft(), cropBox.getTop());
-        parameters.put("crop", ffmpegCrop);
+        String filtertemplate = initParameters.get("filterTemplate");
+        String ffmpegCrop = String.format(filtertemplate, cropBox.getWidth(), cropBox.getHeight(), cropBox.getLeft(),
+                cropBox.getTop());
+        parameters.remove("crop");
+        parameters.put("filter", ffmpegCrop);
         return super.convert(blobHolder, parameters);
     }
 }
