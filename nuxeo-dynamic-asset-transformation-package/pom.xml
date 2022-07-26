@@ -33,10 +33,6 @@
       <groupId>org.nuxeo.labs.asset.transformation</groupId>
       <artifactId>nuxeo-dynamic-asset-transformation-webui</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.nuxeo.labs.asset.transformation</groupId>
-      <artifactId>nuxeo-dynamic-asset-transformation-public-endpoint</artifactId>
-    </dependency>
   </dependencies>
 
   <build>
