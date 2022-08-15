@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.nuxeo</groupId>
     <artifactId>nuxeo-parent</artifactId>
-    <version>2021.9</version>
+    <version>2021.23</version>
   </parent>
 
   <groupId>org.nuxeo.labs.asset.transformation</groupId>
@@ -93,8 +93,8 @@
       </snapshots>
     </repository>
     <repository>
-      <id>maven-internal</id>
-      <url>https://packages.nuxeo.com/repository/maven-internal/</url>
+      <id>maven-private</id>
+      <url>https://packages.nuxeo.com/repository/maven-private/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
