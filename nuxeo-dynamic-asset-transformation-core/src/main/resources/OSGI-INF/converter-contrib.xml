@@ -2,6 +2,17 @@
 <component name="org.nuxeo.labs.asset.transformation.converter">
 
     <extension point="converter" target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl">
+
+        <extension point="converter" target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl">
+            <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="solidCanvasGenerator">
+                <sourceMimeType>*</sourceMimeType>
+                <destinationMimeType>image/png</destinationMimeType>
+                <parameters>
+                    <parameter name="CommandLineName">solidCanvasGenerator</parameter>
+                </parameters>
+            </converter>
+        </extension>
+
         <converter class="org.nuxeo.labs.asset.transformation.converter.DynamicImageConverter" name="dynamicImageResizer">
             <sourceMimeType>image/*</sourceMimeType>
             <sourceMimeType>application/photoshop</sourceMimeType>

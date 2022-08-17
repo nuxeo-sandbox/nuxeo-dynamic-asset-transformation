@@ -5,6 +5,15 @@
 
     <extension target="org.nuxeo.ecm.platform.commandline.executor.service.CommandLineExecutorComponent" point="command">
 
+        <extension target="org.nuxeo.ecm.platform.commandline.executor.service.CommandLineExecutorComponent" point="command">
+            <command name="solidCanvasGenerator" enabled="true">
+                <commandLine>convert</commandLine>
+                <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet  -size #{width}x#{height} -colorspace sRGB  xc:#{color} png:#{targetFilePath}</parameterString>
+                <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet  -size #{width}x#{height} -colorspace sRGB xc:#{color} png:#{targetFilePath}</winParameterString>
+                <installationDirective>You need to install ImageMagick.</installationDirective>
+            </command>
+        </extension>
+
         <command name="dynamicImageResizerCli" enabled="true">
             <commandLine>convert</commandLine>
             <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet  #{sourceFilePath}[0] -background #{backgroundColor} -flatten -gravity NorthWest -crop #{crop} -resize #{width}x#{height}! -strip -sampling-factor 4:2:0 -quality #{compressionLevel} -colorspace #{colorSpace} -alpha remove #{format}:#{targetFilePath}</parameterString>

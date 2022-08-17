@@ -83,4 +83,16 @@ public class TestConverters {
         Blob resultBlob = result.getBlob();
         Assert.assertNotNull(resultBlob);
     }
+
+    @Test
+    public void TestSolidCanvasGeneratorConverter() {
+        Map<String, Serializable> params = new HashMap<>();
+        params.put("color", "none");
+        params.put("width", "240");
+        params.put("height", "240");
+        BlobHolder result = conversionService.convert("solidCanvasGenerator", new SimpleBlobHolder(new StringBlob("")), params);
+        Blob canvas = result.getBlob();
+        Assert.assertNotNull(canvas);
+        Assert.assertEquals("image/png", canvas.getMimeType());
+    }
 }

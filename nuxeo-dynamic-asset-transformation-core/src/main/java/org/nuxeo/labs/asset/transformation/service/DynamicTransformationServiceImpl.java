@@ -82,12 +82,12 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         convertedBlob.setFilename(getTargetFileName(blob, transformation));
         convertedBlob.setMimeType(mimetype);
 
-        Blob watermarkBlob = getWatermarkBlob(transformation, session);
-
-        if (watermarkBlob == null) {
-            return convertedBlob;
-        }
         try {
+            Blob watermarkBlob = getWatermarkBlob(transformation, session);
+            if (watermarkBlob == null) {
+                return convertedBlob;
+            }
+
             Map<String, Serializable> params = new HashMap<>();
             params.put("format", transformation.getFormat());
             params.put("watermarkFilePath", watermarkBlob.getCloseableFile().file.getPath());
@@ -104,15 +104,16 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
 
     public Blob transformVideo(Video video, Transformation transformation, CoreSession session) {
         Map<String, Serializable> params = transformation.toMap();
-        Blob watermarkBlob = getWatermarkBlob(transformation, session);
         String converterName = "dynamicVideoTransform";
-        if (watermarkBlob != null) {
-            try {
+
+        try {
+            Blob watermarkBlob = getWatermarkBlob(transformation, session);
+            if (watermarkBlob != null) {
+                converterName = "dynamicVideoTransformWithWatermark";
                 params.put("watermarkFilePath", watermarkBlob.getCloseableFile().file.getPath());
-            } catch (IOException e) {
-                throw new NuxeoException(e);
             }
-            converterName = "dynamicVideoTransformWithWatermark";
+        } catch (IOException e) {
+            throw new NuxeoException(e);
         }
 
         Blob blob = video.getBlob();
@@ -126,16 +127,23 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         return convertedBlob;
     }
 
-    public Blob getWatermarkBlob(Transformation transformation, CoreSession session) {
-        if (transformation.getImageWatermark() != null) {
-            return transformation.getImageWatermark();
-        } else if (StringUtils.isNotBlank(transformation.getWatermarkId())) {
-            return getWatermarkFromId(transformation.getWatermarkId(), transformation, session);
-        } else if (StringUtils.isNotBlank(transformation.getTextWatermark())) {
-            return getWatermarkBlobFromText(transformation);
-        } else {
+    public Blob getWatermarkBlob(Transformation transformation, CoreSession session) throws IOException {
+        // compose base watermark on target image size canvas
+        // get base watermark
+        Blob baseWatermark = getBaseWatermark(transformation, session);
+        if (baseWatermark == null) {
             return null;
         }
+        // get blank canvas
+        Blob canvas = getTransparentCanvas(transformation.getWidth(), transformation.getWidth());
+        // compose
+        ConversionService conversionService = Framework.getService(ConversionService.class);
+        Map<String, Serializable> params = new HashMap<>();
+        params.put("format", "png");
+        params.put("watermarkFilePath", baseWatermark.getCloseableFile().file.getPath());
+        BlobHolder watermarkHolder = conversionService.convert("composeWatermarkedImage", new SimpleBlobHolder(canvas),
+                params);
+        return watermarkHolder.getBlob();
     }
 
     public Blob getWatermarkBlobFromText(Transformation transformation) {
@@ -143,6 +151,7 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         BlobHolder result = conversionService.convert("text2WatermarkImage",
                 new SimpleBlobHolder(new StringBlob(transformation.getTextWatermark())), transformation.toMap());
         return result.getBlob();
+
     }
 
     public Blob getWatermarkFromId(String watermarkId, Transformation transformation, CoreSession session) {
@@ -162,5 +171,29 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         String name = FilenameUtils.removeExtension(blob.getFilename());
         return String.format("%s_%dx%d.%s", name, transformation.getWidth(), transformation.getHeight(),
                 transformation.getFormat());
+    }
+
+    public Blob getTransparentCanvas(long width, long height) {
+        ConversionService conversionService = Framework.getService(ConversionService.class);
+        Map<String, Serializable> params = new HashMap<>();
+        params.put("color", "none");
+        params.put("height", "" + height);
+        params.put("width", "" + width);
+        // get transparent canvas with same dimension as the final transformed image
+        BlobHolder blobHolder = conversionService.convert("solidCanvasGenerator",
+                new SimpleBlobHolder(new StringBlob("")), params);
+        return blobHolder.getBlob();
+    }
+
+    public Blob getBaseWatermark(Transformation transformation, CoreSession session) {
+        Blob baseBlob = null;
+        if (transformation.getImageWatermark() != null) {
+            baseBlob = transformation.getImageWatermark();
+        } else if (StringUtils.isNotBlank(transformation.getWatermarkId())) {
+            baseBlob = getWatermarkFromId(transformation.getWatermarkId(), transformation, session);
+        } else if (StringUtils.isNotBlank(transformation.getTextWatermark())) {
+            baseBlob = getWatermarkBlobFromText(transformation);
+        }
+        return baseBlob;
     }
 }
