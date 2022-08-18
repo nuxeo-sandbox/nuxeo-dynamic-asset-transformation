@@ -88,8 +88,46 @@
                             'enrichers.document':'thumbnail'
                         };
                     }
-                }
+                },
 
+                watermarkGravityOptions: {
+                    type: Array,
+                    value: function () {
+                        return [
+                            {
+                                id: "tile",
+                                label: "Tile"
+                            }, {
+                                id: "Center",
+                                label: "Center"
+                            }, {
+                                id: "East",
+                                label: "East"
+                            }, {
+                                id: "NorthEast",
+                                label: "NorthEast"
+                            }, {
+                                id: "North",
+                                label: "North"
+                            }, {
+                                id: "NorthWest",
+                                label: "NorthWest"
+                            }, {
+                                id: "SouthEast",
+                                label: "SouthEast"
+                            }, {
+                                id: "South",
+                                label: "South"
+                            }, {
+                                id: "SouthWest",
+                                label: "SouthWest"
+                            }, {
+                                id: "West",
+                                label: "West"
+                            }
+                        ];
+                    }
+                }
             },
 
             observers: ['_srcChanged(document, srcPictureViewName)'],

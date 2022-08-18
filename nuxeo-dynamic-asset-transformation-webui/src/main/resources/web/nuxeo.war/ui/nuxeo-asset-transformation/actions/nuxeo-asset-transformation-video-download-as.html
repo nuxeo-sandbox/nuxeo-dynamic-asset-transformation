@@ -140,7 +140,14 @@
                                                    result-formatter="[[thumbnailFormatter]]"
                                                    headers="[[watermarkSuggestionHeaders]]">
                         </nuxeo-document-suggestion>
-
+                        <div role="widget">
+                            <label>[[i18n('label.action.transform.watermark.gravity')]]</label>
+                            <nuxeo-select role="widget"
+                                          name="format"
+                                          placeholder="[[i18n('label.action.transform.watermark.gravity')]]"
+                                          options="[[watermarkGravityOptions]]" selected="{{watermarkGravity}}">
+                            </nuxeo-select>
+                        </div>
                     </form>
                 </iron-form>
 
@@ -421,6 +428,7 @@
                     autoCropRatio: cropRatio,
                     textWatermark: this.textWatermark,
                     watermarkId : this.watermarkDocumentId,
+                    watermarkGravity: this.watermarkGravity,
                     format: this.format,
                     audioCodec: this.audioCodec,
                     videoCodec: this.videoCodec,

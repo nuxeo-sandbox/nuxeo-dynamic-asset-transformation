@@ -72,7 +72,7 @@ public class TestImageTransformationBuilder {
         Assert.assertEquals(WIDTH, transformation.getWidth());
         Assert.assertEquals(TestFeature.HEIGHT, transformation.getHeight());
         Assert.assertEquals(JPG, transformation.getFormat());
-
+        Assert.assertEquals("tile", transformation.getWatermarkGravity());
     }
 
     @Test
@@ -88,6 +88,7 @@ public class TestImageTransformationBuilder {
                                                                                  .imageWatermark(
                                                                                          new StringBlob("TheBlob"))
                                                                                  .watermarkId("TheNiceWatermark")
+                                                                                 .watermarkGravity("North")
                                                                                  .backgroundColor("white")
                                                                                  .compressionLevel(10)
                                                                                  .build();
@@ -99,7 +100,8 @@ public class TestImageTransformationBuilder {
         Assert.assertEquals("white", transformation.getBackgroundColor());
         Assert.assertEquals("Hello", transformation.getTextWatermark());
         Assert.assertEquals("TheBlob", transformation.getImageWatermark().getString());
-        Assert.assertEquals("TheNiceWatermark",transformation.getWatermarkId());
+        Assert.assertEquals("TheNiceWatermark", transformation.getWatermarkId());
+        Assert.assertEquals("North", transformation.getWatermarkGravity());
     }
 
     @Test

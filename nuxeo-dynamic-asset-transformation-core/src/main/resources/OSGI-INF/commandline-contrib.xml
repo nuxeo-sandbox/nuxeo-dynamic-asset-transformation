@@ -28,10 +28,17 @@
             <installationDirective>You need to install ImageMagick.</installationDirective>
         </command>
 
-        <command name="composeWatermarkedImage" enabled="true">
+        <command name="composeTileWatermarkedImage" enabled="true">
             <commandLine>composite</commandLine>
             <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -tile #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</parameterString>
             <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -tile #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</winParameterString>
+            <installationDirective>You need to install ImageMagick.</installationDirective>
+        </command>
+
+        <command name="composeGravityWatermarkedImage" enabled="true">
+            <commandLine>composite</commandLine>
+            <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -gravity #{gravity} #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</parameterString>
+            <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -gravity #{gravity} #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</winParameterString>
             <installationDirective>You need to install ImageMagick.</installationDirective>
         </command>
 

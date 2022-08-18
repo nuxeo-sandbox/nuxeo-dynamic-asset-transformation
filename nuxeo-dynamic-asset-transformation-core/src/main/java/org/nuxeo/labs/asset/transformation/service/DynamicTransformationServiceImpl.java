@@ -90,8 +90,9 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
 
             Map<String, Serializable> params = new HashMap<>();
             params.put("format", transformation.getFormat());
+            params.put("gravity","Center");
             params.put("watermarkFilePath", watermarkBlob.getCloseableFile().file.getPath());
-            BlobHolder watermarkResult = conversionService.convert("composeWatermarkedImage",
+            BlobHolder watermarkResult = conversionService.convert("composeGravityWatermarkedImage",
                     new SimpleBlobHolder(convertedBlob), params);
             Blob watermarkedBlob = watermarkResult.getBlob();
             watermarkedBlob.setFilename(getTargetFileName(blob, transformation));
@@ -135,13 +136,21 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
             return null;
         }
         // get blank canvas
-        Blob canvas = getTransparentCanvas(transformation.getWidth(), transformation.getWidth());
+        Blob canvas = getTransparentCanvas(transformation.getWidth(), transformation.getHeight());
         // compose
         ConversionService conversionService = Framework.getService(ConversionService.class);
+        String converterName;
         Map<String, Serializable> params = new HashMap<>();
-        params.put("format", "png");
         params.put("watermarkFilePath", baseWatermark.getCloseableFile().file.getPath());
-        BlobHolder watermarkHolder = conversionService.convert("composeWatermarkedImage", new SimpleBlobHolder(canvas),
+        String watermarkGravity = transformation.getWatermarkGravity();
+        if ("tile".equals(watermarkGravity)) {
+            converterName = "composeTileWatermarkedImage";
+        } else {
+            converterName = "composeGravityWatermarkedImage";
+            params.put("gravity", transformation.getWatermarkGravity());
+        }
+        params.put("format", "png");
+        BlobHolder watermarkHolder = conversionService.convert(converterName, new SimpleBlobHolder(canvas),
                 params);
         return watermarkHolder.getBlob();
     }

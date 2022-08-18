@@ -64,6 +64,9 @@ public class VideoTransformOp {
     @Param(name = "imageWatermark", required = false)
     Blob imageWatermark;
 
+    @Param(name = "watermarkGravity", required = false)
+    String watermarkGravity;
+
     @Param(name = "watermarkId", required = false)
     String watermarkId;
 
@@ -85,6 +88,7 @@ public class VideoTransformOp {
                                                                                 .textWatermark(textWatermark)
                                                                                 .imageWatermark(imageWatermark)
                                                                                 .watermarkId(watermarkId)
+                                                                                .watermarkGravity(watermarkGravity)
                                                                                 .compressionLevel(compressionLevel)
                                                                                 .build();
         return transformationService.transform(document, transformation);

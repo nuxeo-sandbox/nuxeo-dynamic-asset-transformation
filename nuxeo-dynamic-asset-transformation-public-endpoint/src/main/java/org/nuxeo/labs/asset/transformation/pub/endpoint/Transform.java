@@ -59,7 +59,8 @@ public class Transform {
             @QueryParam("width") long width, @QueryParam("height") long height, @QueryParam("format") String format,
             @QueryParam("crop") String crop, @QueryParam("autoCropRatio") double autoCropRatio,
             @QueryParam("textWatermark") String textWatermark, @QueryParam("watermarkId") String watermarkId,
-            @QueryParam("colorSpace") String colorSpace, @QueryParam("backgroundColor") String backgroundColor,
+            @QueryParam("watermarkGravity") String watermarkGravity, @QueryParam("colorSpace") String colorSpace,
+            @QueryParam("backgroundColor") String backgroundColor,
             @QueryParam("compressionLevel") int compressionLevel) {
 
         return Framework.doPrivileged(() -> {
@@ -77,6 +78,7 @@ public class Transform {
                                                                                     .format(format)
                                                                                     .textWatermark(textWatermark)
                                                                                     .watermarkId(watermarkId)
+                                                                                    .watermarkGravity(watermarkGravity)
                                                                                     .colorSpace(colorSpace)
                                                                                     .backgroundColor(backgroundColor)
                                                                                     .compressionLevel(compressionLevel)

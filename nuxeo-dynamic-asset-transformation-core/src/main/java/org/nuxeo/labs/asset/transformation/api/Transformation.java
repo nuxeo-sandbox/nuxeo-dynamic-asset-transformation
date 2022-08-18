@@ -107,6 +107,18 @@ public interface Transformation {
     void setImageWatermark(Blob image);
 
     /**
+     *
+     * @return the watermark relative position
+     */
+    String getWatermarkGravity();
+
+    /**
+     *
+     * @param gravity the watermark relative position
+     */
+    void setWatermarkGravity(String gravity);
+
+    /**
      * @return colorspace name
      */
     String getColorSpace();

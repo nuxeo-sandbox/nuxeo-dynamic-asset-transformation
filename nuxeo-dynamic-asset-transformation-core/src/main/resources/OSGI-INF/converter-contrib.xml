@@ -31,12 +31,21 @@
             </parameters>
         </converter>
 
-        <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="composeWatermarkedImage">
+        <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="composeTileWatermarkedImage">
             <sourceMimeType>image/*</sourceMimeType>
             <sourceMimeType>application/photoshop</sourceMimeType>
             <sourceMimeType>application/illustrator</sourceMimeType>
             <parameters>
-                <parameter name="CommandLineName">composeWatermarkedImage</parameter>
+                <parameter name="CommandLineName">composeTileWatermarkedImage</parameter>
+            </parameters>
+        </converter>
+
+        <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="composeGravityWatermarkedImage">
+            <sourceMimeType>image/*</sourceMimeType>
+            <sourceMimeType>application/photoshop</sourceMimeType>
+            <sourceMimeType>application/illustrator</sourceMimeType>
+            <parameters>
+                <parameter name="CommandLineName">composeGravityWatermarkedImage</parameter>
             </parameters>
         </converter>
 
