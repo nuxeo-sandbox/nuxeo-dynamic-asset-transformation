@@ -1,0 +1,184 @@
+<!--
+`nuxeo-asset-transformation-watermark-selection`
+@group Nuxeo UI
+@element nuxeo-asset-transformation-watermark-selection
+-->
+<dom-module id="nuxeo-asset-transformation-watermark-selection">
+    <template>
+        <style include="nuxeo-styles"></style>
+
+        <div role="widget">
+            <label>[[i18n('label.action.transform.watermark')]]</label>
+            <nuxeo-select role="widget"
+                          name="watermark"
+                          options="[[watermarkOptions]]" selected="{{watermark}}">
+            </nuxeo-select>
+        </div>
+        <template is="dom-if" if="[[_isText(watermark)]]">
+            <nuxeo-input name="watermarkText"
+                         role="widget"
+                         label="[[i18n('label.action.transform.watermark.text')]]"
+                         value="{{watermarkText}}"
+                         type="text">
+            </nuxeo-input>
+        </template>
+        <template is="dom-if" if="[[_isImage(watermark)]]">
+            <nuxeo-document-suggestion name="watermarkImage" role="widget"
+                                       value="{{watermarkDocumentId}}"
+                                       label="[[i18n('label.action.transform.watermark.asset')]]"
+                                       min-chars="0"
+                                       page-provider="[[watermarkDocumentPp]]"
+                                       result-formatter="[[thumbnailFormatter]]"
+                                       headers="[[watermarkSuggestionHeaders]]">
+            </nuxeo-document-suggestion>
+        </template>
+        <template is="dom-if" if="[[_isEnabled(watermark)]]">
+            <div role="widget">
+                <label>[[i18n('label.action.transform.watermark.gravity')]]</label>
+                <nuxeo-select role="widget"
+                              name="format"
+                              placeholder="[[i18n('label.action.transform.watermark.gravity')]]"
+                              options="[[watermarkGravityOptions]]" selected="{{watermarkGravity}}">
+                </nuxeo-select>
+            </div>
+        </template>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'nuxeo-asset-transformation-watermark-selection',
+            behaviors: [Nuxeo.LayoutBehavior],
+            properties: {
+                watermark: {
+                    type: String,
+                    notify: true
+                },
+
+                watermarkText: {
+                    type: String,
+                    notify: true
+                },
+
+                watermarkDocumentId: {
+                    type: String,
+                    notify: true
+                },
+
+                watermarkGravity: {
+                    type: String,
+                    notify: true
+                },
+
+                watermarkOptions: {
+                    type: Array,
+                    value: function () {
+                        return [
+                            {
+                                id: "none",
+                                label: this.i18n("label.watermark.none")
+                            }, {
+                                id: "text",
+                                label: this.i18n("label.watermark.text")
+                            }, {
+                                id: "image",
+                                label: this.i18n("label.watermark.image")
+                            }
+                        ];
+                    }
+                },
+
+                watermarkDocumentPp: {
+                    type: String
+                },
+
+                watermarkSuggestionHeaders: {
+                    type: Object,
+                    value: function () {
+                        return {
+                            'enrichers.document':'thumbnail'
+                        };
+                    }
+                },
+
+                watermarkGravityOptions: {
+                    type: Array,
+                    value: function () {
+                        return [
+                            {
+                                id: "tile",
+                                label: this.i18n("label.watermark.gravity.tile")
+                            }, {
+                                id: "Center",
+                                label: this.i18n("label.watermark.gravity.center")
+                            }, {
+                                id: "East",
+                                label: this.i18n("label.watermark.gravity.east")
+                            }, {
+                                id: "NorthEast",
+                                label: this.i18n("label.watermark.gravity.northEast")
+                            }, {
+                                id: "North",
+                                label: this.i18n("label.watermark.gravity.north")
+                            }, {
+                                id: "NorthWest",
+                                label: this.i18n("label.watermark.gravity.northWest")
+                            }, {
+                                id: "SouthEast",
+                                label: this.i18n("label.watermark.gravity.southEast")
+                            }, {
+                                id: "South",
+                                label: this.i18n("label.watermark.gravity.south")
+                            }, {
+                                id: "SouthWest",
+                                label: this.i18n("label.watermark.gravity.southWest")
+                            }, {
+                                id: "West",
+                                label: this.i18n("label.watermark.gravity.west")
+                            }
+                        ];
+                    }
+                }
+
+            },
+
+            thumbnailFormatter: function (doc) {
+                if (!doc.properties) {
+                    return `<span>${doc.title}</span>`;
+                } else {
+                    return `
+                        <div>
+                          <table width='100%'>
+                            <tbody>
+                              <tr>
+                                <td width='75px' style='text-align: center'>
+                                    <img src="${doc.contextParameters.thumbnail.url}" style='width: 75px; height: 75px; display: block; object-fit: cover;' >
+                                </td>
+                                <td>
+                                    <div style='margin-left:15px'>
+                                        <span name=\"suggestionValue\">${doc.title}</span>
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+		            `;
+                }
+            },
+
+            _isText: function(watermark) {
+                return watermark === 'text';
+            },
+
+            _isImage: function(watermark) {
+                return watermark === 'image';
+            },
+
+            _isEnabled: function(watermark) {
+                return watermark && watermark !== 'none';
+            }
+
+        });
+    </script>
+</dom-module>

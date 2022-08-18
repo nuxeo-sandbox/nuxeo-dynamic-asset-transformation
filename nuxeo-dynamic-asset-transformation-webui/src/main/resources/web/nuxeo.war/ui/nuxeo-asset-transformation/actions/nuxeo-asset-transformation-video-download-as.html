@@ -18,14 +18,6 @@
                 @apply --layout-flex;
             }
 
-            .email_title {
-                margin-top: 32px;
-            }
-
-            .acknowledge {
-                margin-top: 24px;
-            }
-
             #progress {
                 margin: 0px;
                 margin-top: 16px;
@@ -52,106 +44,92 @@
 
         <nuxeo-dialog id="dialog" on-iron-overlay-closed="_dialogClosed" with-backdrop>
             <h2>[[i18n(label)]]</h2>
-            <div class="content">
-                <iron-form id="form">
-                    <form>
-                        <div role="widget">
-                            <label>[[i18n('label.action.transform.format')]]</label>
-                            <nuxeo-select role="widget"
-                                          name="format"
-                                          placeholder="[[i18n('label.action.transform.format')]]"
-                                          options="[[formatOptions]]" selected="{{format}}">
-                            </nuxeo-select>
-                        </div>
+            <paper-dialog-scrollable>
+                <div class="content">
+                    <iron-form id="form">
+                        <form>
+                            <div role="widget">
+                                <label>[[i18n('label.action.transform.format')]]</label>
+                                <nuxeo-select role="widget"
+                                              name="format"
+                                              placeholder="[[i18n('label.action.transform.format')]]"
+                                              options="[[formatOptions]]" selected="{{format}}">
+                                </nuxeo-select>
+                            </div>
 
-                        <div role="widget">
-                            <label>[[i18n('label.action.transform.video.codec')]]</label>
-                            <nuxeo-select role="widget"
-                                          name="videoCodec"
-                                          options="[[_getVideoCodecs(format)]]" selected="{{videoCodec}}">
-                            </nuxeo-select>
-                        </div>
+                            <div role="widget">
+                                <label>[[i18n('label.action.transform.video.codec')]]</label>
+                                <nuxeo-select role="widget"
+                                              name="videoCodec"
+                                              options="[[_getVideoCodecs(format)]]" selected="{{videoCodec}}">
+                                </nuxeo-select>
+                            </div>
 
-                        <nuxeo-input name="compressionLevel"
-                                     role="widget"
-                                     label="[[i18n('label.action.transform.compression.level')]]"
-                                     value="{{compressionLevel}}"
-                                     type="number"
-                                     min="1"
-                                     max="63"
-                                     setp="1">
-                        </nuxeo-input>
-
-                        <div role="widget">
-                            <label>[[i18n('label.action.transform.audio.codec')]]</label>
-                            <nuxeo-select role="widget"
-                                          name="audioCodec"
-                                          options="[[_getAudioCodecs(format)]]" selected="{{audioCodec}}">
-                            </nuxeo-select>
-                        </div>
-
-                        <div role="widget">
-                            <label>[[i18n('label.action.transform.ratio')]]</label>
-                            <nuxeo-select role="widget"
-                                          name="cropFormat"
-                                          options="[[_getCropFormatOptions(document)]]" selected="{{cropFormat}}">
-                            </nuxeo-select>
-                        </div>
-                        <template is="dom-if" if="[[_isFreeCropRatio(cropFormat)]]">
-                            <nuxeo-input name="ratio"
+                            <nuxeo-input name="compressionLevel"
                                          role="widget"
-                                         label="[[i18n('label.action.transform.ratio')]]"
-                                         value="{{targetRatio}}"
+                                         label="[[i18n('label.action.transform.compression.level')]]"
+                                         value="{{compressionLevel}}"
                                          type="number"
-                                         min="0.0001"
-                                         step="0.0001">
+                                         min="1"
+                                         max="63"
+                                         setp="1">
                             </nuxeo-input>
-                        </template>
 
-                        <nuxeo-input name="width"
-                                     role="widget"
-                                     label="[[i18n('label.action.transform.width')]]"
-                                     value="{{width}}"
-                                     type="number"
-                                     min="[[min]]"
-                                     max="3840"
-                                     step="2">
-                        </nuxeo-input>
-                        <nuxeo-input name="height"
-                                     role="widget"
-                                     label="[[i18n('label.action.transform.height')]]"
-                                     value="{{height}}"
-                                     type="number"
-                                     min="[[min]]"
-                                     max="3840"
-                                     step="2">
-                        </nuxeo-input>
-                        <nuxeo-input name="watermark"
-                                     role="widget"
-                                     label="[[i18n('label.action.transform.watermark')]]"
-                                     value="{{textWatermark}}"
-                                     type="text">
-                        </nuxeo-input>
-                        <nuxeo-document-suggestion name="watermarkImage" role="widget"
-                                                   value="{{watermarkDocumentId}}"
-                                                   label="Watermark Asset"
-                                                   min-chars="0"
-                                                   page-provider="[[watermarkDocumentPp]]"
-                                                   result-formatter="[[thumbnailFormatter]]"
-                                                   headers="[[watermarkSuggestionHeaders]]">
-                        </nuxeo-document-suggestion>
-                        <div role="widget">
-                            <label>[[i18n('label.action.transform.watermark.gravity')]]</label>
-                            <nuxeo-select role="widget"
-                                          name="format"
-                                          placeholder="[[i18n('label.action.transform.watermark.gravity')]]"
-                                          options="[[watermarkGravityOptions]]" selected="{{watermarkGravity}}">
-                            </nuxeo-select>
-                        </div>
-                    </form>
-                </iron-form>
+                            <div role="widget">
+                                <label>[[i18n('label.action.transform.audio.codec')]]</label>
+                                <nuxeo-select role="widget"
+                                              name="audioCodec"
+                                              options="[[_getAudioCodecs(format)]]" selected="{{audioCodec}}">
+                                </nuxeo-select>
+                            </div>
 
-            </div>
+                            <div role="widget">
+                                <label>[[i18n('label.action.transform.ratio')]]</label>
+                                <nuxeo-select role="widget"
+                                              name="cropFormat"
+                                              options="[[_getCropFormatOptions(document)]]" selected="{{cropFormat}}">
+                                </nuxeo-select>
+                            </div>
+                            <template is="dom-if" if="[[_isFreeCropRatio(cropFormat)]]">
+                                <nuxeo-input name="ratio"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.ratio')]]"
+                                             value="{{targetRatio}}"
+                                             type="number"
+                                             min="0.0001"
+                                             step="0.0001">
+                                </nuxeo-input>
+                            </template>
+
+                            <nuxeo-input name="width"
+                                         role="widget"
+                                         label="[[i18n('label.action.transform.width')]]"
+                                         value="{{width}}"
+                                         type="number"
+                                         min="[[min]]"
+                                         max="3840"
+                                         step="2">
+                            </nuxeo-input>
+                            <nuxeo-input name="height"
+                                         role="widget"
+                                         label="[[i18n('label.action.transform.height')]]"
+                                         value="{{height}}"
+                                         type="number"
+                                         min="[[min]]"
+                                         max="3840"
+                                         step="2">
+                            </nuxeo-input>
+                            <nuxeo-asset-transformation-watermark-selection watermark="{{watermark}}"
+                                                                            watermark-text="{{watermarkText}}"
+                                                                            watermark-document-id="{{watermarkDocumentId}}"
+                                                                            watermark-gravity="{{watermarkGravity}}"
+                                                                            watermark-document-pp="[[watermarkDocumentPp]]">
+                            </nuxeo-asset-transformation-watermark-selection>
+                        </form>
+                    </iron-form>
+
+                </div>
+            </paper-dialog-scrollable>
             <paper-progress id="progress" indeterminate disabled></paper-progress>
             <div class="buttons">
                 <paper-button noink dialog-dismiss on-tap="_close">
@@ -427,7 +405,7 @@
                     height: this.height,
                     autoCropRatio: cropRatio,
                     textWatermark: this.textWatermark,
-                    watermarkId : this.watermarkDocumentId,
+                    watermarkId: this.watermarkDocumentId,
                     watermarkGravity: this.watermarkGravity,
                     format: this.format,
                     audioCodec: this.audioCodec,
@@ -471,3 +449,4 @@
         });
     </script>
 </dom-module>
+

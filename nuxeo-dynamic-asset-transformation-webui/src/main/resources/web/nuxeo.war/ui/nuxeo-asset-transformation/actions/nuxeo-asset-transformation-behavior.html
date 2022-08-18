@@ -71,63 +71,30 @@
                     value: "jpg"
                 },
 
-                textWatermark: {
+                watermark: {
+                    type: String,
+                    value: "text"
+                },
+
+                watermarkText: {
                     type: String,
                     value: 'COPYRIGHT NUXEO PAM 2022'
+                },
+
+                watermarkDocumentId: {
+                    type: String
+                },
+
+                watermarkGravity: {
+                    type: String,
+                    value: "tile"
                 },
 
                 watermarkDocumentPp: {
                     type: String,
                     value: "default_watermark_suggestion"
-                },
-
-                watermarkSuggestionHeaders: {
-                    type: Object,
-                    value: function () {
-                        return {
-                            'enrichers.document':'thumbnail'
-                        };
-                    }
-                },
-
-                watermarkGravityOptions: {
-                    type: Array,
-                    value: function () {
-                        return [
-                            {
-                                id: "tile",
-                                label: "Tile"
-                            }, {
-                                id: "Center",
-                                label: "Center"
-                            }, {
-                                id: "East",
-                                label: "East"
-                            }, {
-                                id: "NorthEast",
-                                label: "NorthEast"
-                            }, {
-                                id: "North",
-                                label: "North"
-                            }, {
-                                id: "NorthWest",
-                                label: "NorthWest"
-                            }, {
-                                id: "SouthEast",
-                                label: "SouthEast"
-                            }, {
-                                id: "South",
-                                label: "South"
-                            }, {
-                                id: "SouthWest",
-                                label: "SouthWest"
-                            }, {
-                                id: "West",
-                                label: "West"
-                            }
-                        ];
-                    }
                 }
+
             },
 
             observers: ['_srcChanged(document, srcPictureViewName)'],
@@ -166,32 +133,8 @@
                     this.width = newWidth;
 
                 }
-            },
-
-            thumbnailFormatter: function (doc) {
-                if (!doc.properties) {
-                    return `<span>${doc.title}</span>`;
-                } else {
-                    return `
-                        <div>
-                          <table width='100%'>
-                            <tbody>
-                              <tr>
-                                <td width='75px' style='text-align: center'>
-                                    <img src="${doc.contextParameters.thumbnail.url}" style='width: 75px; height: 75px; display: block; object-fit: cover;' >
-                                </td>
-                                <td>
-                                    <div style='margin-left:15px'>
-                                        <span name=\"suggestionValue\">${doc.title}</span>
-                                    </div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-		            `;
-                }
             }
+
         };
 
         /** @polymerBehavior */

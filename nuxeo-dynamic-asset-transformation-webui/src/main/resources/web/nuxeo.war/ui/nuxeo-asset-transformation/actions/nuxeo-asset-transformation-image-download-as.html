@@ -1,4 +1,5 @@
 <link rel="import" href="nuxeo-asset-transformation-behavior.html">
+<link rel="import" href="nuxeo-asset-transformation-watermark-selection.html">
 
 <!--
 `nuxeo-asset-transformation-image-download-as`
@@ -18,19 +19,11 @@
                 @apply --layout-flex;
             }
 
-            .email_title {
-                margin-top: 32px;
-            }
-
-            .acknowledge {
-                margin-top:24px;
-            }
-
             #progress {
                 margin: 0px;
                 margin-top: 16px;
                 padding: 0px;
-                width:100%;
+                width: 100%;
             }
 
             .buttons {
@@ -48,83 +41,71 @@
         <paper-tooltip for="bt">[[i18n(label)]]</paper-tooltip>
 
         <nuxeo-dialog id="dialog" on-iron-overlay-closed="_dialogClosed" with-backdrop>
+
             <h2>[[i18n(label)]]</h2>
-            <div class="content">
-                <iron-form id="form">
-                    <form>
-                        <div role="widget">
-                            <label>[[i18n('label.action.transform.format')]]</label>
-                            <nuxeo-select role="widget"
-                                          name="format"
-                                          placeholder="[[i18n('label.action.transform.format')]]"
-                                          options="[[formatOptions]]" selected="{{format}}">
-                            </nuxeo-select>
-                        </div>
-                        <nuxeo-input name="width"
-                                     role="widget"
-                                     label="[[i18n('label.action.transform.width')]]"
-                                     value="{{width}}"
-                                     type="number"
-                                     min="[[min]]"
-                                     step="1">
-                        </nuxeo-input>
-                        <nuxeo-input name="height"
-                                     role="widget"
-                                     label="[[i18n('label.action.transform.height')]]"
-                                     value="{{height}}"
-                                     type="number"
-                                     min="[[min]]"
-                                     step="1">
-                        </nuxeo-input>
-                        <template is="dom-if" if="[[_isJpeg(format)]]">
-                            <nuxeo-input name="background"
+            <paper-dialog-scrollable>
+                <div class="content">
+
+                    <iron-form id="form">
+                        <form>
+                            <div role="widget">
+                                <label>[[i18n('label.action.transform.format')]]</label>
+                                <nuxeo-select role="widget"
+                                              name="format"
+                                              placeholder="[[i18n('label.action.transform.format')]]"
+                                              options="[[formatOptions]]" selected="{{format}}">
+                                </nuxeo-select>
+                            </div>
+                            <nuxeo-input name="width"
                                          role="widget"
-                                         label="[[i18n('label.action.transform.background.color')]]"
-                                         value="{{backgroundColor}}"
+                                         label="[[i18n('label.action.transform.width')]]"
+                                         value="{{width}}"
+                                         type="number"
+                                         min="[[min]]"
+                                         step="1">
+                            </nuxeo-input>
+                            <nuxeo-input name="height"
+                                         role="widget"
+                                         label="[[i18n('label.action.transform.height')]]"
+                                         value="{{height}}"
+                                         type="number"
+                                         min="[[min]]"
+                                         step="1">
+                            </nuxeo-input>
+                            <template is="dom-if" if="[[_isJpeg(format)]]">
+                                <nuxeo-input name="background"
+                                             role="widget"
+                                             label="[[i18n('label.action.transform.background.color')]]"
+                                             value="{{backgroundColor}}"
+                                             type="text">
+                                </nuxeo-input>
+                            </template>
+                            <nuxeo-input name="compression"
+                                         role="widget"
+                                         label="[[_getCompressionLevelLabel(format)]]"
+                                         value="{{compressionLevel}}"
+                                         type="number"
+                                         min="10"
+                                         max="100"
+                                         setp="10">
+                            </nuxeo-input>
+                            <nuxeo-input name="colorspace"
+                                         role="widget"
+                                         label="[[i18n('label.action.transform.colorspace')]]"
+                                         value="{{colorSpace}}"
                                          type="text">
                             </nuxeo-input>
-                        </template>
-                        <nuxeo-input name="compression"
-                                     role="widget"
-                                     label="[[_getCompressionLevelLabel(format)]]"
-                                     value="{{compressionLevel}}"
-                                     type="number"
-                                     min="10"
-                                     max="100"
-                                     setp="10">
-                        </nuxeo-input>
-                        <nuxeo-input name="colorspace"
-                                     role="widget"
-                                     label="[[i18n('label.action.transform.colorspace')]]"
-                                     value="{{colorSpace}}"
-                                     type="text">
-                        </nuxeo-input>
-                        <nuxeo-input name="watermark"
-                                     role="widget"
-                                     label="[[i18n('label.action.transform.watermark')]]"
-                                     value="{{textWatermark}}"
-                                     type="text">
-                        </nuxeo-input>
-                        <nuxeo-document-suggestion name="watermarkImage" role="widget"
-                                                   value="{{watermarkDocumentId}}"
-                                                   label="Watermark Asset"
-                                                   min-chars="0"
-                                                   page-provider="[[watermarkDocumentPp]]"
-                                                   result-formatter="[[thumbnailFormatter]]"
-                                                   headers="[[watermarkSuggestionHeaders]]">
-                        </nuxeo-document-suggestion>
-                        <div role="widget">
-                            <label>[[i18n('label.action.transform.watermark.gravity')]]</label>
-                            <nuxeo-select role="widget"
-                                          name="format"
-                                          placeholder="[[i18n('label.action.transform.watermark.gravity')]]"
-                                          options="[[watermarkGravityOptions]]" selected="{{watermarkGravity}}">
-                            </nuxeo-select>
-                        </div>
-                    </form>
-                </iron-form>
+                            <nuxeo-asset-transformation-watermark-selection watermark="{{watermark}}"
+                                                                            watermark-text="{{watermarkText}}"
+                                                                            watermark-document-id="{{watermarkDocumentId}}"
+                                                                            watermark-gravity="{{watermarkGravity}}"
+                                                                            watermark-document-pp="[[watermarkDocumentPp]]">
+                            </nuxeo-asset-transformation-watermark-selection>
 
-            </div>
+                        </form>
+                    </iron-form>
+                </div>
+            </paper-dialog-scrollable>
             <paper-progress id="progress" indeterminate disabled></paper-progress>
             <div class="buttons">
                 <paper-button noink dialog-dismiss on-tap="_close">
@@ -148,25 +129,16 @@
                     type: Object
                 },
 
-                /**
-                 * Label to display in the action button.
-                 */
                 label: {
                     type: String,
                     value: 'label.action.transform.download.as'
                 },
 
-                /**
-                 * `true` if the action should display the label, `false` otherwise.
-                 */
                 showLabel: {
                     type: Boolean,
                     value: false,
                 },
 
-                /**
-                 * Icon to use (iconset_name:icon_name) in the action button.
-                 */
                 icon: {
                     type: String,
                     value: 'icons:save'
@@ -189,24 +161,11 @@
 
             },
 
-            _toggleDialog: function() {
+            _toggleDialog: function () {
                 this.$.dialog.toggle();
             },
 
-            /**
-             * Callback executed when the user presses the "close" button.
-             *
-             * Note that the "close" button already have a "dialog-dismiss" property that makes the button close the dialog
-             * when clicked. If you don't need to perform additional actions, this method is not needed.
-             */
-            _close: function() {
-                // implement me
-            },
-
-            /**
-             * Useful callback to execute some action after the dialog is closed. Can be removed if it's not necessary.
-             */
-            _dialogClosed: function(e) {
+            _dialogClosed: function (e) {
                 if (e.srcElement.id === "dialog") {
                     this.$.form.reset();
                 }
@@ -216,7 +175,7 @@
                 return format === 'jpg';
             },
 
-            _getCompressionLevelLabel: function(format) {
+            _getCompressionLevelLabel: function (format) {
                 if (format === 'png') {
                     return this.i18n('label.action.transform.compression.level');
                 } else {
@@ -224,17 +183,17 @@
                 }
             },
 
-            _ok: function() {
+            _ok: function () {
                 if (!this.$.form.validate()) return;
 
-                this.$.downloadGetter.path =`/transform/${this.document.uid}`;
+                this.$.downloadGetter.path = `/transform/${this.document.uid}`;
                 this.$.downloadGetter.params = {
-                    format : this.format,
+                    format: this.format,
                     colorSpace: this.colorSpace,
                     compressionLevel: this.compressionLevel,
                     width: this.width,
                     height: this.height,
-                    textWatermark: this.textWatermark,
+                    textWatermark: this.watermarkText,
                     watermarkId: this.watermarkDocumentId,
                     watermarkGravity: this.watermarkGravity
                 };
@@ -255,8 +214,8 @@
                     document.body.removeChild(link);
                     this._toggleDialog();
                 }).catch(error => {
-                    this.fire('notify', { message: this.i18n('label.action.share.failure') });
-                }).finally(function(){
+                    this.fire('notify', {message: this.i18n('label.action.share.failure')});
+                }).finally(function () {
                     this.$.progress.disabled = true;
                     this.$.proceed.disabled = false;
                 }.bind(this));
@@ -265,5 +224,3 @@
         });
     </script>
 </dom-module>
-
-
