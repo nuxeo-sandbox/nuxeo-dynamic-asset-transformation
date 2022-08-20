@@ -53,7 +53,7 @@
             <sourceMimeType>video/*</sourceMimeType>
             <parameters>
                 <parameter name="CommandLineName">dynamicVideoTransformCli</parameter>
-                <parameter name="filterTemplate"><![CDATA[crop=%d:%d:%d:%d]]></parameter>
+                <parameter name="filterTemplate"><![CDATA[[0]crop=%d:%d:%d:%d[video];[video]scale=%s:%s]]></parameter>
             </parameters>
         </converter>
 
@@ -61,7 +61,7 @@
             <sourceMimeType>video/*</sourceMimeType>
             <parameters>
                 <parameter name="CommandLineName">dynamicVideoTransformCliWithWatermark</parameter>
-                <parameter name="filterTemplate"><![CDATA[[0]crop=%d:%d:%d:%d[video];[video][1]overlay=(W-w)/2:(H-h)/2:format=auto]]></parameter>
+                <parameter name="filterTemplate"><![CDATA[[0]crop=%d:%d:%d:%d[video];[video]scale=%s:%s[video];[video][1]overlay=(W-w)/2:(H-h)/2:format=auto]]></parameter>
             </parameters>
         </converter>
 

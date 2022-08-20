@@ -44,16 +44,16 @@
 
         <command name="dynamicVideoTransformCli" enabled="true">
             <commandLine>ffmpeg</commandLine>
-            <parameterString>-i #{sourceFilePath} -filter_complex #{filter} -s #{width}x#{height} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0  -f #{format} #{targetFilePath}</parameterString>
-            <winParameterString>-i #{sourceFilePath} -filter_complex #{filter} -s #{width}x#{height} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0 -f #{format} #{targetFilePath}</winParameterString>
+            <parameterString>-i #{sourceFilePath} -filter_complex #{filter} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0  -f #{format} #{targetFilePath}</parameterString>
+            <winParameterString>-i #{sourceFilePath} -filter_complex #{filter} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0 -f #{format} #{targetFilePath}</winParameterString>
             <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
             </installationDirective>
         </command>
 
         <command name="dynamicVideoTransformCliWithWatermark" enabled="true">
             <commandLine>ffmpeg</commandLine>
-            <parameterString>-i #{sourceFilePath} -i #{watermarkFilePath} -filter_complex #{filter} -s #{width}x#{height} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0  -f #{format} #{targetFilePath}</parameterString>
-            <winParameterString>-i #{sourceFilePath} -i #{watermarkFilePath} -filter_complex #{filter} -s #{width}x#{height} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0 -f #{format} #{targetFilePath}</winParameterString>
+            <parameterString>-i #{sourceFilePath} -i #{watermarkFilePath} -filter_complex #{filter} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0  -f #{format} #{targetFilePath}</parameterString>
+            <winParameterString>-i #{sourceFilePath} -i #{watermarkFilePath} -filter_complex #{filter} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0 -f #{format} #{targetFilePath}</winParameterString>
             <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
             </installationDirective>
         </command>

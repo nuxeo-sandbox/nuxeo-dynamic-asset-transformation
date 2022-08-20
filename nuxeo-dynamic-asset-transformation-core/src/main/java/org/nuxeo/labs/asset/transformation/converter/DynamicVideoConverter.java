@@ -35,7 +35,7 @@ public class DynamicVideoConverter extends CommandLineConverter {
         CropBox cropBox = (CropBox) parameters.get("crop");
         String filtertemplate = initParameters.get("filterTemplate");
         String ffmpegCrop = String.format(filtertemplate, cropBox.getWidth(), cropBox.getHeight(), cropBox.getLeft(),
-                cropBox.getTop());
+                cropBox.getTop(),parameters.get("width"),parameters.get("height"));
         parameters.remove("crop");
         parameters.put("filter", ffmpegCrop);
         return super.convert(blobHolder, parameters);
