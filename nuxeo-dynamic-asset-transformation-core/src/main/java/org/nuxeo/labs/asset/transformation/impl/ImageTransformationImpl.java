@@ -44,6 +44,10 @@ public class ImageTransformationImpl implements Transformation {
 
     protected Blob imageWatermark;
 
+    protected String watermarkId;
+
+    protected String watermarkGravity;
+
     protected int compressionLevel;
 
     protected String colorSpace;
@@ -132,6 +136,26 @@ public class ImageTransformationImpl implements Transformation {
     }
 
     @Override
+    public String getWatermarkGravity() {
+        return watermarkGravity;
+    }
+
+    @Override
+    public void setWatermarkGravity(String gravity) {
+        this.watermarkGravity = gravity;
+    }
+
+    @Override
+    public String getWatermarkId() {
+        return watermarkId;
+    }
+
+    @Override
+    public void setWatermarkId(String watermarkId) {
+        this.watermarkId = watermarkId;
+    }
+
+    @Override
     public String getColorSpace() {
         return colorSpace;
     }
@@ -182,6 +206,7 @@ public class ImageTransformationImpl implements Transformation {
         map.put("colorSpace", colorSpace);
         map.put("backgroundColor", backgroundColor);
         map.put("compressionLevel", "" + compressionLevel);
+        map.put("watermarkGravity", "" + watermarkGravity);
         return map;
     }
 

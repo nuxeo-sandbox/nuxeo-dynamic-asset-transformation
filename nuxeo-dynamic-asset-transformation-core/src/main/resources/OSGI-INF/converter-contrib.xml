@@ -2,6 +2,17 @@
 <component name="org.nuxeo.labs.asset.transformation.converter">
 
     <extension point="converter" target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl">
+
+        <extension point="converter" target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl">
+            <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="solidCanvasGenerator">
+                <sourceMimeType>*</sourceMimeType>
+                <destinationMimeType>image/png</destinationMimeType>
+                <parameters>
+                    <parameter name="CommandLineName">solidCanvasGenerator</parameter>
+                </parameters>
+            </converter>
+        </extension>
+
         <converter class="org.nuxeo.labs.asset.transformation.converter.DynamicImageConverter" name="dynamicImageResizer">
             <sourceMimeType>image/*</sourceMimeType>
             <sourceMimeType>application/photoshop</sourceMimeType>
@@ -20,12 +31,21 @@
             </parameters>
         </converter>
 
-        <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="composeWatermarkedImage">
+        <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="composeTileWatermarkedImage">
             <sourceMimeType>image/*</sourceMimeType>
             <sourceMimeType>application/photoshop</sourceMimeType>
             <sourceMimeType>application/illustrator</sourceMimeType>
             <parameters>
-                <parameter name="CommandLineName">composeWatermarkedImage</parameter>
+                <parameter name="CommandLineName">composeTileWatermarkedImage</parameter>
+            </parameters>
+        </converter>
+
+        <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="composeGravityWatermarkedImage">
+            <sourceMimeType>image/*</sourceMimeType>
+            <sourceMimeType>application/photoshop</sourceMimeType>
+            <sourceMimeType>application/illustrator</sourceMimeType>
+            <parameters>
+                <parameter name="CommandLineName">composeGravityWatermarkedImage</parameter>
             </parameters>
         </converter>
 
@@ -33,6 +53,15 @@
             <sourceMimeType>video/*</sourceMimeType>
             <parameters>
                 <parameter name="CommandLineName">dynamicVideoTransformCli</parameter>
+                <parameter name="filterTemplate"><![CDATA[[0]crop=%d:%d:%d:%d[video];[video]scale=%s:%s]]></parameter>
+            </parameters>
+        </converter>
+
+        <converter name="dynamicVideoTransformWithWatermark" class="org.nuxeo.labs.asset.transformation.converter.DynamicVideoConverter">
+            <sourceMimeType>video/*</sourceMimeType>
+            <parameters>
+                <parameter name="CommandLineName">dynamicVideoTransformCliWithWatermark</parameter>
+                <parameter name="filterTemplate"><![CDATA[[0]crop=%d:%d:%d:%d[video];[video]scale=%s:%s[video];[video][1]overlay=(W-w)/2:(H-h)/2:format=auto]]></parameter>
             </parameters>
         </converter>
 

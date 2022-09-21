@@ -87,6 +87,16 @@ public interface Transformation {
     void setTextWatermark(String text);
 
     /**
+     * @return a watermark identifier
+     */
+    String getWatermarkId();
+
+    /**
+     * @param watermarkId the watermark id
+     */
+    void setWatermarkId(String watermarkId);
+
+    /**
      * @return the image watermark
      */
     Blob getImageWatermark();
@@ -95,6 +105,18 @@ public interface Transformation {
      * @param image the watermark image to add
      */
     void setImageWatermark(Blob image);
+
+    /**
+     *
+     * @return the watermark relative position
+     */
+    String getWatermarkGravity();
+
+    /**
+     *
+     * @param gravity the watermark relative position
+     */
+    void setWatermarkGravity(String gravity);
 
     /**
      * @return colorspace name

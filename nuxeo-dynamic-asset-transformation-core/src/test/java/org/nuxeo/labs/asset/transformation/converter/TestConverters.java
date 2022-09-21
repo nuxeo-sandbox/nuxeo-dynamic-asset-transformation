@@ -78,9 +78,40 @@ public class TestConverters {
         params.put("format", "jpeg");
         params.put("watermarkFilePath", watermarkBlob.getCloseableFile().file.getPath());
 
-        BlobHolder result = conversionService.convert("composeWatermarkedImage", new SimpleBlobHolder(inputBlob),
+        BlobHolder result = conversionService.convert("composeTileWatermarkedImage", new SimpleBlobHolder(inputBlob),
                 params);
         Blob resultBlob = result.getBlob();
         Assert.assertNotNull(resultBlob);
+    }
+
+    @Test
+    public void TestGravityWatermarkConverter() throws IOException {
+        Blob inputBlob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
+        inputBlob.setMimeType("image/jpeg");
+
+        Blob watermarkBlob = new FileBlob(new File(getClass().getResource("/files/text.png").getPath()));
+        watermarkBlob.setMimeType("image/png");
+
+        Map<String, Serializable> params = new HashMap<>();
+        params.put("format", "jpeg");
+        params.put("gravity", "Center");
+        params.put("watermarkFilePath", watermarkBlob.getCloseableFile().file.getPath());
+
+        BlobHolder result = conversionService.convert("composeGravityWatermarkedImage", new SimpleBlobHolder(inputBlob),
+                params);
+        Blob resultBlob = result.getBlob();
+        Assert.assertNotNull(resultBlob);
+    }
+
+    @Test
+    public void TestSolidCanvasGeneratorConverter() {
+        Map<String, Serializable> params = new HashMap<>();
+        params.put("color", "none");
+        params.put("width", "240");
+        params.put("height", "240");
+        BlobHolder result = conversionService.convert("solidCanvasGenerator", new SimpleBlobHolder(new StringBlob("")), params);
+        Blob canvas = result.getBlob();
+        Assert.assertNotNull(canvas);
+        Assert.assertEquals("image/png", canvas.getMimeType());
     }
 }

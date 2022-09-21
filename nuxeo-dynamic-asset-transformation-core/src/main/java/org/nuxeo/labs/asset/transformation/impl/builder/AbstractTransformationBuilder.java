@@ -40,6 +40,10 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
 
     protected Blob imageWatermark = null;
 
+    protected String watermarkId = null;
+
+    protected String watermarkGravity = null;
+
     protected String colorSpace = null;
 
     protected String backgroundColor = null;
@@ -96,6 +100,16 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
         return getThis();
     }
 
+    public T watermarkId(String watermarkId) {
+        this.watermarkId = watermarkId;
+        return getThis();
+    }
+
+    public T watermarkGravity(String gravity) {
+        this.watermarkGravity = gravity;
+        return getThis();
+    }
+
     public T colorSpace(String colorSpace) {
         this.colorSpace = colorSpace;
         return getThis();
@@ -140,6 +154,9 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
 
         transformation.setTextWatermark(this.textWatermark);
         transformation.setImageWatermark(this.imageWatermark);
+        transformation.setWatermarkId(this.watermarkId);
+        transformation.setWatermarkGravity(StringUtils.isNotEmpty(this.watermarkGravity) ?
+                this.watermarkGravity : getDefaultWatermarkGravity());
 
         transformation.setColorSpace(
                 StringUtils.isNotEmpty(this.colorSpace) ? this.colorSpace : getDefaultColorSpace());
@@ -149,6 +166,10 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
                 this.compressionLevel > 0 ? this.compressionLevel : getDefaultCompressionLevel());
 
         return transformation;
+    }
+
+    protected String getDefaultWatermarkGravity() {
+        return "tile";
     }
 
     protected abstract V getNewEmptyTransformation();
@@ -162,4 +183,5 @@ public abstract class AbstractTransformationBuilder<T extends AbstractTransforma
     protected abstract String getDefaultBackgroundColor();
 
     protected abstract int getDefaultCompressionLevel();
+
 }

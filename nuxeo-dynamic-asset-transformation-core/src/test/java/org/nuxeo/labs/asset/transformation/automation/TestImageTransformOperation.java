@@ -19,8 +19,6 @@
 
 package org.nuxeo.labs.asset.transformation.automation;
 
-import java.io.File;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +33,6 @@ import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
@@ -49,6 +46,9 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 public class TestImageTransformOperation {
 
     @Inject
+    protected TestFeature testFeature;
+
+    @Inject
     protected CoreSession session;
 
     @Inject
@@ -56,12 +56,7 @@ public class TestImageTransformOperation {
 
     @Test
     public void testOp() throws OperationException {
-        DocumentModel doc = TestFeature.getDocWithPictureInfo(session);
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
-        blob.setMimeType("image/jpeg");
-        doc.setPropertyValue("file:content", (Serializable) blob);
-        doc = session.saveDocument(doc);
-
+        DocumentModel doc = testFeature.getDocWithPictureInfo(session);
         OperationContext ctx = new OperationContext(session);
         Map<String, Object> params = new HashMap<>();
         ctx.setInput(doc);

@@ -5,6 +5,15 @@
 
     <extension target="org.nuxeo.ecm.platform.commandline.executor.service.CommandLineExecutorComponent" point="command">
 
+        <extension target="org.nuxeo.ecm.platform.commandline.executor.service.CommandLineExecutorComponent" point="command">
+            <command name="solidCanvasGenerator" enabled="true">
+                <commandLine>convert</commandLine>
+                <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet  -size #{width}x#{height} -colorspace sRGB  xc:#{color} png:#{targetFilePath}</parameterString>
+                <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet  -size #{width}x#{height} -colorspace sRGB xc:#{color} png:#{targetFilePath}</winParameterString>
+                <installationDirective>You need to install ImageMagick.</installationDirective>
+            </command>
+        </extension>
+
         <command name="dynamicImageResizerCli" enabled="true">
             <commandLine>convert</commandLine>
             <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet  #{sourceFilePath}[0] -background #{backgroundColor} -flatten -gravity NorthWest -crop #{crop} -resize #{width}x#{height}! -strip -sampling-factor 4:2:0 -quality #{compressionLevel} -colorspace #{colorSpace} -alpha remove #{format}:#{targetFilePath}</parameterString>
@@ -19,17 +28,32 @@
             <installationDirective>You need to install ImageMagick.</installationDirective>
         </command>
 
-        <command name="composeWatermarkedImage" enabled="true">
+        <command name="composeTileWatermarkedImage" enabled="true">
             <commandLine>composite</commandLine>
             <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -tile #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</parameterString>
             <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -tile #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</winParameterString>
             <installationDirective>You need to install ImageMagick.</installationDirective>
         </command>
 
+        <command name="composeGravityWatermarkedImage" enabled="true">
+            <commandLine>composite</commandLine>
+            <parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -gravity #{gravity} #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</parameterString>
+            <winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet -gravity #{gravity} #{watermarkFilePath} #{sourceFilePath} #{format}:#{targetFilePath}</winParameterString>
+            <installationDirective>You need to install ImageMagick.</installationDirective>
+        </command>
+
         <command name="dynamicVideoTransformCli" enabled="true">
             <commandLine>ffmpeg</commandLine>
-            <parameterString>-i #{sourceFilePath} -filter:v #{crop} -s #{width}x#{height} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0  -f #{format} #{targetFilePath}</parameterString>
-            <winParameterString>-i #{sourceFilePath} -filter:v #{crop} -s #{width}x#{height} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0 -f #{format} #{targetFilePath}</winParameterString>
+            <parameterString>-i #{sourceFilePath} -filter_complex #{filter} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0  -f #{format} #{targetFilePath}</parameterString>
+            <winParameterString>-i #{sourceFilePath} -filter_complex #{filter} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0 -f #{format} #{targetFilePath}</winParameterString>
+            <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
+            </installationDirective>
+        </command>
+
+        <command name="dynamicVideoTransformCliWithWatermark" enabled="true">
+            <commandLine>ffmpeg</commandLine>
+            <parameterString>-i #{sourceFilePath} -i #{watermarkFilePath} -filter_complex #{filter} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0  -f #{format} #{targetFilePath}</parameterString>
+            <winParameterString>-i #{sourceFilePath} -i #{watermarkFilePath} -filter_complex #{filter} -pix_fmt yuv420p -acodec #{audioCodec} -vcodec #{videoCodec} -crf #{compressionLevel} -b:v 0 -f #{format} #{targetFilePath}</winParameterString>
             <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
             </installationDirective>
         </command>

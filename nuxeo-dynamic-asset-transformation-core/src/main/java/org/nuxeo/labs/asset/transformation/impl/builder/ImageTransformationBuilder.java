@@ -104,4 +104,5 @@ public class ImageTransformationBuilder
     protected int getDefaultCompressionLevel() {
         return 90;
     }
+
 }

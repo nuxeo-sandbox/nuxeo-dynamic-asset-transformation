@@ -26,7 +26,6 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.platform.video.VideoDocument;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
 import org.nuxeo.labs.asset.transformation.impl.builder.VideoTransformationBuilder;
 import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
@@ -49,7 +48,7 @@ public class VideoTransformOp {
     String videoCodec;
 
     @Param(name = "audioCodec", required = false)
-    String auidoCodec;
+    String audioCodec;
 
     // using a string because automation type adapters don't support integer to float conversion
     // and web browsers will stringify integer numbers without decimals
@@ -65,6 +64,12 @@ public class VideoTransformOp {
     @Param(name = "imageWatermark", required = false)
     Blob imageWatermark;
 
+    @Param(name = "watermarkGravity", required = false)
+    String watermarkGravity;
+
+    @Param(name = "watermarkId", required = false)
+    String watermarkId;
+
     @Param(name = "compressionLevel", required = false)
     int compressionLevel;
 
@@ -73,9 +78,8 @@ public class VideoTransformOp {
 
     @OperationMethod
     public Blob run(DocumentModel document) {
-        VideoDocument videoDocument = document.getAdapter(VideoDocument.class);
         Transformation transformation = new VideoTransformationBuilder(document).videoCodec(videoCodec)
-                                                                                .audioCodec(auidoCodec)
+                                                                                .audioCodec(audioCodec)
                                                                                 .width(width)
                                                                                 .height(height)
                                                                                 .cropRatio(autoCropRatio)
@@ -83,8 +87,10 @@ public class VideoTransformOp {
                                                                                 .format(format)
                                                                                 .textWatermark(textWatermark)
                                                                                 .imageWatermark(imageWatermark)
+                                                                                .watermarkId(watermarkId)
+                                                                                .watermarkGravity(watermarkGravity)
                                                                                 .compressionLevel(compressionLevel)
                                                                                 .build();
-        return transformationService.transformVideo(videoDocument.getVideo(), transformation);
+        return transformationService.transform(document, transformation);
     }
 }

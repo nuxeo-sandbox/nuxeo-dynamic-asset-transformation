@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="disable-video-listener">
+
+    <require>org.nuxeo.platform.video.core.listeners</require>
+
+    <extension target="org.nuxeo.ecm.core.event.EventServiceComponent" point="listener">
+
+        <listener name="pictureChangedListener" async="false" postCommit="false" enabled="false"
+                  class="org.nuxeo.ecm.platform.picture.listener.PictureChangedListener" priority="20">
+            <event>aboutToCreate</event>
+            <event>beforeDocumentModification</event>
+            <event>aboutToCheckIn</event>
+        </listener>
+
+        <listener name="pictureViewsGenerationListener" async="true" postCommit="true" enabled="false"
+                  class="org.nuxeo.ecm.platform.picture.listener.PictureViewsGenerationListener" priority="20">
+            <event>documentCreated</event>
+            <event>documentModified</event>
+        </listener>
+
+        <listener name="videoChangedListener" async="false" postCommit="false"
+                  class="org.nuxeo.ecm.platform.video.listener.VideoChangedListener" priority="20" enabled="false">
+            <event>documentCreated</event>
+            <event>beforeDocumentModification</event>
+        </listener>
+
+    </extension>
+
+</component>

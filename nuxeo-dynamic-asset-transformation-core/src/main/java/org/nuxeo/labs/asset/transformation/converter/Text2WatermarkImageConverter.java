@@ -34,7 +34,8 @@ public class Text2WatermarkImageConverter extends CommandLineConverter {
         String text = (String) parameters.get("textWatermark");
         int imageWidth = Integer.parseInt((String) parameters.get("width"));
 
-        int watermarkMaxRepeat = Integer.parseInt(this.initParameters.getOrDefault("watermarkMaxRepeat", "4"));
+        int watermarkMaxRepeat = Integer.parseInt(
+                this.initParameters.getOrDefault("watermarkMaxRepeat", "4"));
         int watermarkMinRepeatWidthInPx = Integer.parseInt(
                 this.initParameters.getOrDefault("watermarkMinRepeatWidthInPx", "256"));
 

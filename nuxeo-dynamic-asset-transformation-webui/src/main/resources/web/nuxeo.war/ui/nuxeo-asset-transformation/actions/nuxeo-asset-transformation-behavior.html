@@ -1,6 +1,6 @@
 <script>
     var Nuxeo = Nuxeo || {};
-    (function() {
+    (function () {
 
         /**
          * @polymerBehavior Nuxeo.AssetTransformationBehaviorImpl
@@ -50,15 +50,15 @@
 
                 formatOptions: {
                     type: Array,
-                    value: function() {
+                    value: function () {
                         return [
                             {
                                 id: "jpg",
                                 label: "JPEG",
-                            },{
+                            }, {
                                 id: "png",
                                 label: "PNG",
-                            },{
+                            }, {
                                 id: "webp",
                                 label: "WEBP",
                             }
@@ -69,14 +69,38 @@
                 format: {
                     type: String,
                     value: "jpg"
+                },
+
+                watermark: {
+                    type: String,
+                    value: "text"
+                },
+
+                watermarkText: {
+                    type: String,
+                    value: 'COPYRIGHT NUXEO PAM 2022'
+                },
+
+                watermarkDocumentId: {
+                    type: String
+                },
+
+                watermarkGravity: {
+                    type: String,
+                    value: "tile"
+                },
+
+                watermarkDocumentPp: {
+                    type: String,
+                    value: "default_watermark_suggestion"
                 }
 
             },
 
             observers: ['_srcChanged(document, srcPictureViewName)'],
 
-            _srcChanged: function(document, srcPictureViewName) {
-                if (!document || !this.hasFacet(document,'Picture') || !srcPictureViewName) {
+            _srcChanged: function (document, srcPictureViewName) {
+                if (!document || !this.hasFacet(document, 'Picture') || !srcPictureViewName) {
                     return;
                 }
 
@@ -91,7 +115,7 @@
 
             },
 
-            _resizeWidthChanged: function(width) {
+            _resizeWidthChanged: function (width) {
                 if (width >= this.min && this.targetRatio && Math.round(width / this.effectiveRatio) != this.height) {
                     let newHeight = this.step * Math.round(width / (this.targetRatio * this.step));
                     //effective ratio must be set before height
@@ -101,7 +125,7 @@
                 }
             },
 
-            _resizeHeightChanged: function(height) {
+            _resizeHeightChanged: function (height) {
                 if (height >= this.min && this.targetRatio && Math.round(height * this.effectiveRatio) != this.width) {
                     let newWidth = this.step * Math.round(height * (this.targetRatio / this.step));
                     //effective ratio must be set before width

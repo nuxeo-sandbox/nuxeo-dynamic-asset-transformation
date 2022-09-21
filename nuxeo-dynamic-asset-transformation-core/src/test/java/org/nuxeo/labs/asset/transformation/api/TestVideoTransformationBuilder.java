@@ -46,6 +46,9 @@ public class TestVideoTransformationBuilder {
     @Inject
     protected CoreSession session;
 
+    @Inject
+    protected TestFeature testFeature;
+
     @Test
     public void testWithVideoInfo() {
         VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).build();
@@ -59,7 +62,7 @@ public class TestVideoTransformationBuilder {
 
     @Test
     public void testVideoDocumentConstructor() {
-        DocumentModel doc = TestFeature.getDocWithVideoInfo(session);
+        DocumentModel doc = testFeature.getDocWithVideoInfo(session);
         VideoTransformationImpl transformation = new VideoTransformationBuilder(doc).format("webm").build();
         Assert.assertEquals(WIDTH, transformation.getWidth());
         Assert.assertEquals(HEIGHT, transformation.getHeight());

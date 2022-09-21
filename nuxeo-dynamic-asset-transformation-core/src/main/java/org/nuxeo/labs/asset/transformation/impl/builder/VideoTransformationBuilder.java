@@ -151,4 +151,5 @@ public class VideoTransformationBuilder
     protected int getDefaultCompressionLevel() {
         return 30;
     }
+
 }
