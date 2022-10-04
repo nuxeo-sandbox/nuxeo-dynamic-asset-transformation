@@ -20,6 +20,7 @@
 package org.nuxeo.labs.asset.transformation.service;
 
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
 
@@ -33,5 +34,23 @@ public interface DynamicTransformationService {
      * @return the transformed media file
      */
     Blob transform(DocumentModel doc, Transformation transformation);
+
+    /**
+     * Transform a blob
+     *
+     * @param blob
+     * @param transformation
+     * @return the transformed media file
+     */
+    Blob transformPicture(Blob blob, Transformation transformation, CoreSession session);
+
+    /**
+     * Transform a blob
+     *
+     * @param blob
+     * @param transformation
+     * @return the transformed media file
+     */
+    Blob transformVideo(Blob blob, Transformation transformation, CoreSession session);
 
 }

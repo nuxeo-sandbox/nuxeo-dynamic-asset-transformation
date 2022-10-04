@@ -55,7 +55,7 @@ public class TestVideoTransformOperation {
     protected AutomationService automationService;
 
     @Test
-    public void testOp() throws OperationException {
+    public void testDocumentOp() throws OperationException {
         DocumentModel doc = testFeature.getDocWithVideoInfo(session);
         OperationContext ctx = new OperationContext(session);
         Map<String, Object> params = new HashMap<>();
@@ -64,4 +64,16 @@ public class TestVideoTransformOperation {
         Blob transformedVideo = (Blob) automationService.run(ctx, VideoTransformOp.ID, params);
         Assert.assertNotNull(transformedVideo);
     }
+
+    @Test
+    public void testBlobOp() throws OperationException {
+        Blob blob = testFeature.getVideoBlob();
+        OperationContext ctx = new OperationContext(session);
+        Map<String, Object> params = new HashMap<>();
+        params.put("autoCropRatio", "1");
+        ctx.setInput(blob);
+        Blob transformedVideo = (Blob) automationService.run(ctx, VideoTransformOp.ID, params);
+        Assert.assertNotNull(transformedVideo);
+    }
+
 }

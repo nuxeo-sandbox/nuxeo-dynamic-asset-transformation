@@ -25,7 +25,10 @@ import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.platform.video.VideoHelper;
+import org.nuxeo.ecm.platform.video.VideoInfo;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
 import org.nuxeo.labs.asset.transformation.impl.builder.VideoTransformationBuilder;
 import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
@@ -76,6 +79,9 @@ public class VideoTransformOp {
     @Context
     DynamicTransformationService transformationService;
 
+    @Context
+    CoreSession session;
+
     @OperationMethod
     public Blob run(DocumentModel document) {
         Transformation transformation = new VideoTransformationBuilder(document).videoCodec(videoCodec)
@@ -92,5 +98,24 @@ public class VideoTransformOp {
                                                                                 .compressionLevel(compressionLevel)
                                                                                 .build();
         return transformationService.transform(document, transformation);
+    }
+
+    @OperationMethod
+    public Blob run(Blob blob) {
+        VideoInfo videoInfo = VideoHelper.getVideoInfo(blob);
+        Transformation transformation = new VideoTransformationBuilder(videoInfo).videoCodec(videoCodec)
+                .audioCodec(audioCodec)
+                .width(width)
+                .height(height)
+                .cropRatio(autoCropRatio)
+                .cropBox(crop)
+                .format(format)
+                .textWatermark(textWatermark)
+                .imageWatermark(imageWatermark)
+                .watermarkId(watermarkId)
+                .watermarkGravity(watermarkGravity)
+                .compressionLevel(compressionLevel)
+                .build();
+        return transformationService.transformVideo(blob, transformation, session);
     }
 }

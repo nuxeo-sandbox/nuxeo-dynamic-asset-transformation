@@ -51,7 +51,7 @@ public class TestVideoTransformationBuilder {
 
     @Test
     public void testWithVideoInfo() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).build();
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(testFeature.getVideoInfo()).build();
         Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(WIDTH, transformation.getWidth());
         Assert.assertEquals(HEIGHT, transformation.getHeight());
@@ -73,7 +73,7 @@ public class TestVideoTransformationBuilder {
 
     @Test
     public void testWithVideoAllFormatInfo() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).audioCodec(
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(testFeature.getVideoInfo()).audioCodec(
                 "libvorbis").videoCodec("libx265").format("mp4").build();
         Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(WIDTH, transformation.getWidth());
@@ -85,7 +85,7 @@ public class TestVideoTransformationBuilder {
 
     @Test
     public void testWithVideoCropRatio() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo())
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(testFeature.getVideoInfo())
                                                                                                            .cropRatio(
                                                                                                                    1.0d)
                                                                                                            .build();
@@ -96,7 +96,7 @@ public class TestVideoTransformationBuilder {
 
     @Test
     public void testWithVideoStringIntCropRatio() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo())
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(testFeature.getVideoInfo())
                                                                                                            .cropRatio(
                                                                                                                    "1")
                                                                                                            .build();
@@ -107,7 +107,7 @@ public class TestVideoTransformationBuilder {
 
     @Test
     public void testWithVideoStringFloatCropRatio() {
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropRatio(
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(testFeature.getVideoInfo()).cropRatio(
                 "1.00").build();
         Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(HEIGHT, transformation.getWidth());
@@ -117,7 +117,7 @@ public class TestVideoTransformationBuilder {
     @Test
     public void testWithVideoCrop() {
         CropBox box = new CropBox(100, 100, 50, 50);
-        VideoTransformationImpl transformation = new VideoTransformationBuilder(TestFeature.getVideoInfo()).cropBox(box)
+        VideoTransformationImpl transformation = new VideoTransformationBuilder(testFeature.getVideoInfo()).cropBox(box)
                                                                                                            .build();
         Assert.assertEquals(box, transformation.getCropBox());
         Assert.assertEquals(box.getWidth(), transformation.getWidth());

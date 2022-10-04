@@ -46,7 +46,7 @@ public class TestFeature implements RunnerFeature {
 
     public static final int HEIGHT = 200;
 
-    public static ImageInfo getImageInfo() {
+    public ImageInfo getImageInfo() {
         ImageInfo imageInfo = new ImageInfo();
         imageInfo.setWidth(WIDTH);
         imageInfo.setHeight(HEIGHT);
@@ -56,14 +56,13 @@ public class TestFeature implements RunnerFeature {
     public DocumentModel getDocWithPictureInfo(CoreSession session) {
         DocumentModel doc = session.createDocumentModel(session.getRootDocument().getPathAsString(), "Picture",
                 "Picture");
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
-        blob.setMimeType("image/jpeg");
+        Blob blob = getImageBlob();
         doc.setPropertyValue("file:content", (Serializable) blob);
         doc.setPropertyValue("picture:info", (Serializable) getImageInfo().toMap());
         return session.createDocument(doc);
     }
 
-    public static VideoInfo getVideoInfo() {
+    public VideoInfo getVideoInfo() {
         HashMap<String, Serializable> info = new HashMap<>();
         info.put("width", (long) WIDTH);
         info.put("height", (long) HEIGHT);
@@ -72,11 +71,22 @@ public class TestFeature implements RunnerFeature {
 
     public DocumentModel getDocWithVideoInfo(CoreSession session) {
         DocumentModel doc = session.createDocumentModel(session.getRootDocument().getPathAsString(), "Video", "Video");
-        Blob blob = new FileBlob(new File(getClass().getResource("/files/nuxeo.mp4").getPath()));
-        blob.setMimeType("video/mp4");
+        Blob blob = getVideoBlob();
         doc.setPropertyValue("file:content", (Serializable) blob);
         doc.setPropertyValue(INFO_PROPERTY, (Serializable) getVideoInfo().toMap());
         return session.createDocument(doc);
+    }
+
+    public Blob getImageBlob() {
+        Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
+        blob.setMimeType("image/jpeg");
+        return blob;
+    }
+
+    public Blob getVideoBlob() {
+        Blob blob = new FileBlob(new File(getClass().getResource("/files/nuxeo.mp4").getPath()));
+        blob.setMimeType("video/mp4");
+        return blob;
     }
 
 }

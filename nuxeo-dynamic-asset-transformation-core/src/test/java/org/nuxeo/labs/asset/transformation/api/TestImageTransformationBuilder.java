@@ -67,7 +67,7 @@ public class TestImageTransformationBuilder {
 
     @Test
     public void testWithNoParameters() {
-        ImageInfo imageInfo = TestFeature.getImageInfo();
+        ImageInfo imageInfo = testFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).build();
         Assert.assertEquals(WIDTH, transformation.getWidth());
         Assert.assertEquals(TestFeature.HEIGHT, transformation.getHeight());
@@ -77,7 +77,7 @@ public class TestImageTransformationBuilder {
 
     @Test
     public void testWithAllParameters() throws IOException {
-        ImageInfo imageInfo = TestFeature.getImageInfo();
+        ImageInfo imageInfo = testFeature.getImageInfo();
         CropBox box = new CropBox(0, 100, 100, 100);
         Transformation transformation = new ImageTransformationBuilder(imageInfo).width(50)
                                                                                  .height(50)
@@ -106,7 +106,7 @@ public class TestImageTransformationBuilder {
 
     @Test
     public void testKeepOriginalRatioFromWidth() {
-        ImageInfo imageInfo = TestFeature.getImageInfo();
+        ImageInfo imageInfo = testFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).width(600).build();
         Assert.assertEquals(600, transformation.getWidth());
         Assert.assertEquals(400, transformation.getHeight());
@@ -115,7 +115,7 @@ public class TestImageTransformationBuilder {
 
     @Test
     public void testKeepOriginalRatioFromHeight() {
-        ImageInfo imageInfo = TestFeature.getImageInfo();
+        ImageInfo imageInfo = testFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).height(400).format(PNG).build();
         Assert.assertEquals(600, transformation.getWidth());
         Assert.assertEquals(400, transformation.getHeight());
@@ -124,7 +124,7 @@ public class TestImageTransformationBuilder {
 
     @Test
     public void testWithCropRatio() {
-        ImageInfo imageInfo = TestFeature.getImageInfo();
+        ImageInfo imageInfo = testFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).cropRatio(1.0).build();
         Assert.assertEquals(TestFeature.HEIGHT, transformation.getWidth());
         Assert.assertEquals(TestFeature.HEIGHT, transformation.getHeight());
@@ -132,7 +132,7 @@ public class TestImageTransformationBuilder {
 
     @Test
     public void testWithNoCrop() {
-        ImageInfo imageInfo = TestFeature.getImageInfo();
+        ImageInfo imageInfo = testFeature.getImageInfo();
         Transformation transformation = new ImageTransformationBuilder(imageInfo).build();
         Assert.assertNotNull(transformation.getCropBox());
         Assert.assertEquals(WIDTH, transformation.getCropBox().getWidth());
@@ -141,7 +141,7 @@ public class TestImageTransformationBuilder {
 
     @Test
     public void testWithPreset() {
-        ImageInfo imageInfo = TestFeature.getImageInfo();
+        ImageInfo imageInfo = testFeature.getImageInfo();
         Map<String, CropBox> cropPresets = new HashMap<>();
         cropPresets.put("2.00", new CropBox(0, 0, 200, 100));
         Transformation transformation = new ImageTransformationBuilder(imageInfo, cropPresets).cropRatio(2.0).build();

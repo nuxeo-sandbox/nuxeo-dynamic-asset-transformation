@@ -55,11 +55,21 @@ public class TestImageTransformOperation {
     protected AutomationService automationService;
 
     @Test
-    public void testOp() throws OperationException {
+    public void testDocumentOp() throws OperationException {
         DocumentModel doc = testFeature.getDocWithPictureInfo(session);
         OperationContext ctx = new OperationContext(session);
         Map<String, Object> params = new HashMap<>();
         ctx.setInput(doc);
+        Blob transformedImage = (Blob) automationService.run(ctx, ImageTransformOp.ID, params);
+        Assert.assertNotNull(transformedImage);
+    }
+
+    @Test
+    public void testBlobOp() throws OperationException {
+        Blob blob = testFeature.getImageBlob();
+        OperationContext ctx = new OperationContext(session);
+        Map<String, Object> params = new HashMap<>();
+        ctx.setInput(blob);
         Blob transformedImage = (Blob) automationService.run(ctx, ImageTransformOp.ID, params);
         Assert.assertNotNull(transformedImage);
     }

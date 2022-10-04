@@ -155,4 +155,21 @@ public class TestDynamicTransformationService {
         Assert.assertEquals(100, resultInfo.getHeight());
     }
 
+    @Test
+    public void testResizeImageBlob() {
+        Blob blob = testFeature.getImageBlob();
+        ImageInfo imageInfo = testFeature.getImageInfo();
+        Transformation transformation = new ImageTransformationBuilder(imageInfo).format(PNG).height(100).build();
+        Blob result = transformationService.transformPicture(blob, transformation, session);
+
+        Assert.assertNotNull(result);
+        Assert.assertEquals("image/png", result.getMimeType());
+
+        ImageInfo resultInfo = imagingService.getImageInfo(result);
+        Assert.assertEquals(150, resultInfo.getWidth());
+        Assert.assertEquals(100, resultInfo.getHeight());
+        Assert.assertEquals(PNG, resultInfo.getFormat().toLowerCase());
+    }
+
+
 }

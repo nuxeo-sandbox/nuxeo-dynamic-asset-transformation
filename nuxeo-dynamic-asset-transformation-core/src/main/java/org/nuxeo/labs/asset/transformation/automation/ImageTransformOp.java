@@ -25,7 +25,10 @@ import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.platform.picture.api.ImageInfo;
+import org.nuxeo.ecm.platform.picture.api.ImagingService;
 import org.nuxeo.labs.asset.transformation.api.Transformation;
 import org.nuxeo.labs.asset.transformation.impl.builder.ImageTransformationBuilder;
 import org.nuxeo.labs.asset.transformation.service.DynamicTransformationService;
@@ -76,6 +79,12 @@ public class ImageTransformOp {
     @Context
     DynamicTransformationService transformationService;
 
+    @Context
+    ImagingService imagingService;
+
+    @Context
+    CoreSession session;
+
     @OperationMethod
     public Blob run(DocumentModel document) {
         Transformation transformation = new ImageTransformationBuilder(document).width(width)
@@ -92,6 +101,25 @@ public class ImageTransformOp {
                                                                                 .compressionLevel(compressionLevel)
                                                                                 .build();
         return transformationService.transform(document, transformation);
+    }
+
+    @OperationMethod
+    public Blob run(Blob blob) {
+        ImageInfo info = imagingService.getImageInfo(blob);
+        Transformation transformation = new ImageTransformationBuilder(info).width(width)
+                .height(height)
+                .cropBox(crop)
+                .cropRatio(autoCropRatio)
+                .format(format)
+                .textWatermark(textWatermark)
+                .imageWatermark(imageWatermark)
+                .watermarkId(watermarkId)
+                .watermarkGravity(watermarkGravity)
+                .colorSpace(colorSpace)
+                .backgroundColor(backgroundColor)
+                .compressionLevel(compressionLevel)
+                .build();
+        return transformationService.transformPicture(blob, transformation, session);
     }
 
 }
