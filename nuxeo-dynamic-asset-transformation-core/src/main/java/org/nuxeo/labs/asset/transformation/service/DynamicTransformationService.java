@@ -29,26 +29,26 @@ public interface DynamicTransformationService {
     /**
      * Transform the document main media file
      * 
-     * @param doc
-     * @param transformation
+     * @param doc The input document
+     * @param transformation the transformation parameters
      * @return the transformed media file
      */
     Blob transform(DocumentModel doc, Transformation transformation);
 
     /**
-     * Transform a blob
+     * Transform an image blob
      *
-     * @param blob
-     * @param transformation
+     * @param blob the input blob
+     * @param transformation the transformation parameters
      * @return the transformed media file
      */
     Blob transformPicture(Blob blob, Transformation transformation, CoreSession session);
 
     /**
-     * Transform a blob
+     * Transform a video blob
      *
-     * @param blob
-     * @param transformation
+     * @param blob the input blob
+     * @param transformation the transformation parameters
      * @return the transformed media file
      */
     Blob transformVideo(Blob blob, Transformation transformation, CoreSession session);
