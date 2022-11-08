@@ -92,7 +92,7 @@
 
         </style>
 
-        <nuxeo-operation id="saveOp" op="javascript.api_save_rendition" input="[[document.uid]]"></nuxeo-operation>
+        <nuxeo-operation id="saveOp" op="[[saveOperation]]" input="[[document.uid]]"></nuxeo-operation>
 
         <nuxeo-operation id="createLinkOp" input="[[input]]" params="[[params]]" op="CreatePublicDownloadLink"></nuxeo-operation>
 
@@ -296,12 +296,16 @@
                     }
                 },
 
+                saveOperation: {
+                  type: String,
+                  value: "javascript.api_save_rendition"
+                },
+
                 cropFormat: {
                     type: String,
                     value: "0",
                     observer: "_cropFormatChanged"
                 },
-
 
                 url: {
                     type: String,
