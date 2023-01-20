@@ -16,13 +16,12 @@ LABEL com.customer.sample.build-tag=${BUILD_TAG}
 # We need to be root to run yum commands
 USER 0
 
-RUN yum -y localinstall --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \
-    && rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-el-7 \
-    && yum -y install ffmpeg mediainfo x264 x265
+RUN dnf config-manager --set-enabled crb && dnf -y install epel-release && \
+    dnf -y install https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm && \
+    dnf -y install ffmpeg mediainfo x264 x265
 
 # Set back original (nuxeo) user
 USER 900
-
 
 COPY --chown=nuxeo:0 target/nuxeo-dynamic-asset-transformation*.zip /home/nuxeo/local-packages/
 

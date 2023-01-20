@@ -1,17 +1,40 @@
 version: "3.8"
 services:
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+  opensearch:
+    image: opensearchproject/opensearch:1.3.7
+    hostname: opensearch
+    ports:
+      - "9200:9200"
+    environment:
+      - cluster.name=docker-cluster
+      - "discovery.type=single-node"
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "DISABLE_SECURITY_PLUGIN=true"
+    volumes:
+      - "search_data:/usr/share/opensearch/data"
   nuxeo:
-    image: nuxeo-dynamic-asset-transformation:2021.13.0-SNAPSHOT
+    image: nuxeo-dynamic-asset-transformation:2023.0.0-RC1
     ports:
       - "8080:8080"
       - "8787:8787"
     environment:
       - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8787
       - NUXEO_DEV=true
-      - NUXEO_PACKAGES=nuxeo-web-ui marketplace-disable-studio-snapshot-validation
+      - NUXEO_PACKAGES=nuxeo-web-ui
       - NUXEO_CLID=${NUXEO_CLID}
+    depends_on:
+      - mongodb
+      - opensearch
     volumes:
       - ./conf.d:/etc/nuxeo/conf.d
       - data:/var/lib/nuxeo
 volumes:
   data: {}
+  search_data: {}
+  mongodb_data: {}

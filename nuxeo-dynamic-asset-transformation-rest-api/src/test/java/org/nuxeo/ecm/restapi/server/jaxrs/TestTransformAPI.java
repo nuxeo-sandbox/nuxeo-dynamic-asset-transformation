@@ -39,6 +39,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
+import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 import org.nuxeo.ecm.platform.picture.core.ImagingFeature;
 import org.nuxeo.ecm.restapi.test.BaseTest;
 import org.nuxeo.ecm.restapi.test.RestServerFeature;
@@ -78,6 +79,12 @@ public class TestTransformAPI extends BaseTest {
         Blob blob = new FileBlob(new File(getClass().getResource("/files/small.jpg").getPath()));
         blob.setMimeType("image/jpg");
         picture.setPropertyValue("file:content", (Serializable) blob);
+
+        ImageInfo imageInfo = new ImageInfo();
+        imageInfo.setWidth(300);
+        imageInfo.setHeight(300);
+        picture.setPropertyValue("picture:info", (Serializable) imageInfo.toMap());
+
         picture = session.createDocument(picture);
 
         // commit the transaction and record the change in the DB
