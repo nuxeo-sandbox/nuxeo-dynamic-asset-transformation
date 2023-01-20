@@ -23,6 +23,12 @@ parameters are query params:
 - height
 - format (jpeg, png or webp)
 - crop (x,y,width,height) where is x is left, y is top, width and height of the cropped area in pixels
+- colorSpace (ex: sRGB, Gray ...)
+- backgroundColor (useful when converting from a format that supports to transparency to a format which does not like JPEG)
+- compressionLevel from 1 (lowest image quality and highest compression) to 100 (best quality but least effective compression)
+- textWatermark 
+- watermarkId
+- watermarkGravity 
   
 Example:
 
