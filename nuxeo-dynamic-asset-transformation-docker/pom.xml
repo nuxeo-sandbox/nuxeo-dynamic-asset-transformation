@@ -78,13 +78,12 @@
             <configuration>
               <images>
                 <image>
-                  <name>nuxeo-dynamic-asset-transformation</name>
+                  <name>nuxeo-dynamic-asset-transformation:${project.version}</name>
                   <build>
                     <args>
                       <BASE_IMAGE>docker-private.packages.nuxeo.com/nuxeo/nuxeo:${nuxeo.platform.version}</BASE_IMAGE>
                       <BUILD_TAG>${project.version}</BUILD_TAG>
                       <SCM_REF>built-locally</SCM_REF>
-                      <VERSION>${project.version}</VERSION>
                     </args>
                     <contextDir>${project.basedir}</contextDir>
                     <buildx>
