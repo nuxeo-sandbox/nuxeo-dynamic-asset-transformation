@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.nuxeo</groupId>
     <artifactId>nuxeo-parent</artifactId>
-    <version>2023.0.66</version>
+    <version>2023.0.75</version>
   </parent>
 
   <groupId>org.nuxeo.labs.asset.transformation</groupId>
   <artifactId>nuxeo-dynamic-asset-transformation-parent</artifactId>
-  <version>2023.0.0-SNAPSHOT</version>
+  <version>2023.0.0-RC1</version>
   <name>Nuxeo dynamic asset transformation parent</name>
   <description />
   <packaging>pom</packaging>

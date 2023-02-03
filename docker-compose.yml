@@ -19,7 +19,7 @@ services:
     volumes:
       - "search_data:/usr/share/opensearch/data"
   nuxeo:
-    image: nuxeo-dynamic-asset-transformation:2023.0.0-SNAPSHOT
+    image: nuxeo-dynamic-asset-transformation:2023.0.0-RC1
     ports:
       - "8080:8080"
       - "8787:8787"

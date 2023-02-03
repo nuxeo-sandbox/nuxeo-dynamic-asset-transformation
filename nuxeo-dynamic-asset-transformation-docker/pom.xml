@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.nuxeo.labs.asset.transformation</groupId>
     <artifactId>nuxeo-dynamic-asset-transformation-parent</artifactId>
-    <version>2023.0.0-SNAPSHOT</version>
+    <version>2023.0.0-RC1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -86,9 +86,6 @@
                       <SCM_REF>built-locally</SCM_REF>
                     </args>
                     <contextDir>${project.basedir}</contextDir>
-                    <buildx>
-                      <platforms>linux/amd64</platforms>
-                    </buildx>
                   </build>
                 </image>
               </images>
