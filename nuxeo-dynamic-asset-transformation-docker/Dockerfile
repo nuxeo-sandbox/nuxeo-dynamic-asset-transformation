@@ -27,4 +27,3 @@ USER 900
 COPY --chown=nuxeo:0 target/nuxeo-dynamic-asset-transformation*.zip /home/nuxeo/local-packages/
 
 RUN /install-packages.sh --offline /home/nuxeo/local-packages/nuxeo-dynamic-asset-transformation*.zip
-RUN /install-packages.sh --clid ${NUXEO_CLID} ${PACKAGES}

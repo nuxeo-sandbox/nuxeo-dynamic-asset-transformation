@@ -39,6 +39,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
+import org.nuxeo.ecm.platform.picture.core.ImagingFeature;
 import org.nuxeo.ecm.restapi.test.BaseTest;
 import org.nuxeo.ecm.restapi.test.RestServerFeature;
 import org.nuxeo.runtime.api.Framework;
@@ -51,7 +52,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 @RunWith(FeaturesRunner.class)
-@Features({ RestServerFeature.class, TransactionalFeature.class, AutomationFeature.class })
+@Features({ RestServerFeature.class, TransactionalFeature.class, AutomationFeature.class, ImagingFeature.class })
 @RepositoryConfig(cleanup = Granularity.METHOD)
 @Deploy({ "org.nuxeo.ecm.platform.picture.core", "org.nuxeo.ecm.platform.tag",
         "nuxeo-dynamic-asset-transformation-core", "nuxeo-dynamic-asset-transformation-rest-api" })

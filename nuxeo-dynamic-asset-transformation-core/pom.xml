@@ -16,22 +16,27 @@
         <dependency>
             <groupId>org.nuxeo.ecm.platform</groupId>
             <artifactId>nuxeo-platform-commandline-executor</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.nuxeo.ecm.core</groupId>
             <artifactId>nuxeo-core-convert-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.nuxeo.ecm.automation</groupId>
             <artifactId>nuxeo-automation-core</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.nuxeo.ecm.platform</groupId>
             <artifactId>nuxeo-platform-imaging-core</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.nuxeo.ecm.platform</groupId>
             <artifactId>nuxeo-platform-video</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.nuxeo.runtime</groupId>

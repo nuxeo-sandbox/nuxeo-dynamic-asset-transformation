@@ -13,14 +13,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.nuxeo.ecm.platform</groupId>
+            <artifactId>nuxeo-platform-imaging-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.nuxeo.ecm.webengine</groupId>
             <artifactId>nuxeo-webengine-core</artifactId>
+            <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.nuxeo.labs.asset.transformation</groupId>
             <artifactId>nuxeo-dynamic-asset-transformation-core</artifactId>
-            <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.nuxeo.labs.public.link</groupId>
             <artifactId>nuxeo-public-download-link-core</artifactId>
@@ -53,7 +60,12 @@
             <artifactId>nuxeo-platform-tag</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.nuxeo.ecm.platform</groupId>
+            <artifactId>nuxeo-platform-imaging-core</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

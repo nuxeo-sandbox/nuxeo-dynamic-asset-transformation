@@ -30,6 +30,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
+import org.nuxeo.ecm.platform.picture.core.ImagingFeature;
 import org.nuxeo.labs.download.link.service.PublicDownloadLinkService;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
@@ -41,7 +42,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 @RunWith(FeaturesRunner.class)
-@Features({ TestFeature.class })
+@Features({ TestFeature.class, ImagingFeature.class})
 
 @RepositoryConfig(cleanup = Granularity.METHOD)
 public class TestTransform {

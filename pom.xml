@@ -64,12 +64,24 @@
       </dependency>
       <dependency>
         <groupId>org.nuxeo.labs.asset.transformation</groupId>
+        <artifactId>nuxeo-dynamic-asset-transformation-package</artifactId>
+        <type>pom</type>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.nuxeo.labs.asset.transformation</groupId>
         <artifactId>nuxeo-dynamic-asset-transformation-public-endpoint</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.nuxeo.labs.asset.transformation</groupId>
         <artifactId>nuxeo-dynamic-asset-transformation-aws-package</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.nuxeo.labs.asset.transformation</groupId>
+        <artifactId>nuxeo-dynamic-asset-transformation-aws-package</artifactId>
+        <type>pom</type>
         <version>${project.version}</version>
       </dependency>
       <dependency>
