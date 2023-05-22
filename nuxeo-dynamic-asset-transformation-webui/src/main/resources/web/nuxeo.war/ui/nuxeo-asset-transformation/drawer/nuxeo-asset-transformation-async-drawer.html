@@ -28,7 +28,7 @@
         <iron-localstorage id="storage" name="ondemand" value="{{jobs}}"></iron-localstorage>
 
         <div class="header">
-            <h5>Jobs</h5>
+            <h5>[[i18n(label)]]</h5>
         </div>
 
         <template is="dom-if" if="[[_noJobs(jobs)]]">
@@ -45,7 +45,9 @@
         Polymer({
             is: 'nuxeo-asset-transformation-async-drawer',
             behaviors: [Nuxeo.RoutingBehavior, Nuxeo.I18nBehavior],
-            properties: {},
+            properties: {
+                label: String
+            },
 
             listeners: {
                 'remove-async-job': '_removeAsyncJob',

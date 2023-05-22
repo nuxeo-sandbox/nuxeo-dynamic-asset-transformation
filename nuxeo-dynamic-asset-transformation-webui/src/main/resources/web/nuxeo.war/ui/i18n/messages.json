@@ -45,5 +45,22 @@
   "label.action.save.failure": "Failed to save",
   "label.action.transform.download.as": "Download As",
   "label.drawer.async.no.job": "You don't have any scheduled job",
-  "label.drawer.async.job.title": "Jobs"
+  "label.drawer.async.job.title": "Jobs",
+  "label.action.transform.title.cropbox":"Crop Box",
+  "label.action.transform.title.resize":"Resize",
+  "label.action.transform.title.output_format":"Output Format",
+  "label.action.transform.title.downnload_url":"Download",
+  "label.action.transform.title.save_as":"Save As",
+  "label.aspect.ratio.original": "Original",
+  "label.aspect.ratio.free":"Free",
+  "label.aspect.ratio.square":"Square",
+  "label.aspect.ratio.3.2":"3/2",
+  "label.aspect.ratio.16.9":"16/9",
+  "label.aspect.ratio.web.full.banner":"Full Banner (7.8)",
+  "label.aspect.ratio.web.half.banner":"half Banner (3.9)",
+  "label.aspect.ratio.instagram.video.portrait":"Instagram Portrait Video",
+  "label.aspect.ratio.instagram.video.landscape":"Instagram Landscape Video",
+  "label.aspect.ratio.instagram.video.stories":"Instagram Stories",
+  "label.asset.conversion":"Conversion"
+
 }

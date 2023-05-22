@@ -185,27 +185,26 @@
                         return [
                             {
                                 id: "1.00",
-                                label: "Square",
+                                label: this.i18n("label.aspect.ratio.square")
                             }, {
                                 id: "1.76",
-                                label: "16/9",
+                                label: this.i18n("label.aspect.ratio.16.9")
                             }, {
                                 id: "0.8",
-                                label: "Instagram Portrait Video"
+                                label: this.i18n("label.aspect.ratio.16.9")
                             }, {
                                 id: "1.91",
-                                label: "Instagram Landscape Video"
+                                label: this.i18n("label.aspect.ratio.instagram.video.portrait")
                             }, {
                                 id: "0.5625",
-                                label: "Instagram Stories"
+                                label: this.i18n("label.aspect.ratio.instagram.video.landscape")
                             }, {
                                 id: "0",
-                                label: "Free",
+                                label: this.i18n("label.aspect.ratio.instagram.video.stories")
                             },
                         ];
                     }
                 },
-
 
                 formatOptions: {
                     type: Array,
@@ -305,7 +304,7 @@
             },
 
             _dialogClosed: function (e) {
-                if (e.srcElement.id === "dialog") {
+                if (e.target.id === "dialog") {
                     this.$.form.reset();
                 }
             },
@@ -340,7 +339,7 @@
 
                 allCropFormatOptions.unshift({
                     id: originalRatio,
-                    label: "Original",
+                    label: this.i18n('label.aspect.ratio.original')
                 });
 
                 return allCropFormatOptions;

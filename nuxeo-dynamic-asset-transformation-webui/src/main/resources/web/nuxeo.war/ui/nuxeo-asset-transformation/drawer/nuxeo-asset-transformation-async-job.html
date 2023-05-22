@@ -13,7 +13,7 @@
 
         <a href="[[urlFor('document',docId)]]">[[doc.title]]</a>
 
-        <div>Conversion to [[params.format]] [[params.width]]x[[params.height]]</div>
+        <div>[[i18n('label.asset.conversion')]] [[params.format]] [[params.width]]x[[params.height]]</div>
 
         <template is="dom-if" if="[[done]]">
             <a href="[[_computeDownloadUrl(url,done)]]">

@@ -111,7 +111,7 @@
                     <div class="params">
                         <iron-form id="form">
                             <form>
-                                <h3 class="firstTitle">Crop Box</h3>
+                                <h3 class="firstTitle">[[i18n('label.action.transform.title.cropbox')]]</h3>
                                 <div role="widget">
                                     <label>[[i18n('label.action.transform.ratio')]]</label>
                                     <nuxeo-select role="widget"
@@ -123,14 +123,13 @@
                                 <template is="dom-if" if="[[_isFreeCropRatio(cropFormat)]]">
                                     <nuxeo-input name="ratio"
                                                  role="widget"
-                                                 label="[[i18n('label.action.transform.ratio')]]"
                                                  value="{{cropData.ratio}}"
                                                  type="number"
                                                  min="0.0001"
                                                  step="0.0001">
                                     </nuxeo-input>
                                 </template>
-                                <h3>Resize</h3>
+                                <h3>[[i18n('label.action.transform.title.resize')]]</h3>
                                 <nuxeo-input name="width"
                                              role="widget"
                                              label="[[i18n('label.action.transform.width')]]"
@@ -148,7 +147,7 @@
                                              step="1">
                                 </nuxeo-input>
 
-                                <h3>Output Format</h3>
+                                <h3>[[i18n('label.action.transform.title.output_format')]]</h3>
                                 <div role="widget">
                                     <label>[[i18n('label.action.transform.format')]]</label>
                                     <nuxeo-select role="widget"
@@ -160,7 +159,7 @@
                             </form>
                         </iron-form>
 
-                        <h3>Download URLs</h3>
+                        <h3>[[i18n('label.action.transform.title.downnload_url')]]</h3>
 
                         <div role="widget" class="links">
                             <div class="layout horizontal">
@@ -196,7 +195,7 @@
 
                         <nuxeo-filter document="[[document]]" permission="Write">
                             <template>
-                                <h3>Save</h3>
+                                <h3>[[i18n('label.action.transform.title.save_as')]]</h3>
                                 <div>
                                     <div>
                                         <nuxeo-input id="renditionName"
@@ -275,22 +274,22 @@
                         return [
                             {
                                 id: "0",
-                                label: "Free",
+                                label: this.i18n("label.aspect.ratio.free")
                             },{
                                 id: "1.00",
-                                label: "Square",
+                                label: this.i18n("label.aspect.ratio.square")
                             },{
                                 id: "1.50",
-                                label: "3/2",
+                                label: this.i18n("label.aspect.ratio.3.2")
                             },{
                                 id: "1.76",
-                                label: "16/9",
+                                label: this.i18n("label.aspect.ratio.16.9")
                             },{
                                 id: "7.80",
-                                label: "Full Banner (7.8)"
+                                label: this.i18n("label.aspect.ratio.web.full.banner")
                             },{
                                 id: "3.90",
-                                label: "half Banner (3.9)"
+                                label: this.i18n("label.aspect.ratio.web.half.banner")
                             }
                         ];
                     }
