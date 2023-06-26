@@ -5,7 +5,7 @@
 
         <extension point="converter" target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl">
             <converter class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter" name="solidCanvasGenerator">
-                <sourceMimeType>*</sourceMimeType>
+                <sourceMimeType>void</sourceMimeType>
                 <destinationMimeType>image/png</destinationMimeType>
                 <parameters>
                     <parameter name="CommandLineName">solidCanvasGenerator</parameter>

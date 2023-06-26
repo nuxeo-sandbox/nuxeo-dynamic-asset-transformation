@@ -109,7 +109,7 @@ public class TestConverters {
         params.put("color", "none");
         params.put("width", "240");
         params.put("height", "240");
-        BlobHolder result = conversionService.convert("solidCanvasGenerator", new SimpleBlobHolder(new StringBlob("")), params);
+        BlobHolder result = conversionService.convert("solidCanvasGenerator", new SimpleBlobHolder(new StringBlob("","void")), params);
         Blob canvas = result.getBlob();
         Assert.assertNotNull(canvas);
         Assert.assertEquals("image/png", canvas.getMimeType());

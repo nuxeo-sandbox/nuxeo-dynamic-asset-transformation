@@ -181,7 +181,7 @@ public class DynamicTransformationServiceImpl implements DynamicTransformationSe
         params.put("width", "" + width);
         // get transparent canvas with same dimension as the final transformed image
         BlobHolder blobHolder = conversionService.convert("solidCanvasGenerator",
-                new SimpleBlobHolder(new StringBlob("")), params);
+                new SimpleBlobHolder(new StringBlob("","void")), params);
         return blobHolder.getBlob();
     }
 
