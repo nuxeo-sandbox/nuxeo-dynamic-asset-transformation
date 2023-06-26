@@ -434,7 +434,6 @@
 
 
             _cropFormatChanged: function(cropFormat) {
-                console.log(cropFormat);
                 if (cropFormat > "0") {
                     if (this.document && this.document.properties && this.document.properties['crops:crops']) {
                         let crop = this.document.properties['crops:crops'].find(element => element.name === cropFormat);
