@@ -22,7 +22,7 @@ package org.nuxeo.labs.asset.transformation.api;
 import static org.nuxeo.labs.asset.transformation.TestFeature.HEIGHT;
 import static org.nuxeo.labs.asset.transformation.TestFeature.WIDTH;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -25,9 +25,9 @@ import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
 import java.io.File;
 import java.io.Serializable;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 import org.junit.Before;
 import org.junit.Test;
