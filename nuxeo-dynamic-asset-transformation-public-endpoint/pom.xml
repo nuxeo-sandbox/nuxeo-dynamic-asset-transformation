@@ -30,10 +30,9 @@
         <dependency>
             <groupId>org.nuxeo.labs.public.link</groupId>
             <artifactId>nuxeo-public-download-link-core</artifactId>
-            <version>2023.2.0-SNAPSHOT-SNAPSHOT</version>
+            <version>2023.1.0</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.nuxeo.runtime</groupId>
             <artifactId>nuxeo-runtime-test</artifactId>
@@ -65,7 +64,5 @@
             <artifactId>nuxeo-platform-tag</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
 </project>
