@@ -24,12 +24,14 @@ import static org.nuxeo.labs.asset.transformation.impl.Constants.PNG;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.automation.test.AutomationFeature;
@@ -40,24 +42,18 @@ import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
-import org.nuxeo.ecm.platform.picture.core.ImagingFeature;
-import org.nuxeo.ecm.restapi.test.BaseTest;
+import org.nuxeo.ecm.platform.picture.core.ImagingCoreFeature;
 import org.nuxeo.ecm.restapi.test.RestServerFeature;
-import org.nuxeo.runtime.api.Framework;
-import org.nuxeo.runtime.test.runner.Deploy;
-import org.nuxeo.runtime.test.runner.Features;
-import org.nuxeo.runtime.test.runner.FeaturesRunner;
-import org.nuxeo.runtime.test.runner.TransactionalFeature;
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import org.nuxeo.ecm.webengine.test.WebEngineFeature;
+import org.nuxeo.http.test.CloseableHttpResponse;
+import org.nuxeo.http.test.HttpClientTestRule;
+import org.nuxeo.runtime.test.runner.*;
 
 @RunWith(FeaturesRunner.class)
-@Features({ RestServerFeature.class, TransactionalFeature.class, AutomationFeature.class, ImagingFeature.class })
+@Features({ WebEngineFeature.class, RestServerFeature.class, TransactionalFeature.class, AutomationFeature.class, ImagingCoreFeature.class })
 @RepositoryConfig(cleanup = Granularity.METHOD)
-@Deploy({ "org.nuxeo.ecm.platform.picture.core", "org.nuxeo.ecm.platform.tag",
-        "nuxeo-dynamic-asset-transformation-core", "nuxeo-dynamic-asset-transformation-rest-api" })
-public class TestTransformAPI extends BaseTest {
+@Deploy({ "nuxeo-dynamic-asset-transformation-core", "nuxeo-dynamic-asset-transformation-rest-api" })
+public class TestTransformAPI {
 
     @Inject
     public CoreSession session;
@@ -65,11 +61,12 @@ public class TestTransformAPI extends BaseTest {
     @Inject
     protected TransactionalFeature transactionalFeature;
 
-    @Before
-    public void setup() {
-        int port = this.servletContainerFeature.getPort();
-        Framework.getProperties().put("nuxeo.url", "http://localhost:" + port);
-    }
+    @Inject
+    protected RestServerFeature restServerFeature;
+
+    @Rule
+    public final HttpClientTestRule httpClient =
+            HttpClientTestRule.defaultClient(() -> restServerFeature.getRestApiUrl()+"/transform/");
 
     @Test
     public void testCallAPI() {
@@ -90,11 +87,16 @@ public class TestTransformAPI extends BaseTest {
         // commit the transaction and record the change in the DB
         transactionalFeature.nextTransaction();
 
-        MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-        queryParams.add("height", "80");
-        queryParams.add("format", PNG);
-        ClientResponse response = getResponse(RequestType.GET, "/transform/" + picture.getId(), queryParams);
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("height", "80");
+        queryParams.put("format", PNG);
+
+        //try get JSON response
+        try (CloseableHttpResponse response =
+                     httpClient.buildGetRequest(picture.getId()).accept(MediaType.APPLICATION_JSON)
+                             .addQueryParameters(queryParams).execute()) {
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        }
     }
 
 }

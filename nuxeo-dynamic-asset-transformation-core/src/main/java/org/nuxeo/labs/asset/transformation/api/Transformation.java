@@ -134,7 +134,7 @@ public interface Transformation {
     String getBackgroundColor();
 
     /**
-     * @param backgroundColor
+     * @param backgroundColor the background color
      */
     void setBackgroundColor(String backgroundColor);
 

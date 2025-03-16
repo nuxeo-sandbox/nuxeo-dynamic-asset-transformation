@@ -1,12 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.nuxeo.labs.asset.transformation</groupId>
         <artifactId>nuxeo-dynamic-asset-transformation-parent</artifactId>
-        <version>2023.2.0-SNAPSHOT</version>
+        <version>2025.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>nuxeo-dynamic-asset-transformation-public-endpoint</artifactId>
@@ -30,14 +27,10 @@
         <dependency>
             <groupId>org.nuxeo.labs.public.link</groupId>
             <artifactId>nuxeo-public-download-link-core</artifactId>
-            <version>2023.1.0</version>
+            <version>2025.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.nuxeo.runtime</groupId>
-            <artifactId>nuxeo-runtime-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.nuxeo.ecm.platform</groupId>
             <artifactId>nuxeo-platform-test</artifactId>
@@ -61,8 +54,39 @@
         </dependency>
         <dependency>
             <groupId>org.nuxeo.ecm.platform</groupId>
-            <artifactId>nuxeo-platform-tag</artifactId>
+            <artifactId>nuxeo-binary-metadata</artifactId>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.nuxeo.ecm.platform</groupId>
+            <artifactId>nuxeo-platform-io-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- needed for ImagingFeature -->
+        <dependency>
+            <groupId>org.nuxeo.ecm.platform</groupId>
+            <artifactId>nuxeo-preview-core</artifactId>
+            <type>test-jar</type>
+        </dependency>
+        <!-- needed for ImagingFeature -->
+        <dependency>
+            <groupId>org.nuxeo.ecm.platform</groupId>
+            <artifactId>nuxeo-platform-filemanager</artifactId>
+            <type>test-jar</type>
+        </dependency>
+        <!-- needed for ImagingFeature -->
+        <dependency>
+            <groupId>org.nuxeo.ecm.platform</groupId>
+            <artifactId>nuxeo-platform-rendition-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- needed for ImagingFeature -->
+        <dependency>
+            <groupId>org.nuxeo.ecm.platform</groupId>
+            <artifactId>nuxeo-platform-rendition-core</artifactId>
+            <type>test-jar</type>
+        </dependency>
+
     </dependencies>
+
 </project>

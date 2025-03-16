@@ -21,33 +21,29 @@ package org.nuxeo.labs.asset.transformation.pub.endpoint;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
-import org.junit.Before;
+import jakarta.ws.rs.core.Response;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
-import org.nuxeo.ecm.platform.picture.core.ImagingFeature;
+import org.nuxeo.http.test.CloseableHttpResponse;
+import org.nuxeo.http.test.HttpClientTestRule;
 import org.nuxeo.labs.download.link.service.PublicDownloadLinkService;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.ServletContainerFeature;
 import org.nuxeo.runtime.test.runner.TransactionalFeature;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
 @RunWith(FeaturesRunner.class)
-@Features({ TestFeature.class, ImagingFeature.class})
+@Features({ TestFeature.class, TransactionalFeature.class })
 
 @RepositoryConfig(cleanup = Granularity.METHOD)
 public class TestTransform {
-
-    protected Client client;
 
     @Inject
     protected CoreSession session;
@@ -64,43 +60,32 @@ public class TestTransform {
     @Inject
     protected PublicDownloadLinkService publicDownloadLinkService;
 
-    @Before
-    public void setup() {
-        client = Client.create();
-        client.setFollowRedirects(Boolean.FALSE);
-    }
+    @Rule
+    public final HttpClientTestRule httpClient = HttpClientTestRule.builder()
+            .url(() -> servletContainerFeature.getHttpUrl()+"/public/transform/")
+            .build();
 
     @Test
     public void testValidRequest() {
         DocumentModel doc = testFeature.getDocWithPictureInfo(session);
         String token = publicDownloadLinkService.setPublicDownloadPermission(doc, "file:content");
         transactionalFeature.nextTransaction();
-        WebResource webResource = client.resource(getBaseURL())
-                                        .path("public")
-                                        .path("transform")
-                                        .path(doc.getRepositoryName())
-                                        .path(doc.getId());
-        System.out.println(webResource);
-        ClientResponse response = webResource.get(ClientResponse.class);
-        assertEquals(200, response.getStatus());
+
+        try (CloseableHttpResponse response =
+                     httpClient.buildGetRequest(String.format("/%s/%s",doc.getRepositoryName(),doc.getId())).execute()) {
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        }
     }
 
     @Test
     public void testNoTokenRequest() {
         DocumentModel doc = testFeature.getDocWithPictureInfo(session);
         transactionalFeature.nextTransaction();
-        WebResource webResource = client.resource(getBaseURL())
-                                        .path("public")
-                                        .path("transform")
-                                        .path(doc.getRepositoryName())
-                                        .path(doc.getId());
-        System.out.println(webResource);
-        ClientResponse response = webResource.get(ClientResponse.class);
-        assertEquals(404, response.getStatus());
+
+        try (CloseableHttpResponse response =
+                     httpClient.buildGetRequest(String.format("/%s/%s",doc.getRepositoryName(),doc.getId())).execute()) {
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        }
     }
 
-    protected String getBaseURL() {
-        int port = servletContainerFeature.getPort();
-        return "http://localhost:" + port;
-    }
 }

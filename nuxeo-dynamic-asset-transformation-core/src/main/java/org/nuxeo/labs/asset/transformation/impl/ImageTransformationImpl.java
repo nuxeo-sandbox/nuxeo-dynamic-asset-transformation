@@ -206,7 +206,7 @@ public class ImageTransformationImpl implements Transformation {
         map.put("colorSpace", colorSpace);
         map.put("backgroundColor", backgroundColor);
         map.put("compressionLevel", "" + compressionLevel);
-        map.put("watermarkGravity", "" + watermarkGravity);
+        map.put("watermarkGravity", watermarkGravity);
         return map;
     }
 

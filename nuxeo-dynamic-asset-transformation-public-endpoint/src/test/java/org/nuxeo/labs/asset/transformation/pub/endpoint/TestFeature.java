@@ -28,14 +28,14 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
+import org.nuxeo.ecm.platform.picture.core.ImagingCoreFeature;
 import org.nuxeo.ecm.webengine.test.WebEngineFeature;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.RunnerFeature;
 
-@Features({ WebEngineFeature.class, AutomationFeature.class })
-@Deploy({ "org.nuxeo.ecm.platform.picture.core", "org.nuxeo.ecm.platform.tag", "org.nuxeo.ecm.platform.web.common",
-        "nuxeo-public-download-link-core", "nuxeo-dynamic-asset-transformation-core",
+@Features({ WebEngineFeature.class, AutomationFeature.class, ImagingCoreFeature.class })
+@Deploy({ "org.nuxeo.ecm.platform.web.common", "nuxeo-public-download-link-core", "nuxeo-dynamic-asset-transformation-core",
         "nuxeo-dynamic-asset-transformation-pub-endpoint" })
 public class TestFeature implements RunnerFeature {
 

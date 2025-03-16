@@ -69,11 +69,10 @@ public class VideoTransformationImpl extends ImageTransformationImpl {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof VideoTransformationImpl))
+        if (!(o instanceof VideoTransformationImpl that))
             return false;
         if (!super.equals(o))
             return false;
-        VideoTransformationImpl that = (VideoTransformationImpl) o;
         return fromTimeInMs == that.fromTimeInMs && toTimeInMs == that.toTimeInMs
                 && Objects.equals(videoCodec, that.videoCodec) && Objects.equals(audioCodec, that.audioCodec);
     }

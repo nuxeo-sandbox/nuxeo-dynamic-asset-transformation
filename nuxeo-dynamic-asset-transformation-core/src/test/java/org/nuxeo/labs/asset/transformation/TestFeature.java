@@ -31,16 +31,16 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
-import org.nuxeo.ecm.platform.picture.core.ImagingFeature;
+import org.nuxeo.ecm.platform.picture.core.ImagingCoreFeature;
 import org.nuxeo.ecm.platform.video.VideoInfo;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.RunnerFeature;
 
-@Features({ AutomationFeature.class, ImagingFeature.class })
+@Features({ AutomationFeature.class, ImagingCoreFeature.class })
 @Deploy({ "org.nuxeo.ecm.platform.video",
-          "nuxeo-dynamic-asset-transformation-core",
-          "nuxeo-dynamic-asset-transformation-core:disable-listener.xml" })
+        "nuxeo-dynamic-asset-transformation-core",
+        "nuxeo-dynamic-asset-transformation-core:disable-listener.xml" })
 public class TestFeature implements RunnerFeature {
 
     public static final int WIDTH = 300;

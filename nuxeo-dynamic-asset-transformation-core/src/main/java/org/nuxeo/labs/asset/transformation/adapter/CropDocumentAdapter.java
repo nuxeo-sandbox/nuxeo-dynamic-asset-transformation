@@ -53,8 +53,8 @@ public class CropDocumentAdapter {
         List<Map<String, Serializable>> crops = (List<Map<String, Serializable>>) doc.getPropertyValue(CROPS_PROPERTY);
         crops = crops.stream()
                      .filter(element -> name.equals(element.get(CROP_NAME_SUBPROPERTY)))
-                     .collect(Collectors.toList());
-        return crops.size() > 0 ? new CropBox(crops.get(0)) : null;
+                     .toList();
+        return !crops.isEmpty() ? new CropBox(crops.getFirst()) : null;
     }
 
     public void addCrop(String name, CropBox box) {
