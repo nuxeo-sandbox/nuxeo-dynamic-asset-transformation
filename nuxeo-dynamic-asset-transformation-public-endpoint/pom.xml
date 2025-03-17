@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.nuxeo.labs.public.link</groupId>
             <artifactId>nuxeo-public-download-link-core</artifactId>
-            <version>2025.0.0-SNAPSHOT</version>
+            <version>2025.0.0</version>
             <scope>provided</scope>
         </dependency>
 
