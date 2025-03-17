@@ -2,6 +2,22 @@
 This repository contains a plugin to provide on the fly asset transformation capabilities to the nuxeo platform
 
 # How to build
+
+In addition to the nuxeo maven repositories, the [GitHub maven repository credentials](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#authenticating-with-a-personal-access-token) must be configured in `~/.m2/settings.xml` 
+
+```xml
+    <server>
+      <id>github</id>
+      <username></username>
+      <password></password>
+      <configuration>
+        <timeout>3000</timeout>
+      </configuration>
+    </server>
+```
+
+Then run:
+
 ```
 git clone https://github.com/nuxeo-sandbox/nuxeo-dynamic-asset-transformation
 cd nuxeo-dynamic-asset-transformation
